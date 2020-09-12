@@ -40,7 +40,7 @@ TODO: insert title and caption
 
 **Affidavit (please fill out)**
 
-Please tick this by placing a cross in the box:
+Please add ticks by placing a cross in the box:
 * [ ] I have searched both open and closed suggestions and proposals on this site and believe this is not a duplicate.
 * [ ] I believe that the spirit of this suggestion is aligned with the design principles and general vision for Q#. 
 
