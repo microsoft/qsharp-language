@@ -5,7 +5,9 @@ title: ''
 labels: ''
 assignees: ''
 
-*Suggestion*
+---
+
+**Suggestion**
 
 TODO:    
 Insert a short outline for what the proposed modification is. 
@@ -45,4 +47,3 @@ Please tick this by placing a cross in the box:
 Please tick all that apply:
 * [ ] This is not a breaking change to the Q# language design
 * [ ] I or my organization would be willing to help implement and/or test this
----
