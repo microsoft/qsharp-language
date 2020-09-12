@@ -10,7 +10,7 @@ Yes! Please take a look at the proposals that have been [approved in principle](
 
 ### *Why has my suggestion been declined?*
 
-There are many reasons why a suggestion may be declined. Q# is a domain specific language for a rather unique domain, and unfortunately, not everything that works well on classical hardware works well for execution on quantum devices. Please take a look a the [Q# design principles](https://github.com/microsoft/qsharp-language#design-principles) as well as other [considerations](https://github.com/microsoft/qsharp-language/blob/main/Guidance.md) we factor into our decisions.
+There are many reasons why a suggestion may be declined. Q# is a domain specific language for a rather unique domain, and unfortunately, not everything that works well on classical hardware works well for execution on quantum devices. Please take a look a the [Q# design principles](https://github.com/microsoft/qsharp-language#design-principles) as well as other [considerations](https://github.com/microsoft/qsharp-language/blob/main/Guidelines.md) we factor into our decisions.
 
 ### *How can I use Q# and where do I get development tools?*
 
