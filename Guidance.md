@@ -1,13 +1,7 @@
-# Good Practices and Considerations
+# Considerations and Guidelines
 
-There are a couple of things we want to be mindful of when making design decisions for the Q# language and core libraries, such as 
-- the ease of adoption
-- the benefit over time
-- the cost of implementation
-- alternative approaches
-- ...
-
-The considerations listed in this document are by no means exhaustive, but they give a first impression of what we factor into our considerations. For the API design of the core libraries, please also take a look at the style guide. 
+There are several considerations that factor into design decisions for the Q# language and core libraries. The ease of adoption, the benefit over time, the cost of implementation, alternative approaches, etc. are but a few examples.
+Rather than attempting to compile an exhaustive list, we present some rough guidelines that may give a first impression for things we want to be mindful of. For the API design of the core libraries, please also take a look at the [style guide](https://github.com/microsoft/qsharp-language/tree/main/CoreLibraries). 
 
 ## Try to
 - Be mindful of the design space
