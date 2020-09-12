@@ -1,6 +1,6 @@
 ---
 name: Suggestion
-about: Suggestion a new feature
+about: Suggest a new feature
 title: ''
 labels: ''
 assignees: ''
