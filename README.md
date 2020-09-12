@@ -9,7 +9,7 @@ Q# is designed by the Q# Language Design Team in collaboration with many contrib
 Suggestions for features and adaptions are filed and tracked in the form of issues on this repository. 
 We greatly appreciate your feedback and contribution to the discussion in the form of comments and votes on open issues. Better understanding the needs of the community will help us make better decisions. 
 
-If you have a suggestion for a feature and would like to share your thoughts, we encourage you to file an issue following our suggestion template. The [following section](#process-&-implementation) describes the process and workflow in more detail. For a suggestion to be adopted it needs to align with the general vision for Q# and the Q# language [design principles](#design-principles). We do not generally revisit design decisions that have been made unless there is new information to consider, e.g. due to scientific or technical breakthroughs. 
+If you have a suggestion for a feature and would like to share your thoughts, we encourage you to file an issue following our suggestion template. The [following section](#process-and-implementation) describes the process and workflow in more detail. For a suggestion to be adopted it needs to align with the general vision for Q# and the Q# language [design principles](#design-principles). We do not generally revisit design decisions that have been made unless there is new information to consider, e.g. due to scientific or technical breakthroughs. 
 
 We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.   
 
@@ -37,7 +37,7 @@ We share a vision of how quantum devices will revolutionize computing in the fut
 
 In addition to these principles, we try to adhere to a general set of good practices, and there are other aspects to consider that factor into a decision whether to pursue a certain feature. Please take a look at this document for a more detailed list of considerations. We also refer to our FAQs for further questions. 
 
-## Process & Implementation
+## Process and Implementation
 
 The development of a language feature consists of the following stages:
 
