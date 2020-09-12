@@ -1,16 +1,16 @@
-<!-- 
-title: 
-description: 
-author:
-date: 
--->
+---
+name: Implementation
+about: Create an issue to track the implementation of an approved feature
+title: 'Implementation: '
+labels: 'Implementation'
+assignees: ''
 
-# Implementation
+**Implementation**
 
 TODO:    
 Please link the approved proposal that you would like to implement. 
 
-## Work items
+*Work items*
 
 TODO:    
 Please create a list of the work items that need to be completed, and update the status as it progresses.
@@ -18,5 +18,5 @@ Please create a list of the work items that need to be completed, and update the
 * [ ] ... 
 * [ ] Merge to master
 * [ ] Update the Q# language specification
-
+---
 

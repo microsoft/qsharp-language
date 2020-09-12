@@ -1,28 +1,28 @@
-<!-- 
-title: 
-description: 
-author:
-date: 
--->
+---
+name: Suggestion
+about: Suggest a new feature
+title: ''
+labels: ''
+assignees: ''
 
-# Suggestion
+*Suggestion*
 
 TODO:    
 Insert a short outline for what the proposed modification is. 
 
-## Considerations
+*Considerations*
 
 TODO:    
 Explain why this modification to the Q# language is desireable.    
 Briefly summarize the benefits and drawbacks of the chosen mechanism opposed to other ways of achieving a similar functionality. 
 
-## Context
+*Context*
 
 TODO:
 Describe briefly the most important points to consider in more detail going forward. 
 Link to related suggestions, proposals, specs, documentation or other related topics. 
 
-## Examples
+*Examples*
 
 TODO: 
 Give concrete examples for syntax and behavior to illustrate the suggestions above. 
@@ -36,7 +36,7 @@ TODO: insert title and caption
 // Comment your code to further elaborate and clarify the example.
 ```
 
-# Affidavit (please fill out)
+**Affidavit (please fill out)**
 
 Please tick this by placing a cross in the box:
 * [ ] I have searched both open and closed suggestions and proposals on this site and believe this is not a duplicate.
@@ -45,5 +45,4 @@ Please tick this by placing a cross in the box:
 Please tick all that apply:
 * [ ] This is not a breaking change to the Q# language design
 * [ ] I or my organization would be willing to help implement and/or test this
-
-
+---
