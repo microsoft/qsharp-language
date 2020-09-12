@@ -20,4 +20,3 @@ Please create a list of the work items that need to be completed, and update the
 * [ ] ... 
 * [ ] Merge to master
 * [ ] Update the Q# language specification
-
