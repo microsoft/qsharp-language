@@ -9,7 +9,7 @@ Q# is designed by the Q# Language Design Team in collaboration with many contrib
 Suggestions for features and adaptions are filed and tracked in the form of issues on this repository. 
 We greatly appreciate your feedback and contribution to the discussion in the form of comments and votes on open issues. Better understanding the needs of the community will help us make better decisions. 
 
-If you have a suggestion for a feature and would like to share your thoughts, we encourage you to file an issue following our suggestion template. The [following section](#process-\&-implementation) describes the process and workflow in more detail. For a suggestion to be adopted it needs to align with the general vision for Q# and the Q# language [design principles](#design-principles). We do not generally revisit design decisions that have been made unless there is new information to consider, e.g. due to scientific or technical breakthroughs. 
+If you have a suggestion for a feature and would like to share your thoughts, we encourage you to file an issue following our suggestion template. The [following section](#process-&-implementation) describes the process and workflow in more detail. For a suggestion to be adopted it needs to align with the general vision for Q# and the Q# language [design principles](#design-principles). We do not generally revisit design decisions that have been made unless there is new information to consider, e.g. due to scientific or technical breakthroughs. 
 
 We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.   
 
@@ -41,22 +41,22 @@ In addition to these principles, we try to adhere to a general set of good pract
 
 The development of a language feature consists of the following stages:
 
-### Suggestion:
+### *Suggestion:*
 An addition or modification to the Q# language starts with a suggestion. A suggestion is filed as issue on this repository following the suggestion template.     
 Once a suggestion has been filed, it will be discussed on the issue, resulting in a first conclusion regarding whether to further pursue it. It will be tagged either with `UnderReview` or `Declined` by the Language Design Team depending on the outcome.    
 This stage should be fairly quick and will take a couple of weeks to a month or two. If a conclusion can't be reached at this time, e.g. because it is not clear that it can be supported by hardware or it depends on other features that are currently under development, it will be tagged with `OnHold`.
 
-### Review:
+### *Review:*
 Once a feature is tagged as `UnderReview`, the next step is to work out a more detailed proposal for how the feature should look like. Such a proposal is made by filling out the proposal template. For the purpose of discussion and collaboration when working out the details, and for us to give early feedback, we encourage to make a draft PR early on even when the template is not yet fully filled in. Once the template is sufficiently filled in, the PR is published and will be reviewed.     
 Based on full proposal, the issue with the suggestion will either be tagged with `ApprovedInPrinciple` and the proposal is merged into the Approved folder, or it will be tagged with `Declined` and the PR is merged into the Declined folder for archiving purposes. The issue itself will be closed.     
 How long it takes to work out the full proposal can vary a lot depending on the functionality. 
 
-### Implementation:
+### *Implementation:*
 All proposals that have been approved in principle and are ready to be implemented can be found in the Approved folder. When implementation starts, a new issue is created using the implementation template to track the progress. These issues are tagged with `Implementation`. The readme in the Approved folder also contains a list of all proposals and a link to the corresponding issue if development has already started.     
 If you would like to contribute to an ongoing implementation, please indicate your interest and offer your help on the corresponding issue. If you would like to start the implementation of a proposal that is not actively being developed, please create a new issue following the implementation template. We will respond on the issue for an initial discussion on how to go about implementing it.     
 Any revisions to the original proposal based on insights gained during implementation will be raised and discussed via comments on the issue.
 
-### Release:
+### *Release:*
 Once the implementation is complete, the proposal that reflects the implemented functionality is moved from the Approved folder into the Implemented folder. As a last step before closing the corresponding issue, a PR to update the Q# language specification needs to be create and merged. The PR will only be merged once the functionality has been released as part of the QDK. We release a new QDK version at the end of each month and implemented features can be incorporated into any such release. At that time the corresponding issue will be tagged as `Released` and closed.
 
 
