@@ -60,12 +60,15 @@ Any revisions to the original proposal based on insights gained during implement
 Once the implementation is complete, the proposal that reflects the implemented functionality is moved from the [Approved](https://github.com/microsoft/qsharp-language/tree/main/Approved) folder into the [Implemented](https://github.com/microsoft/qsharp-language/tree/main/Implemented) folder. As a last step before closing the corresponding issue, a PR to update the Q# language specification needs to be create and merged. The PR will only be merged once the functionality has been released as part of the QDK. We release a new QDK version at the end of each month and implemented features can be incorporated into any such release. At that time the corresponding issue will be labeled as `Released` and closed.
 
 
-## Repository structure
+## Repository Content
 
-The specification for the Q# language shipped with the latest QDK can be found [here](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language).   
-The specification for the Quantum Intermediate Representation (QIR) into which Q# is compiled can be found [here](https://github.com/microsoft/qsharp-language/tree/main/Specifications/QIR).    
-Notes from the libraries API design meetings can be found [here](https://github.com/microsoft/qsharp-language/tree/main/CoreLibraries/ReviewNotes).    
-Proposals that have been approved but are not yet implemented can be found in the [Approved](https://github.com/microsoft/qsharp-language/tree/main/Approved) folder.    
-Proposals for features that are implemented in the latest Q# version can be found in the [Implemented](https://github.com/microsoft/qsharp-language/tree/main/Implemented) folder.    
-Proposals for features that have been rejected are archived in the [Declined](https://github.com/microsoft/qsharp-language/tree/main/Declined) folder.     
-Templates for suggestions and proposals can be found in the [Templates](https://github.com/microsoft/qsharp-language/tree/main/Templates) folder.    
+- Specification of the [Q# language](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language) shipped with the latest [QDK](https://www.microsoft.com/quantum/development-kit) version 
+- Specification for the [Quantum Intermediate Representation](https://github.com/microsoft/qsharp-language/tree/main/Specifications/QIR) (QIR) into which Q# is compiled  
+- Notes from the libraries [API design meetings](https://github.com/microsoft/qsharp-language/tree/main/CoreLibraries/ReviewNotes)
+- Active proposals that are [under review](https://github.com/microsoft/qsharp-language/issues?q=is%3Aopen+is%3Aissue+label%3AUnderReview)
+- Proposals that have been [approved in principle](https://github.com/microsoft/qsharp-language/tree/main/Approved) but are not yet implemented
+- Features for which the implementation has [started](https://github.com/microsoft/qsharp-language/issues?q=is%3Aopen+is%3Aissue+label%3AImplementation)
+- Proposals for features that are [implemented](https://github.com/microsoft/qsharp-language/tree/main/Implemented) in the latest Q# version
+- Archived proposals for features that have been [declined](https://github.com/microsoft/qsharp-language/tree/main/Declined)
+- Suggestions that are currently [on hold](https://github.com/microsoft/qsharp-language/issues?q=is%3Aopen+is%3Aissue+label%3AOnHold) and need to be evaluated once more information is available
+- [Templates](https://github.com/microsoft/qsharp-language/tree/main/Templates) for suggestions and proposals    
