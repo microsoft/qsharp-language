@@ -71,5 +71,5 @@ Once the implementation is complete, the proposal that reflects the implemented 
 - Proposals for features that are [implemented](https://github.com/microsoft/qsharp-language/tree/main/Implemented) in the latest Q# version
 - Archived proposals for features that have been [declined](https://github.com/microsoft/qsharp-language/tree/main/Declined)
 - Suggestions that are currently [on hold](https://github.com/microsoft/qsharp-language/issues?q=is%3Aopen+is%3Aissue+label%3AOnHold) and need to be evaluated once more information is available
-- Suggestions that have been reviewed in the past, i.e. all [closed](https://github.com/microsoft/qsharp-language/issues?q=is%3Aissue+is%3Aclosed+label%3AApprovedInPrinciple+label%3ADeclined) suggestions for which a conclusion has been reached
+- Suggestions that have been reviewed in the past, i.e. all [closed suggestions](https://github.com/microsoft/qsharp-language/issues?q=is%3Aissue+is%3Aclosed+label%3AApprovedInPrinciple+label%3ADeclined) for which a conclusion has been reached
 - [Templates](https://github.com/microsoft/qsharp-language/tree/main/Templates) for suggestions and proposals
