@@ -1,9 +1,11 @@
 ---
 name: Implementation
 about: Create an issue to track the implementation of an approved feature
-title: 'Implementation: '
-labels: 'Implementation'
+title: ''
+labels: Implementation
 assignees: ''
+
+---
 
 **Implementation**
 
@@ -18,5 +20,4 @@ Please create a list of the work items that need to be completed, and update the
 * [ ] ... 
 * [ ] Merge to master
 * [ ] Update the Q# language specification
----
 
