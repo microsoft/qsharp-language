@@ -14,7 +14,7 @@ Concretely, functors are prefix modifiers, whereas the [unwrap operator](https:/
 
 Like modifiers, function calls and item access can also be seen as a special kind of operator subject to the same restrictions regarding where they can be applied; we refer to them as *combinators*. 
 
-The section on precedence and associativity contains a complete list of all operators as well as a complete list of all modifiers and combinators. 
+The section on [precedence and associativity](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md) contains a complete [list of all operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators) as well as a complete [list of all modifiers and combinators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#modifiers-and-combinators). 
 
 
 
