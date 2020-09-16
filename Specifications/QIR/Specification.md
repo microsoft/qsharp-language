@@ -4,31 +4,6 @@ Version 0.2 (May 15 2020)
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 
-## Introduction
-
-This specification defines an intermediate representation for compiled
-quantum computations.
-The intent is that a quantum computation written in any language can be
-compiled into this representation as a common intermediate _lingua franca_.
-The intermediate representation would then be an input to a code generation
-step that is specific to the target execution platform, whether simulator
-or quantum hardware.
-
-We see compilation as having three high-level phases:
-
-1. A language-specific phase that takes code written in some quantum language,
-   performs language-specific transformations and optimizations, and compiles
-   the result into this intermediate format.
-2. A generic phase that performs transformations and analysis of the code
-   in the intermediate format.
-3. A target-specific phase that performs additional transformations and
-   ultimately generates the instructions required by the execution platform
-   in a target-specific format.
-
-By defining our representation within the popular open-source LLVM framework,
-we enable users to easily write code analyzers and code transformers that
-operate at this level, before the final target-specific code generation.
-
 ## Role of This Specification
 
 The representation defined in this specification is intended to be the target
@@ -50,71 +25,6 @@ language-specific compilers should meet.
 It is the role of the target-specific compiler to translate the quantum functions
 into an appropriate computation that meets the computing model and capabilities
 of the target platform.
-
-## Profiles
-
-We know that many current targets will not support the full breadth of possible
-quantum programs that can be expressed in this representation.
-It is our intent to define a sequence of specification _profiles_ that define
-coherent subsets of functionality that a specific target can support.
-We describe here two initial draft profiles.
-
-### Profile A: Basic Quantum Functionality
-
-The *Basic Quantum Functionality* profile defines a minimal subset of the QIR that includes
-quantum operations but explicitly rules out any decision making or "fast feedback" based on
-measurement results.
-
-In terms of the intermediate representation, this translates into the following restrictions:
-
-- Values of type `%Result` may be stored in memory, stored as part of a tuple or as an element
-  of an array, or returned from an operation or function. No other actions may be performed with
-  them. In particular, they may not be compared against other `%Result` values or converted into
-  values of any other type. Note that this implies that control flow cannot be based on the result
-  of a measurement.
-- Once a qubit is measured, nothing further will be done with it other than releasing it.
-- No arithmetic or other calculations may be performed with classical values. Any such computations
-  in the original source code are performed in the service before passing the QIR to the target
-  and the results folded in as constants in the QIR.
-- The only LLVM primitives allowed are: `call`, `bitcast`, `getelementptr`, `load`, `store`, `ret`,
-  and `extractvalue`.
-- The only QIR runtime functions allowed are: **TBD**.
-- LLVM functions will always be passed null pointers for the capture tuple.
-- The only classical value types allowed are `%Int`, `%Double`, `%Result`, `%Pauli`, and tuples of these
-  values.
-- The argument tuple passed to an operation will be a tuple of the above types.
-- Outside of the argument tuple, values of types other than `%Result` will only appear as literals.
-
-### Profile B: Basic Measurement Feedback
-
-The *Basic Measurement Feedback* profile expands on the Basic Quantum Functionality profile
-to allow limited capabilities to control the execution of quantum operations based on prior
-measurement results.
-These capabilities correspond roughly to what are commonly known as "binary controlled gates".
-
-In terms of the intermediate representation, this translates into the following restrictions:
-
-- Comparison of `%Result` values is allowed, but only to compute the input to a conditional branch.
-- Boolean computations are not allowed. Boolean expressions on `%Result` comparisons must be represented
-  by a sequence of simple comparisons and branches. Effectively, complex "if" clauses must be translated
-  into embedded simple "if"s.
-- Any basic blocks whose execution depends on the result of a `%Result` comparison may only include
-  calls to quantum operations, comparisons of `%Result`s, and branches. In particular, classical
-  arithmetic and other purely classical operations may not be performed inside of such a basic block.
-- Basic blocks that depend on the result of a `%Result` comparison may not form a cycle (loop).
-- No arithmetic or other calculations may be performed with classical values. Any such computations
-  in the original source code are performed in the service before passing the QIR to the target
-  and the results folded in as constants in the QIR.
-- The only LLVM primitives allowed are: `call`, `bitcast`, `getelementptr`, `load`, `store`, `ret`,
-  `extractvalue`, `icmp`, `alloca`, and `br`.
-- The only QIR runtime functions allowed are: **TBD**.
-- LLVM functions will always be passed a null pointer for the capture tuple.
-- LLVM functions may fill in the result tuple. If they do, the result tuple may only contain `%Result`
-  values or tuples of `%Result` values.
-- The only classical value types allowed are `%Int`, `%Double`, `%Result`, `%Pauli`, `%Unit`, and tuples
-  of these values.
-- The argument tuple passed to an operation will be a tuple of the above types.
-- Outside of the argument tuple, values of types other than `%Result` will only appear as literals.
 
 ## Executable Code Generation Considerations
 
