@@ -1,9 +1,6 @@
 # Statements
 
-As we have seen in the code examples in the previous section, the implementation for a certain specialization of a callable consists of a mixture of classical and quantum computations and looks much like in any other classical programming language.
-
-Opposed to some other functional languages like F# for example, which is expression based, Q# distinguishes between statements and expressions. Optically it currently resembles much more C# or C++ with its curly braces and semicolon - a decision which may be worthwhile revising in the future. 
-Some statements, such as the `let` and `mutable` bindings, are well-known from classical languages, while others such as conjugations or qubit allocations are unique to the quantum domain.
+Q# distinguishes between statements and expressions. Q# programs consist of a mixture of classical and quantum computations and the implementation looks much like in any other classical programming language. Some statements, such as the `let` and `mutable` bindings, are well-known from classical languages, while others such as conjugations or qubit allocations are unique to the quantum domain.
 
 The following statements are currently available in Q#:
 
