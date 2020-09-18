@@ -1,13 +1,9 @@
 # Equality Comparison
 
-Equality and inequality comparison is currently limited to the following data types: `Int`, `BigInt`, `Double`, `String`, `Bool`, `Result`, `Pauli`, and `Qubit`. The comparison for equality of arrays, tuples, ranges, user defined types, or callables is currently not supported. There are no fundamental issues with allowing comparisons of ranges, as well as for arrays, tuples, and user defined types, provided their items support comparison; it is merely a matter of not yet having been implemented. 
-For all types, the comparison is by value, meaning two values are considered equal if all of their items are, i.e. for
-```qsharp
-    let arr1 = [0,0,0];
-    let arr2 = new Int[3];
-```
-the expression `arr1 == arr2` should evaluate to `true` since the default value for an integer is `0` and both arrays thus contain the same items. The same should hold for values of user defined type, with the caveat that their type also needs to match. 
-Supporting the comparison of values of type `Range` follows the same logic; they should be equal as long as they produce the same sequence of integers, meaning the two ranges 
+Equality and inequality comparison is currently limited to the following data types: `Int`, `BigInt`, `Double`, `String`, `Bool`, `Result`, `Pauli`, and `Qubit`. The comparison for equality of arrays, tuples, ranges, user defined types, or callables is currently not supported. 
+
+In the future, we may support the comparisons of ranges, as well as arrays, tuples, and user defined types, provided their items support comparison. 
+As for all types, the comparison will be by value, meaning two values are considered equal if all of their items are. For values of user defined type, additionally their type also needs to match. Future support for the comparison of values of type `Range` follows the same logic; they should be equal as long as they produce the same sequence of integers, meaning the two ranges 
 ```qsharp
     let r1 = 0..2..5; // generates the sequence 0,2,4
     let r2 = 0..2..4; // generates the sequence 0,2,4
