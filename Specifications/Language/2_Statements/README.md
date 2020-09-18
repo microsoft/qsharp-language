@@ -20,13 +20,13 @@ The following statements are currently available in Q#:
     Variables that have been declared as being reassignable can be rebound to contain different values. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndUpdates.md) for more details.
 
 * **Iteration**    
-    An iteration is a loop-like statement that during each iteration assigns the declared loop variables to the next item in a sequence (a value of array or `Range` type) and executes a specified block of statements. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/LoopsAndIterations.md) for more details.
+    An iteration is a loop-like statement that during each iteration assigns the declared loop variables to the next item in a sequence (a value of array or `Range` type) and executes a specified block of statements. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Iterations.md) for more details.
     
 * **While Statement**    
-    If a specified condition evaluates to `true`, a block of statements is executed. The execution is repeated indefinitely until the condition evaluates to `false`. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/LoopsAndIterations.md) for more details.
+    If a specified condition evaluates to `true`, a block of statements is executed. The execution is repeated indefinitely until the condition evaluates to `false`. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalLoops.md) for more details.
 
 * **Repeat Statement**    
-    Quantum-specific loop that breaks based on a condition. The statement consists of an initial block of statements that is executed before a specified condition is evaluated. If the condition evaluates to `false`, a subsequent `fixup`-block is executed before entering the next iteration of the loop. The loop terminates only once the condition evaluates to `true`. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/LoopsAndIterations.md) for more details.
+    Quantum-specific loop that breaks based on a condition. The statement consists of an initial block of statements that is executed before a specified condition is evaluated. If the condition evaluates to `false`, a subsequent `fixup`-block is executed before entering the next iteration of the loop. The loop terminates only once the condition evaluates to `true`. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalLoops.md) for more details.
 
 * **If Statement**    
     The statement consists of one or more blocks of statements, each preceded by a boolean expression. The first block for which the boolean expression evaluates to `true` is executed. Optionally, a block of statements can be specified that is executed if none of the conditions evaluates to `true`. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalBranching.md) for more details.
