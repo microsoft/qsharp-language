@@ -1,7 +1,9 @@
 # Contextual and Omitted Expressions
 
-We have already seen an example for an expression that is only valid in a certain context, namely the usage of item names in [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) without having to qualify them. 
+The usage of item names in [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) without having to qualify them is an example for an expression that is only valid in a certain context.
+
 Furthermore, expressions can be omitted when they can be inferred and automatically inserted by the compiler, as it is the case in [evaluate-and-reassign statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndUpdates.md#evaluate-and-reassign-statements).
+
 There is one more example for both; open-ended ranges are valid only within a certain context, and the compiler will translate them into normal `Range` expressions during compilation by inferring suitable boundaries. 
 
 A value of type `Range` generates a sequence of integers, specified by a start, optionally a step, and an end value. For example, the `Range` literal expressions `1..3` generates the sequence 1,2,3, and the expression `3..-1..1` generates the sequence 3,2,1. Ranges can be used for example to create a new array from an existing one by slicing: 
