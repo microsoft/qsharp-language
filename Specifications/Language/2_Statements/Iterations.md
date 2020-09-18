@@ -1,0 +1,6 @@
+# Iterations
+
+Much more benign on the other hand are loops that merely iterate over a sequence of values. Q# hence carefully distinguishes between `repeat`-statements and `for`-loops. A `for`-loop in Q# does not break based on a condition, but instead corresponds to what is often expressed as `foreach` or `iter` in other languages. There are furthermore no `break`- or `continue`-primitives in Q#, such that the length of the loop is perfectly predictable as soon as the value to iterate over is known. Of course, the length of the iteration may still depend on runtime information. However, at least in principle it is possible to make estimates regarding that length, facilitated by the fact that there is no concept of standard input during quantum execution, and programs are compiled for a given set of inputs. 
+
+There are currently two date types in Q# that support iteration: arrays and ranges. 
+The same deconstruction rules apply to the defined loop variable(s) as to any other variable assignment, such as bindings in `let`-, `mutable`-, `set`-, `using`- and `borrowing`-statements. The loop variables themselves are immutably bound, cannot be reassigned within the body of the loop, and go out of scope when the loop terminates. 
