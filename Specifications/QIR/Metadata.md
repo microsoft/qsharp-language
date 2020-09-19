@@ -74,3 +74,6 @@ be marked with an LLVM "EntryPoint" attribute.
 *__Discussion__*
 >It is likely that there is other useful information that could be represented
 >as LLVM metadata in QIR. We anticipate that this will become clearer through use.
+
+---
+_[Back to index](README.md)_

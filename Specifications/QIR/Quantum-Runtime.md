@@ -42,3 +42,6 @@ It is always acceptable to satisfy `borrow` by allocating new qubits.
 >It will likely be useful to provide usage hints to `alloc` and `borrow`.
 >Since we don't know yet what form these hints may take, we leave defining them
 >for future work.
+
+---
+_[Back to index](README.md)_

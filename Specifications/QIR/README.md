@@ -44,14 +44,15 @@ We know that many current targets will not support the full breadth of possible
 quantum programs that can be expressed in this representation.
 We define a sequence of specification _profiles_ that define
 coherent subsets of functionality that a specific target can support. 
-Please take a look at [this document](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Profiles.md) for more details. 
+Please take a look at [this document](Profiles.md) for more details. 
 
 ## Index
 
 1. [Identifiers](Identifiers.md)
-1. [Data Types](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Data-Types.md)
-1. [Quantum Runtime](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Quantum-Runtime.md)
-1. [Classical Runtime](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Classical-Runtime.md)
-1. [Metadata](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Metadata.md)
-1. [Code Generation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Code-Generation.md)
-1. [Profiles](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Profiles.md)
+1. [Data Types](Data-Types.md)
+1. [Callables](Callables.md)
+1. [Quantum Runtime](Quantum-Runtime.md)
+1. [Classical Runtime](Classical-Runtime.md)
+1. [Metadata](Metadata.md)
+1. [Code Generation](Code-Generation.md)
+1. [Profiles](Profiles.md)

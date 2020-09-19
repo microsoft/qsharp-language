@@ -23,3 +23,6 @@ Similarly, global symbols should have their identifiers converted by adding the
 '@' prefix.
 If the source language provides a named scoping mechanism, such as Python modules
 or Q# namespaces, then the fully-qualified name of the global symbol should be used.
+
+---
+_[Back to index](README.md)_

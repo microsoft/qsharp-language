@@ -1,8 +1,7 @@
 ## Classical Runtime
 
 Most functions in the classical runtime are defined in the
-[Data Types](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Data-Types.md)
-specification.
+[Data Types](Data-Types.md) specification.
 
 ### Memory Management
 
@@ -24,3 +23,6 @@ They should provide the same behavior as the standard C library functions malloc
 | Function              | Signature         | Description |
 |-----------------------|-------------------|-------------|
 | quantum.rt.fail       | `void(%String*)`  | Fail the computation with the given error message. |
+
+---
+_[Back to index](README.md)_

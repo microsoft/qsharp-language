@@ -20,3 +20,6 @@ from a simple rewrite of basic intrinsics to target machine code:
   may differ significantly from the intrinsics defined in this specification.
   It is expected that code generators will significantly rewrite sequences of
   quantum intrinsics into sequences that are optimal for the specific target.
+
+---
+_[Back to index](README.md)_
