@@ -1,13 +1,22 @@
 # Type Declarations
 
 Q# supports the definition of custom types. Custom types are similar to record types in F#; they are immutable but support a [copy-and-update](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) construct. 
-Such custom types may contain both named and anonymous items. 
-The contained items can be accessed via the [item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md) operator.
 
+Such custom types may contain both named and anonymous items. 
 The following declaration within a namespace for instance defines a type `Complex` which has two named items `Real` and `Imaginary`, both of type `Double`:
 ```qsharp
     newtype Complex = (Real: Double, Imaginary : Double);
 ```
+
+Any combination of named and unnamed items is supported, and inner items may also be named. 
+For example, the type `Nested` defined as follows 
+```qsharp
+newtype Nested = (Double, (ItemName : Int, String)); 
+```
+contains two anonymous items of type `Double` and `String` respectively, and a named item `ItemName` of type `Int`.
+
+The contained items can be accessed via their name or by deconstruction, see the section on [item access expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md) for more details. 
+A tuple of all items where the shape matches the one defined in the declaration can be obtained via the [unwrap operator]().
 
 User defined types are particularly useful for two reasons. For one, 
 as long as the libraries and programs that use the defined types access items via their name rather than by deconstruction, the type can be extended to contain additional items later on without breaking any of the library code. Accessing items via deconstruction is hence generally discouraged.
