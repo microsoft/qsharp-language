@@ -12,10 +12,10 @@ Additional modifiers and combinators are listed further below and bind tighter t
 | --- | --- | --- | --- | --- |
 | [copy-and-update operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) | `w/` `<-` | ternary | left  | 1  |
 | [range operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md) | `..` | infix | left | 2 |
-| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md) | `?` `|` | ternary | right | 5 |
+| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md) | `?` `\|` | ternary | right | 5 |
 | logical OR | `or` | infix | left | 10 |
 | logical AND | `and` | infix | left | 11 |
-| bitwise OR | `|||` | infix | left | 12 |
+| bitwise OR | `\|\|\|` | infix | left | 12 |
 | bitwise XOR | `^^^` | infix | left | 13 |
 | bitwise AND | `&&&` | infix | left | 14 |
 | equality | `==` | infix | left | 20 |
