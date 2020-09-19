@@ -1,8 +1,8 @@
 # Type Declarations
 
-Q# supports the definition of custom types. Custom types are similar to record types in F#; they are immutable but support a [copy-and-update](https://github.com/microsoft/qsharp-language/tree/beheim/specs/Specifications/Language) construct. 
+Q# supports the definition of custom types. Custom types are similar to record types in F#; they are immutable but support a [copy-and-update](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) construct. 
 Such custom types may contain both named and anonymous items. 
-The contained items can be accessed via the [item access](https://github.com/microsoft/qsharp-language/tree/beheim/specs/Specifications/Language) operator.
+The contained items can be accessed via the [item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md) operator.
 
 The following declaration within a namespace for instance defines a type `Complex` which has two named items `Real` and `Imaginary`, both of type `Double`:
 ```qsharp

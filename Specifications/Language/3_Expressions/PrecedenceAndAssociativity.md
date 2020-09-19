@@ -53,7 +53,7 @@ This artificial precedence is listed in the table below, which also shows how th
 | [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md) | `Controlled` | prefix | right | 950 |
 | [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 1000 |
 | Array item access | `[` `]` | n/a | left | 1100 |
-| [Named item access](https://github.com/microsoft/qsharp-language/blob/beheim/specs/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 1100 |  
+| [Named item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 1100 |  
 | | | | | 
 
 To illustrate the implications of the assigned precedences, suppose we have a unitary operation `DoNothing` as defined in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md), a callable `GetStatePrep` that returns a unitary operation, and an array `algorithms` containing items of type `Algorithm` defined as follows
