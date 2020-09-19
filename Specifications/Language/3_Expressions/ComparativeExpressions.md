@@ -2,6 +2,7 @@
 
 Equality and inequality comparison is currently limited to the following data types: `Int`, `BigInt`, `Double`, `String`, `Bool`, `Result`, `Pauli`, and `Qubit`. The comparison for equality of arrays, tuples, ranges, user defined types, or callables is currently not supported. 
 
+*__Discussion__*
 >In the future, we may support the comparisons of ranges, as well as arrays, tuples, and user defined types, provided their items support comparison. As for all types, the comparison will be by value, meaning two values are considered equal if all of their items are. For values of user defined type, additionally their type also needs to match. Future support for the comparison of values of type `Range` follows the same logic; they should be equal as long as they produce the same sequence of integers, meaning the two ranges 
 >```qsharp
 >    let r1 = 0..2..5; // generates the sequence 0,2,4
