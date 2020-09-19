@@ -48,7 +48,7 @@ Please take a look at [this document](https://github.com/microsoft/qsharp-langua
 
 ## Index
 
-1. [Identifiers](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Identifiers.md)
+1. [Identifiers](Identifiers.md)
 1. [Data Types](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Data-Types.md)
 1. [Quantum Runtime](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Quantum-Runtime.md)
 1. [Classical Runtime](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Classical-Runtime.md)
