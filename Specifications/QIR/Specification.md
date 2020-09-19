@@ -75,7 +75,7 @@ Similarly, global symbols should have their identifiers converted by adding the
 If the source language provides a named scoping mechanism, such as Python modules
 or Q# namespaces, then the fully-qualified name of the global symbol should be used.
 
-:[DataTypes](./Data-Types.md)
+:[DataTypes](./DataTypes.md)
 
 ## Metadata
 
