@@ -1,7 +1,7 @@
-# Quantum Intermediate Representation
+# Quantum Intermediate Representation (QIR)
 
-This [specification](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Specification.md) 
-defines an intermediate representation for compiled quantum computations.
+This specification defines an intermediate representation for compiled quantum 
+computations.
 The intent is that a quantum computation written in any language can be
 compiled into this representation as a common intermediate _lingua franca_.
 The intermediate representation would then be an input to a code generation
@@ -23,10 +23,36 @@ By defining our representation within the popular open-source LLVM framework,
 we enable users to easily write code analyzers and code transformers that
 operate at this level, before the final target-specific code generation.
 
+It is neither required nor expected that any particular execution target actually
+implement every runtime function specified here.
+Rather, it is expected that the target-specific compiler will translate the
+functions defined here into the appropriate representation for the target, whether
+that be code, calls into target-specific libraries, metadata, or something else.
+
+This applies to quantum functions as well as classical functions.
+We do not intend to specify a gate set that all targets must support, nor even
+that all targets use the gate model of computation.
+Rather, the quantum functions in this document specify the interface that
+language-specific compilers should meet.
+It is the role of the target-specific compiler to translate the quantum functions
+into an appropriate computation that meets the computing model and capabilities
+of the target platform.
+
 ## Profiles
 
 We know that many current targets will not support the full breadth of possible
 quantum programs that can be expressed in this representation.
-It is our intent to define a sequence of specification _profiles_ that define
+We define a sequence of specification _profiles_ that define
 coherent subsets of functionality that a specific target can support. 
-Please take a look at [this document](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Profiles.md) for more details. 
+Please take a look at [this document](Profiles.md) for more details. 
+
+## Index
+
+1. [Identifiers](Identifiers.md)
+1. [Data Types](Data-Types.md)
+1. [Callables](Callables.md)
+1. [Quantum Runtime](Quantum-Runtime.md)
+1. [Classical Runtime](Classical-Runtime.md)
+1. [Metadata](Metadata.md)
+1. [Code Generation](Code-Generation.md)
+1. [Profiles](Profiles.md)
