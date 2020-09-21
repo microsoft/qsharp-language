@@ -10,9 +10,9 @@ Additional modifiers and combinators are listed further below and bind tighter t
 
 | Description | Syntax | Operator | Associativity | Precedence |
 | --- | --- | --- | --- | --- |
-| [copy-and-update operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) | `w/` `<-` | ternary | left  | 1  |
-| [range operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md) | `..` | infix | left | 2 |
-| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md) | `?` `\|` | ternary | right | 5 |
+| [copy-and-update operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) | `w/` `<-` | ternary | left  | 1  |
+| [range operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) | `..` | infix | left | 2 |
+| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md#conditional-expressions) | `?` `\|` | ternary | right | 5 |
 | logical OR | `or` | infix | left | 10 |
 | logical AND | `and` | infix | left | 11 |
 | bitwise OR | `\|\|\|` | infix | left | 12 |
@@ -37,26 +37,26 @@ Additional modifiers and combinators are listed further below and bind tighter t
 | negative | `-` | prefix | right | 45 |
 
 
-Copy-and-update expressions necessarily need to have the lowest precedence to ensure a consistent behavior of the corresponding [evaluate-and-reassign statement](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndUpdates.md#evaluate-and-reassign-statements). 
-Similar considerations hold for the range operator to ensure a consistent behavior of the corresponding [contextual expression](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md).
+Copy-and-update expressions necessarily need to have the lowest precedence to ensure a consistent behavior of the corresponding [evaluate-and-reassign statement](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements). 
+Similar considerations hold for the range operator to ensure a consistent behavior of the corresponding [contextual expression](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
 
 ## Modifiers and Combinators
 
-Modifiers can be seen as special operators that can be applied to certain expressions only (see [this section](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/3_Expressions) for more detail). We can assign them an artificial precedence to capture their behavior. 
+Modifiers can be seen as special operators that can be applied to certain expressions only (see [this section](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/3_Expressions#expressions) for more detail). We can assign them an artificial precedence to capture their behavior. 
 
 This artificial precedence is listed in the table below, which also shows how the precedence of operators and modifiers relates to how tight item access combinators (`[`,`]` and `::` respectively) and call combinators (`(`, `)`) bind.
 
 | Description | Syntax | Operator | Associativity | Precedence |
 | --- | --- | --- | --- | --- |
-| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md) | `(` `)` | n/a | right | 900 | 
-| [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md) | `Adjoint` | prefix | right | 950 |
-| [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md) | `Controlled` | prefix | right | 950 |
+| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `(` `)` | n/a | right | 900 | 
+| [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Adjoint` | prefix | right | 950 |
+| [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Controlled` | prefix | right | 950 |
 | [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 1000 |
 | Array item access | `[` `]` | n/a | left | 1100 |
 | [Named item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 1100 |  
 | | | | | 
 
-To illustrate the implications of the assigned precedences, suppose we have a unitary operation `DoNothing` as defined in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md), a callable `GetStatePrep` that returns a unitary operation, and an array `algorithms` containing items of type `Algorithm` defined as follows
+To illustrate the implications of the assigned precedences, suppose we have a unitary operation `DoNothing` as defined in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations), a callable `GetStatePrep` that returns a unitary operation, and an array `algorithms` containing items of type `Algorithm` defined as follows
 
 ```qsharp
     newtype Algorithm = (
@@ -70,7 +70,7 @@ To illustrate the implications of the assigned precedences, suppose we have a un
     );
 ```
 
-where `LittleEndian` is defined in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md). 
+where `LittleEndian` is defined in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations). 
 Then the following expressions are all valid: 
 ```qsharp
     (GetStatePrep())(arg)

@@ -47,7 +47,7 @@ Existing literals for the [`Bool` type](https://github.com/microsoft/qsharp-lang
 
 ## String Literals
 
-Value literals for the [`String` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are an arbitrary length sequence of Unicode characters enclosed in double quotes. 
+A value literal for the [`String` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) is an arbitrary length sequence of Unicode characters enclosed in double quotes. 
 Inside of a string, the back-slash character `\` may be used to escape
 a double quote character, and to insert a new-line as `\n`, a carriage
 return as `\r`, and a tab as `\t`.
@@ -69,9 +69,9 @@ $"This is an interpolated string. The result was {res}."
 
 ## Qubit Literals
 
-No literals for the [`Qubit` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) exist, since quantum memory is managed by the runtime. Values of type `Qubit` can hence only be obtained via [allocation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md).
+No literals for the [`Qubit` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) exist, since quantum memory is managed by the runtime. Values of type `Qubit` can hence only be obtained via [allocation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management).
 
-Values of type `Qubit` represent an opaque identifier by which a quantum bit, a.k.a. a qubit, can be addressed. The only operator they support is [equality comparison](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md). See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits) for more details on the `Qubit` data type.
+Values of type `Qubit` represent an opaque identifier by which a quantum bit, a.k.a. a qubit, can be addressed. The only operator they support is [equality comparison](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#equality-comparison). See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits) for more details on the `Qubit` data type.
 
 ## Result Literals
 
@@ -89,13 +89,26 @@ Values of type `Pauli` are commonly used to denote the axis for rotations and to
 
 ## Range Literals
 
-Values of type `Range` represent a sequence of integers, denoted by `start..step..stop`, where denoting the step is options. 
-That is `start .. stop` corresponds to `start..1..stop`, and e.g. `1..2..7` represents the sequence $\{1, 3, 5, 7\}$.
+Value literals for the [`Range` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are expressions of the form `start..step..stop`, where `start`, `step`, and `end` are expressions of type `Int`. If the step size is one, it may be omitted, i.e. `start..stop` is a valid `Range` literal and the same as `start..1..stop`.
+
+Values of type `Range` represent a sequence of integers, where the first element in the sequence is `start`, and subsequent elements are obtained by adding `step` to the previous one, until `stop` is passed.
+`Range` values are inclusive at both ends; i.e. the last element of the range will be `stop` if the difference between `start` and `stop` is a multiple of `step`.
+A range may be empty if, for instance, `step` is positive and `stop < start`.
+
+The following are examples for valid `Range` literals:
+- `1..3` is the range 1, 2, 3.
+- `2..2..5` is the range 2, 4.
+- `2..2..6` is the range 2, 4, 6.
+- `6..-2..2` is the range 6, 4, 2.
+- `2..-2..1` is the range 2.
+- `2..1` is the empty range.
+
+See also the sections on [array slicing](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access) and [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
 
 ## Array Literals
 
-An array literal is a sequence of one or more expressions, separated by commas, enclosed in `[` and `]`, e.g. `[1,2,3]`.
-All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md), which will be the item type of the array.
+An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions, separated by commas, enclosed in `[` and `]`, e.g. `[1,2,3]`.
+All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance), which will be the item type of the array.
 
 Arrays or arbitrary length, and in particular empty arrays, may be created using a new array expression. 
 Such an expression is of the form `new <ItemType>[expr]`, where `expr` can be any expression of type `Int` and `<ItemType>` is to be replace by the type of the array items.   
@@ -109,7 +122,7 @@ Suitable initialization routines can be found in the Microsoft.Quantum.Arrays na
 
 ## Tuple Literals
 
-An tuple literal is a sequence of one or more expressions of any type, separated by commas, enclosed in `(` and `)`. The type of the tuple includes the information about each item type.
+A [tuple](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions of any type, separated by commas, enclosed in `(` and `)`. The type of the tuple includes the information about each item type.
 
 | Value Literal | Type |
 | --- | --- | 
@@ -117,15 +130,23 @@ An tuple literal is a sequence of one or more expressions of any type, separated
 | `(PauliX,(3,1))` | `(Pauli, (Int, Int))` |
 | | |
 
-Tuples containing a single item are treated as identical to the item itself, both in type and value. We refer to this a [singleton tuple equivalence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md). 
+Tuples containing a single item are treated as identical to the item itself, both in type and value. We refer to this a [singleton tuple equivalence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence). 
 
 Tuples are used to bundle values together into a single value, making it easier to pass them around. This makes it possible that every callable takes exactly one input and returns exactly one output.
 
-## User Defined Type Literals
+## Literals for User Defined Types
+
+Values of a [user defined type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are constructed by invoking their constructor. A default constructor is automatically generated when [declaring the type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations). It is currently not possible to define custom constructors. 
+
+For instance, if `IntPair` has two items of type `Int`, then `IntPair(2, 3)` creates a new instance by invoking the default constructor.
 
 ## Operation Literals
 
+No literals exist for values of [operation type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types); operations have to be [declared](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations) on a global scope and new operations can be constructed locally using [partial application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application).
+
 ## Function Literals
+
+No literals exist for values of [function type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types); functions have to be [declared](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations) on a global scope and new functions can be constructed locally using [partial application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application).
 
 
 # Default Values

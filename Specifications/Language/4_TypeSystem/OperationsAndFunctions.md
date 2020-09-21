@@ -1,6 +1,6 @@
 # Operations and Functions
 
-As elaborated in more detail in the description of the [qubits](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits), quantum computations are executed in the form of side effects of operations that are natively supported on the targeted quantum processor. These are in fact the only side effects in Q#; since all types are [immutable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md), there are no side effect that impact a value that is explicitly represented in Q#. Hence, as long as an implementation of a certain callable does not directly or indirectly call any of these natively implemented operations, its execution will always produce the same output given the same input. 
+As elaborated in more detail in the description of the [qubits](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits), quantum computations are executed in the form of side effects of operations that are natively supported on the targeted quantum processor. These are in fact the only side effects in Q#; since all types are [immutable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md#immutability), there are no side effect that impact a value that is explicitly represented in Q#. Hence, as long as an implementation of a certain callable does not directly or indirectly call any of these natively implemented operations, its execution will always produce the same output given the same input. 
 
 Q# allows to explicitly split out such purely deterministic computations into *functions*. Since the set of natively supported instructions is not fixed and built into the language itself, but rather fully configurable and expressed as a Q# library, determinism is guaranteed by requiring that functions can only call other functions, but cannot call any operations. Additionally, native instructions that are not deterministic, e.g., because they impact the quantum state are represented as operations. With these two restrictions, function can be evaluated as soon as their input value is known, and in principle never need to be evaluated more than once for the same input. 
 
@@ -13,7 +13,7 @@ There is little difference between operations and functions beside this determin
     }
 ```
 
-They can be instantiated based on a type parametrized definition such as, e.g., the [type parametrized](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md) function `Pow` above, and they can be [partially applied](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language) as done in Line 2 in the example. 
+They can be instantiated based on a type parametrized definition such as, e.g., the [type parametrized](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations) function `Pow` above, and they can be [partially applied](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application) as done in Line 2 in the example. 
 
 
 ## Operation Characteristics
