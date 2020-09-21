@@ -273,6 +273,8 @@ callable values:
 | __quantum__rt__callable_invoke  | `void(%Callable*, %TupleHeader*, %TupleHeader*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
 | __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
+| __quantum__rt__callable_reference | `void(%Callable*)`                      | Indicates that a new reference has been added. |
+| __quantum__rt__callable_unreference | `void(%Callable*)`                      | Indicates that an existing reference has been removed and potentially releases the callable value. |
 
 ---
 _[Back to index](README.md)_
