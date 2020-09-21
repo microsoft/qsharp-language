@@ -1,6 +1,6 @@
 # Expressions
 
-At the core, Q# expressions are either value literals or identifiers, where identifiers can refer to either locally declared variables or to globally declared callables (there are currently no global constants in Q#). 
+At the core, Q# expressions are either [value literals](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md) or [identifiers](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Identifiers.md), where identifiers can refer to either locally declared variables or to globally declared callables (there are currently no global constants in Q#). 
 Value literals exist for all types except for qubits. There are currently no literals for callables either, though we are planning to support such expressions in the future.  
 
 Operators, combinators, and modifiers can be used to combine these into a wider variety of expressions. 

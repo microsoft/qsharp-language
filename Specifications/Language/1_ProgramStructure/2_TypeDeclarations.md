@@ -1,18 +1,28 @@
 # Type Declarations
 
 Q# supports the definition of custom types. Custom types are similar to record types in F#; they are immutable but support a [copy-and-update](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) construct. 
-Such custom types may contain both named and anonymous items. 
-The contained items can be accessed via the [item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md) operator.
 
+Such custom types may contain both named and anonymous items. 
 The following declaration within a namespace for instance defines a type `Complex` which has two named items `Real` and `Imaginary`, both of type `Double`:
 ```qsharp
     newtype Complex = (Real: Double, Imaginary : Double);
 ```
 
+Any combination of named and unnamed items is supported, and inner items may also be named. 
+For example, the type `Nested` defined as follows 
+```qsharp
+newtype Nested = (Double, (ItemName : Int, String)); 
+```
+contains two anonymous items of type `Double` and `String` respectively, and a named item `ItemName` of type `Int`.
+
+The contained items can be accessed via their name or by deconstruction, see the section on [item access expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md) for more details. 
+A tuple of all items where the shape matches the one defined in the declaration can be obtained via the [unwrap operator]().
+
 User defined types are particularly useful for two reasons. For one, 
 as long as the libraries and programs that use the defined types access items via their name rather than by deconstruction, the type can be extended to contain additional items later on without breaking any of the library code. Accessing items via deconstruction is hence generally discouraged.
 
-Furthermore, they allow to clearly convey the intent and expectations for a certain data type. For instance, the arithmetic library includes quantum arithmetic operations for both big-endian and little-endian quantum integers.
+Furthermore, they allow to clearly convey the intent and expectations for a certain data type, since there is no automatic conversion between values of two custom types even if their item types are identical.
+For instance, the arithmetic library includes quantum arithmetic operations for both big-endian and little-endian quantum integers.
 It hence defines two types, `BigEndian` and `LittleEndian`, both of which contain a single anonymous item of type `Qubit[]`:
 ```qsharp
     newtype BigEndian = Qubit[];
@@ -20,7 +30,7 @@ It hence defines two types, `BigEndian` and `LittleEndian`, both of which contai
 ```
 This allows operations to specify whether they are written for big-endian or little-endian representations, and leverages the type system to ensure at compile-time that mismatched operands aren't allowed.
 
-Types may not have circular dependencies in Q#; defining something like a directly or indirectly recursive type is not possible, i.e. the following construct will give a compilation error: 
+Type names must be unique within a namespace and may not conflict with operation and function names. Types may not have circular dependencies in Q#; defining something like a directly or indirectly recursive type is not possible, i.e. the following construct will give a compilation error: 
 ```qsharp
     newtype Foo = (Foo, Int); // gives an error
     newtype Bar = Baz;        // gives an error
