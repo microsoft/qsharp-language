@@ -1,8 +1,8 @@
 # Contextual and Omitted Expressions
 
-The usage of item names in [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md) without having to qualify them is an example for an expression that is only valid in a certain context.
+The usage of item names in [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) without having to qualify them is an example for an expression that is only valid in a certain context.
 
-Furthermore, expressions can be omitted when they can be inferred and automatically inserted by the compiler, as it is the case in [evaluate-and-reassign statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndUpdates.md#evaluate-and-reassign-statements).
+Furthermore, expressions can be omitted when they can be inferred and automatically inserted by the compiler, as it is the case in [evaluate-and-reassign statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements).
 
 There is one more example for both; open-ended ranges are valid only within a certain context, and the compiler will translate them into normal `Range` expressions during compilation by inferring suitable boundaries. 
 
