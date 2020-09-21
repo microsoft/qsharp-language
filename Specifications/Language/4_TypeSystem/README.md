@@ -10,13 +10,13 @@ We expect to make incremental progress in extending the type system to be more c
 Type | Description
 ---------|----------
  `Unit` | Represents a singleton type whose only value is `()`.
- `Int` | Represents a 64-bit signed integer. Values range from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.
- `BigInt` | Represents a signed integer of any size.
- `Double` | Represents a double-precision 64-bit floating-point number. Values range from -1.79769313486232e308 to 1.79769313486232e308 as well as NaN (not a number).
- `Bool` | Represents a Boolean value. Possible values are `true` or `false`.
+ `Int` | Represents a 64-bit signed integer. [Values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#int-literals) range from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807.
+ `BigInt` | Represents signed integer [values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#bigint-literals) of any size.
+ `Double` | Represents a double-precision 64-bit floating-point number. [Values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#double-literals) range from -1.79769313486232e308 to 1.79769313486232e308 as well as NaN (not a number).
+ `Bool` | Represents Boolean [values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#bool-literals). Possible values are `true` or `false`.
  `String` | Represents text as a sequence of UTF-16 code units.
  `Qubit` | Represents an opaque identifier by which virtual quantum memory can be addressed.
- `Result` | Represents the result of a projective measurement onto the eigenspaces of a quantum operator with eigenvalues ±1. Possible values are `Zero` or `One`. `Zero` indicates a projection onto the +1 eigenspace, `One` indicates a projection onto the -1 eigenspace.
+ `Result` | Represents the result of a projective measurement onto the eigenspaces of a quantum operator with eigenvalues ±1. Possible values are `Zero` or `One`. 
  `Pauli` | Represents a single-qubit Pauli matrix. Possible values are `PauliI`, `PauliX`, `PauliY`, or `PauliZ`.
  `Range` | Represents an ordered sequence of equally spaced `Int` values. The sequence may be in ascending or descending order, or empty.
  Array | Represents a data structure containing a sequence of values of the same type.
