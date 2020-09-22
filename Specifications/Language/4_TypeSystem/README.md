@@ -7,6 +7,8 @@ We expect to make incremental progress in extending the type system to be more c
 
 ## Available Types
 
+All types in Q# are [immutable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md#immutability). 
+
 Type | Description
 ---------|----------
  `Unit` | Represents a singleton type whose only value is `()`.

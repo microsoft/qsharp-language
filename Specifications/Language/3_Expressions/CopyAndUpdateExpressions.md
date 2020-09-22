@@ -3,8 +3,10 @@
 To reduce the need for mutable bindings, Q# supports copy-and-update expressions for value types with item access. User defined types and arrays both are immutable and fall into this category. 
 User defined types allow to access items via name, whereas arrays allow to access items via an index or range of indices. 
 
-Such copy-and-update expressions consist of a ternary operator `w/` `<-`; the syntax `w/` should be read as the commonly used short notation for "with".
-Copy-and-update expressions are of the form 
+Copy-and-update expressions instantiate a new value of with all items set to the corresponding value in  the original expression, except certain specified items(s), which are set to the one(s) defined on the right hand side of the expression. 
+
+Copy-and-update expressions are constructed using a ternary operator `w/` `<-`; the syntax `w/` should be read as the commonly used short notation for "with".
+They are of the form 
 ```qsharp
     original w/ itemAccess <- modification
 ```
@@ -28,7 +30,6 @@ The two statements below for example achieve the following: The first statement 
     set arr w/= 0 <- 10;      // arr contains [3,0,0] 
 ```
 The second statement is nothing but a short-hand for the more verbose syntax `set arr = arr w/ 0 <- 10;`.
-
 
 ## Copy-and-Update of User Defined Types
 
