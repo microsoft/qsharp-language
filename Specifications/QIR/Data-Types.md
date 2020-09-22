@@ -45,13 +45,32 @@ They are represented as follows:
 
 | Type     | LLVM Representation        | Comments |
 |----------|----------------------------|----------|
-| `Int`    | `i64`                      |          |
-| `Double` | `double`                   |          |
+| `Int`    | `i64`                      | A 64-bit signed integer. Targets should specify their behavior on integer overflow and division by zero. |
+| `Double` | `double`                   | A 64-bit IEEE double-precision floating point number. Targets should specify their behavior on floating overflow and division by zero. |
 | `Bool`   | `i1`                       | 0 is false, 1 is true. |
 | `Result` | `%Result*`                 | `%Result` is an opaque type. |
 | `Pauli`  | `%Pauli = {i2}`            | 0 is PauliI, 1 is PauliX, 3 is PauliY, and 2 is PauliZ. |
 | `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
-| `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and end of the range. When passed as a function argument or return value, ranges should be passed by value. |
+| `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value to or from a compiled routine, ranges should be passed by value. |
+
+A `%Range` is an expression that represents a sequence of integers.
+The first element of the sequence is the `start` of the range, the second
+element is `start+step`, the third element is `start+2*step`, and so forth.
+The `step` may be positive or negative, but not zero.
+The last element of the range may be `end`; that is, `end` is inclusive.
+A range is empty if `step` is positive and `end` is less than `start`,
+or if `step` is negative and `end` is greater than `start`.
+For example:
+
+```
+0..1..2 = {0, 1, 2}
+0..2..4 = {0. 2. 4}
+0..2..5 = {0, 2, 4}
+4..-1..2 = {4, 3, 2}
+5..-3..0 = {5, 2}
+0..1..-1 = {}
+0..-1..1 = {}
+```
 
 The following global constants are defined for use with the `%Result` and `%Pauli` types:
 
@@ -104,9 +123,9 @@ allocated by the caller because the length of the string depends on the actual v
 | __quantum__rt__int_to_string     | `%String*(i64)`      | Returns a string representation of the integer. |
 | __quantum__rt__double_to_string  | `%String*(Double)`   | Returns a string representation of the double. |
 | __quantum__rt__bool_to_string    | `%String*(i1)`       | Returns a string representation of the Boolean. |
-| __quantum__rt__result_to_string  | `%String*(%Result)`  | Returns a string representation of the result. |
+| __quantum__rt__result_to_string  | `%String*(%Result*)` | Returns a string representation of the result. |
 | __quantum__rt__pauli_to_string   | `%String*(%Pauli)`   | Returns a string representation of the Pauli. |
-| __quantum__rt__qubit_to_string   | `%String*(%Qubit)`   | Returns a string representation of the qubit. |
+| __quantum__rt__qubit_to_string   | `%String*(%Qubit*)`  | Returns a string representation of the qubit. |
 | __quantum__rt__range_to_string   | `%String*(%Range)`   | Returns a string representation of the range. |
 | __quantum__rt__bigint_to_string  | `%String*(%BigInt*)` | Returns a string representation of the big integer. |
 
@@ -203,33 +222,51 @@ When creating an array, the size of each element in bytes must be provided.
 
 Many languages provide immutable arrays, along with operators that allow a modified
 copy of an existing array to be created.
-In QIR, this is implemented by creating a new copy of the existing arrays on the
-heap, and then modifying the newly-created arrays in place.
-In some cases, if the compiler knows that the existing arrays is not used after the
-creation of the modified copy, it is possible to avoid the copy and modify the
-existing arrays as long as there are no other references to the arrays.
+In QIR, this is implemented by creating a new copy of the existing array and then
+modifying the newly-created array in place.
+In some cases, if the source-language compiler knows that the existing array is not
+used after the creation of the modified copy, it is possible to avoid the copy and
+modify the existing array as long as there are known to be no other references to the
+array.
 
 There are two special operations on arrays:
 
 - An array *slice* is specified by providing a dimension to slice on and a `%Range` to
-  slice with.
+  slice with. The resulting array has the same number of dimensions as the original
+  array, but only those elements in the sliced dimension whose original indexes were
+  part of the resolution of the `%Range`. Those elements get new indices in the resulting
+  array based on their appearance order in the `%Range`. In particular, if the step of
+  the `%Range` is negative, the elements in the sliced dimension will be in the reverse
+  order than they were in the original array. If the `%Range` is empty, the resulting
+  array will be empty.
 - An array *projection* is specified by providing a dimension to project on and an `i64`
   index value to project to. The resulting array has one fewer dimension than the original
-  array, and is the segment of the original array with the given dimension fixed to the
-  given index value.
+  array, and is the segment of the original array with the projected dimension fixed to the
+  given index value. Projection is the array access analog to partial application;
+  effectively it creates a new array that has the same elements as the original array,
+  but one of the indices is fixed at a constant value.
 
-Both slicing and projecting are implemented by creating a new `%Array*` with
-updated dimension count, offset, stride, and length information.
+Both slicing and projecting are implemented by creating a new `%Array*` that
+represents the resulting array as described above.
 Runtime library implementations may optimize by initially sharing data between
-the slice or projection and the original array and implementing a copy-on-write
-strategy to minimize data copying.
+the slice or projection and the original array and working with the source-language
+compiler to implement a copy-on-write strategy to minimize data copying.
+In particular, the source-language compiler should not assume that the result of a
+slice or projection operation is safe to write unless it can prove that the original
+array is no longer accessible.
+
+In all cases, attempting to access an index or dimension outside the bounds of
+an array should cause an immediate runtime failure.
+This applies to slicing and projection operations as well as to element access.
+When validating indices for slicing, only indices that are actually part of the
+resolved range should be considered.
 
 The following utility functions are provided by the classical runtime to support
 arrays:
 
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
-| __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. |
+| __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
 | __quantum__rt__array_copy        | `%Array*(%Array*)`                   | Returns a new array which is a copy of the passed-in `%Array*`. |
 | __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
 | __quantum__rt__array_get_length  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be 0 for a 1-dimensional array. |
@@ -242,10 +279,14 @@ The following utility functions are provided if multidimensional array support i
 
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
-| __quantum__rt__array_create      | `%Array* void(i32, i32, ...)`        | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The variable arguments should be a sequence of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. |
+| __quantum__rt__array_create      | `%Array* void(i32, i32, ...)`        | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The variable arguments should be a sequence of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. If any length is zero, the result should be an empty array with the given number of dimensions. |
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, ...)`              | Returns a pointer to the indicated element of the array. The variable arguments should be a sequence of `i64`s that are the indices for each dimension. |
-| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. The returned `Array*` will have one fewer dimension than the existing array. The new array may share data with the existing array. |
+| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. |
+
+There are special runtime functions defined for allocating or releasing an
+array of qubits.
+See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
 
 ---
 _[Back to index](README.md)_
