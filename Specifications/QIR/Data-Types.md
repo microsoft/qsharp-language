@@ -53,6 +53,25 @@ They are represented as follows:
 | `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
 | `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value to or from a compiled routine, ranges should be passed by value. |
 
+A `%Range` is an expression that represents a sequence of integers.
+The first element of the sequence is the `start` of the range, the second
+element is `start+step`, the third element is `start+2*step`, and so forth.
+The `step` may be positive or negative, but not zero.
+The last element of the range may be `end`; that is, `end` is inclusive.
+A range is empty if `step` is positive and `end` is less than `start`,
+or if `step` is negative and `end` is greater than `start`.
+For example:
+
+```
+0..1..2 = {0, 1, 2}
+0..2..4 = {0. 2. 4}
+0..2..5 = {0, 2, 4}
+4..-1..2 = {4, 3, 2}
+5..-3..0 = {5, 2}
+0..1..-1 = {}
+0..-1..1 = {}
+```
+
 The following global constants are defined for use with the `%Result` and `%Pauli` types:
 
 ```LLVM
@@ -215,7 +234,7 @@ There are two special operations on arrays:
 - An array *slice* is specified by providing a dimension to slice on and a `%Range` to
   slice with. The resulting array has the same number of dimensions as the original
   array, but only those elements in the sliced dimension whose original indexes were
-  part of the expansion of the `%Range`. Those elements get new indices in the resulting
+  part of the resolution of the `%Range`. Those elements get new indices in the resulting
   array based on their appearance order in the `%Range`. In particular, if the step of
   the `%Range` is negative, the elements in the sliced dimension will be in the reverse
   order than they were in the original array. If the `%Range` is empty, the resulting
@@ -239,6 +258,8 @@ array is no longer accessible.
 In all cases, attempting to access an index or dimension outside the bounds of
 an array should cause an immediate runtime failure.
 This applies to slicing and projection operations as well as to element access.
+When validating indices for slicing, only indices that are actually part of the
+resolved range should be considered.
 
 The following utility functions are provided by the classical runtime to support
 arrays:
