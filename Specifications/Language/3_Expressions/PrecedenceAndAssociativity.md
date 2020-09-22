@@ -52,7 +52,7 @@ This artificial precedence is listed in the table below, which also shows how th
 | [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Adjoint` | prefix | right | 950 |
 | [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Controlled` | prefix | right | 950 |
 | [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 1000 |
-| Array item access | `[` `]` | n/a | left | 1100 |
+| [Array item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#array-item-access-and-array-slicing) | `[` `]` | n/a | left | 1100 |
 | [Named item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 1100 |  
 | | | | | 
 

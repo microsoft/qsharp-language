@@ -103,7 +103,7 @@ The following are examples for valid `Range` literals:
 - `2..-2..1` is the range 2.
 - `2..1` is the empty range.
 
-See also the sections on [array slicing](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access) and [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
+See also the section on [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
 
 ## Array Literals
 

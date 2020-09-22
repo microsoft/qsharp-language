@@ -39,12 +39,14 @@ The contained items can be accessed via their name or by deconstruction, illustr
 
 The item access operator (`::`) retrieves named items.
 While named items can be accessed by their name or via deconstruction, anonymous items can only be accessed by the latter. Since deconstruction relies on all of the contained items, the usage anonymous items is discourage when these items need to be accessed outside the compilation unit in which the type is defined. 
-Access via deconstruction makes use of the unwrap operator (`!`). That operator will return a tuple of all contained items, where a single item tuple is equivalent to the item itself (see [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence)).  
 
+Access via deconstruction makes use of the unwrap operator (`!`). That operator will return a tuple of all contained items, where the shape of the tuple matches the one defined in the declaration, and a single item tuple is equivalent to the item itself (see [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence)).  
 
-The unwrap operator `!` returns a tuple of all items, where the shape of the tuple matches the one defined in the declaration. For example, for a value `nested` of type `Nested` defined as follows
+For example, for a value `nested` of type `Nested` defined as follows
 ```qsharp
 newtype Nested = (Double, (ItemName : Int, String)); 
 ```
 the expression `nested!` return a value of type `(Double, (Int, String))`. 
-As illustrated by the example above, inner items may also be named. They can be accessed directly via the item access operator for named items; the expression `nested::ItemName` returns the corresponding integer.
+
+The `!` operator has lower [precedence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#modifiers-and-combinators) than both item access operators, but higher precedence than any other operator. A complete list of precedences can be found [here](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#precedence-and-associativity). 
+
