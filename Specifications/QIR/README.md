@@ -1,6 +1,6 @@
 # Quantum Intermediate Representation (QIR)
 
-This specification defines an intermediate representation for compiled quantum 
+This draft specification defines an intermediate representation for compiled quantum 
 computations.
 The intent is that a quantum computation written in any language can be
 compiled into this representation as a common intermediate _lingua franca_.
