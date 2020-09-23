@@ -4,7 +4,10 @@ Callables are declared at a global scope and publicly visible by default, i.e. t
 
 Q# supports two kinds of callables: operations and functions. [This section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operations-and-functions) elaborates on the distinction between the two. Even more, Q# in fact supports defining *templates*, i.e. type parametrized implementations for a certain callable. Type parameterizations are described in more detail in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations). 
 
-Such type parametrized implementations may not use any language constructs that rely on particular properties of the type arguments; there is currently no way to express type constraints in Q#, or to define specialized implementations for particular type arguments. However, it is conceivable to introduce a suitable mechanism, similar to, e.g., type classes in Haskell, to allow for more expressiveness in the future. Q# does have the notion of specializing implementations for certain purposes; operations in Q# can implicitly or explicitly define support for certain *functors*, and along with it the specialized implementations that are to be invoked when a certain functor is applied to that callable. 
+### *Discussion*
+>Such type parametrized implementations may not use any language constructs that rely on particular properties of the type arguments; there is currently no way to express type constraints in Q#, or to define specialized implementations for particular type arguments. However, it is conceivable to introduce a suitable mechanism, similar to, e.g., type classes in Haskell, to allow for more expressiveness in the future. 
+
+Q# allows to specialize implementations for certain purposes; operations in Q# can implicitly or explicitly define support for certain *functors*, and along with it the specialized implementations that are to be invoked when a certain functor is applied to that callable. 
 
 A functor in a sense is a factory that define a new callable implementation 
 that has a certain relation to the callable it was applied to. 
@@ -31,7 +34,9 @@ is equivalent to
     }
 ```
 Here, `body` specifies that the given implementation applies to the default body of the function `Hello`, meaning the implementation that is invoked when no functors or other factory mechanisms have been applied prior to invocation. The three dots in `body (...)` correspond to a compiler directive indicating that the argument items in the function declaration should be copy-pasted into this spot.  
-The reasoning behind explicitly indicating where the arguments of the parent callable declaration are to be copy-pasted is that for one, it is unnecessary to repeat the argument declaration, but more importantly it ensures that functors that require additional arguments, like the `Controlled` functor, can be introduced in a consistent manner. 
+
+### *Discussion*
+>The reasoning behind explicitly indicating where the arguments of the parent callable declaration are to be copy-pasted is that for one, it is unnecessary to repeat the argument declaration, but more importantly it ensures that functors that require additional arguments, like the `Controlled` functor, can be introduced in a consistent manner. 
 
 The same applies to operations; when there is exactly one specialization defining the implementation of the default body, the additional wrapping of the form `body (...){ <implementation> }` may be omitted.
 
