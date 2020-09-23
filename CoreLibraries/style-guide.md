@@ -1,9 +1,9 @@
-# Q# Style Guide #
-## General Conventions ##
+# Q# Style Guide
+## General Conventions
 
 The conventions listed here are suggestions only, and should likely be disregarded when they would result in less readable or useful code.
 
-# [Guidance](#tab/guidance) 
+# [Guidance](#tab/guidance)
 
 We suggest:
 
@@ -13,14 +13,14 @@ We suggest:
 
 ***
 
-## Naming Conventions ##
+## Naming Conventions
 
 In offering the Quantum Development Kit, we strive for function and operation names that help quantum developers write programs that are easy to read and that minimize surprise.
 An important part of that is that when we choose names for functions, operations, and types, we are establishing the *vocabulary* that programmers use to express quantum concepts; with our choices, we either help or hinder them in their effort to clearly communicate.
 This places a responsibility on us to make sure that the names we introduce lend themselves to clarity rather than obscurity.
 In this section, we detail how we meet this obligation in terms of explicit guidance that helps us do the best by the Q# development community.
 
-### Operations and Functions ###
+### Operations and Functions
 
 The first thing that a name should establish is whether a given symbol represents a function or an operation.
 The difference between functions and operations is critical to understanding how a block of code behaves.
@@ -78,7 +78,6 @@ In common cases, we suggest using particular nouns and adjectives:
 | Identity | A UDT or operation that represents identity / no-op on some data type. |
 | Operation | An operation that is computed from another operation in some way. Use when no more specific case applies. |
 
-
 # [Guidance](#tab/guidance)
 
 We suggest:
@@ -103,7 +102,7 @@ We suggest:
 
 ***
 
-### Shorthand and Abbreviations ###
+### Shorthand and Abbreviations
 
 The above advice notwithstanding, there are many forms of shorthand that see common and pervasive use in quantum computing.
 We suggest using existing and common shorthand where it exists, especially for operations that are intrinsic to the operation of a target machine.
@@ -150,12 +149,9 @@ We suggest:
 | ☑ | `ApplyQft` | Common initialism "QFT" appears as a part of a long-form name. |
 | ☑ | `QFT` | Common initialism "QFT" appears as a part of a shorthand name. |
 
-
-
 ***
 
-
-### Proper Nouns in Names ###
+### Proper Nouns in Names
 
 While in physics it is common to name things after the first person to publish about them, most non-physicists aren’t familiar with everyone’s names and all of the history.
 Relying too heavily on naming conventions from physics can thus put up a substantial barrier to entry, as users from other backgrounds must learn a large number of seemingly opaque names in order to use common operations and concepts.
@@ -171,7 +167,7 @@ This preference is especially important given that some usage of proper nouns wi
 A few quantum concepts similarly are named in a similar fashion, including the `Pauli` type built-in to the Q# language.
 By minimizing the usage of proper nouns where such usage is not essential, we reduce the impact where proper nouns cannot be reasonably avoided.
 
-# [Guidance](#tab/guidance) 
+# [Guidance](#tab/guidance)
 
 We suggest:
 
@@ -181,7 +177,7 @@ We suggest:
 
 ***
 
-### Type Conversions ###
+### Type Conversions
 
 Since Q# is a strongly and staticly typed language, a value of one type can only be used as a value of another type by using an explicit call to a type conversion function.
 This is in contrast to languages which allow for values to change types implicitly (e.g.: type promotion), or through casting.
@@ -208,7 +204,7 @@ We suggest:
 
 ***
 
-### Private or Internal Names ###
+### Private or Internal Names
 
 > [!NOTE]
 > It is expected that the guidance in this section will change with Q# 1.0.
@@ -235,7 +231,7 @@ We suggest:
 
 ***
 
-### Variants ###
+### Variants
 
 Though this limitation may not persist in future versions of Q#, it is presently the case that there will often be groups of related operations or functions that are distinguished by which functors their inputs support, or by the concrete types of their arguments.
 These groups can be distinguished by using the same root name, followed by one or two letters that indicate its variant.
@@ -262,13 +258,12 @@ We suggest:
 
 ***
 
-### Arguments and Variables ###
+### Arguments and Variables
 
 A key goal of the Q# code for a function or operation is for it to be easily read and understood.
 Similarly, the names of inputs and type arguments should communicate how a function or argument will be used once provided.
 
-
-# [Guidance](#tab/guidance) 
+# [Guidance](#tab/guidance)
 
 We suggest:
 
@@ -287,7 +282,7 @@ We suggest:
 
 ***
 
-## Input Conventions ##
+## Input Conventions
 
 When a developer calls into an operation or function, the various inputs to that operation or function must be specified in a particular order, increasing the cognitive load that a developer faces in order to make use of a library.
 In particular, the task of remembering input orderings is often a distraction from the task at hand: programming an implementation of a quantum algorithm.
@@ -334,7 +329,7 @@ We suggest:
 
 ***
 
-## Documentation Conventions ##
+## Documentation Conventions
 
 The Q# language allows for attaching documentation to operations, functions, and user-defined types through the use of specially formatted documentation comments.
 Denoted by triple-slashes (`///`), these documentation comments are small [DocFX-flavored Markdown](https://dotnet.github.io/docfx/spec/docfx_flavored_markdown.html) documents that can be used to describing the purpose of each operation, function, and user-defined type, what inputs each expects, and so forth.
@@ -354,9 +349,9 @@ We suggest:
 
 - Each public function, operation, and user-defined type should be immediately preceded by a documentation comment.
 - At a minimum, each documentation comment should include the following sections:
-    - Summary
-    - Input
-    - Output (if applicable)
+  - Summary
+  - Input
+  - Output (if applicable)
 - Ensure that all summaries are two sentences or less. If more room is needed, provide a `# Description` section immediately following `# Summary` with complete details.
 - Where reasonable, do not include math in summaries, as not all clients support TeX notation in summaries. Note that when writing prose documents (e.g. TeX or Markdown), it may be preferable to use longer line lengths.
 - Provide all relevant mathematical expressions in the `# Description` section.
@@ -370,7 +365,7 @@ We suggest:
 
 # [Examples](#tab/examples)
 
-#### ☑ ####
+#### ☑
 
 ```
 /// # Summary
@@ -408,22 +403,24 @@ operation Rx(theta : Double, qubit : Qubit) : Unit {
 
 ***
 
-## Formatting Conventions ##
+## Formatting Conventions
 
 In addition to the preceding suggestions, it is helpful to help make code as legible as possible to use consistent formatting rules.
 Such formatting rules by nature tend to be somewhat arbitrary and strongly up to personal aesthetics.
 Nonetheless, we recommend maintaining a consistent set of formatting conventions within a group of collaborators, and especially for large Q# projects such as the Quantum Development Kit itself.
 
-# [Guidance](#tab/guidance) 
+# [Guidance](#tab/guidance)
 
 We suggest:
 
 - Use four spaces instead of tabs for portability.
   For instance, in VS Code:
+
   ```json
     "editor.insertSpaces": true,
     "editor.tabSize": 4
   ```
+
 - Line wrap at 79 characters where reasonable.
 - Use spaces around binary operators.
 - Use spaces on either side of colons used for type annotations.
@@ -438,4 +435,3 @@ We suggest:
 | ☑ | `Example(a, b, c)` | Items in input tuple are correctly spaced for readability. |
 
 ***
-
