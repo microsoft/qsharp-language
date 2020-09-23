@@ -26,7 +26,7 @@ Additional modifiers and combinators are listed further below and bind tighter t
 | [greater-than](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `>` | infix | left | 25 |
 | [right shift](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `>>>` | infix | left | 28 |
 | [left shift](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `<<<` | infix | left | 28 |
-| [addition or concatenation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `+` | infix | left | 30 |
+| [addition](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) or [concatenation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Concatentation.md#concatenation) | `+` | infix | left | 30 |
 | [subtraction](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `-` | infix | left | 30 |
 | [multiplication](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `*` | infix | left | 35 |
 | [division](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `/` | infix | left | 35 |
