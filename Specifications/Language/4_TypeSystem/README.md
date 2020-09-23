@@ -7,6 +7,8 @@ We expect to make incremental progress in extending the type system to be more c
 
 ## Available Types
 
+All types in Q# are [immutable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md#immutability). 
+
 Type | Description
 ---------|----------
  `Unit` | Represents a singleton type whose only value is `()`.
@@ -24,4 +26,6 @@ Type | Description
  User defined type | Represents a [user defined type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations) consisting of named and anonymous items of different types. [Values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#literals-for-user-defined-types) are instantiated by invoking the constructor. 
  Operation | Represents a non-deterministic [callable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operations-and-functions) that takes one (possibly tuple-valued) input argument returns one (possibly tuple-valued) output. Calls to operation [values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#operation-literals) may have side effects and the output may vary for each call even when invoked with the same argument.
  Function | Represents a deterministic [callable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operations-and-functions) that takes one (possibly tuple-valued) input argument returns one (possibly tuple-valued) output. Calls to function [values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#function-literals) do not have side effects and the output is will always be the same given the same input. 
- | | |
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

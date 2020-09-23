@@ -13,7 +13,7 @@ If you have a suggestion for a feature and would like to share your thoughts, we
 
 We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.   
 
-We refer to this document regarding contributing and the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+We refer to [this document](https://github.com/microsoft/qsharp-language/blob/main/CODE_OF_CONDUCT.md) regarding contributing and the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
 # Design Principles
 

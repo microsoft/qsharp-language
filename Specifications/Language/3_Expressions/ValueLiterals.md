@@ -17,7 +17,6 @@ Value literals for the [`Int` type](https://github.com/microsoft/qsharp-language
 | Octal | `0o52` |
 | Decimal | `42` |
 | Hexadecimal | `0x2a` |
-| | |
 
 ## BigInt Literals
 
@@ -27,7 +26,6 @@ Value literals for the [`BigInt` type](https://github.com/microsoft/qsharp-langu
 | --- | --- | 
 | Decimal | `42L` |
 | Hexadecimal | `0x2aL` |
-| | |
 
 ## Double Literals
 
@@ -37,7 +35,6 @@ Value literals for the [`Double` type](https://github.com/microsoft/qsharp-langu
 | --- | --- | 
 | Standard | `0.1973269804` |
 | Scientific | `1.973269804e-1` |
-| | |
 
 If nothing follows after the decimal point, then the digit after dot may be omitted, e.g. `1.` is a valid `Double` literal and the same as `1.0`. Similarly, if the digits before the decimal point are all zero, then they may be omitted, e.g. `.1` is a valid `Double` literal and the same as `0.1`. 
 
@@ -103,7 +100,7 @@ The following are examples for valid `Range` literals:
 - `2..-2..1` is the range 2.
 - `2..1` is the empty range.
 
-See also the sections on [array slicing](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access) and [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
+See also the section on [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
 
 ## Array Literals
 
@@ -128,7 +125,6 @@ A [tuple](https://github.com/microsoft/qsharp-language/tree/main/Specifications/
 | --- | --- | 
 | `("Id", 0, 1.)` | `(String, Int, Double)` |
 | `(PauliX,(3,1))` | `(Pauli, (Int, Int))` |
-| | |
 
 Tuples containing a single item are treated as identical to the item itself, both in type and value. We refer to this a [singleton tuple equivalence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence). 
 
@@ -168,7 +164,8 @@ Type | Default
  User defined type | all items are set to default values
  Operation | _invalid operation_
  Function | _invalid function_
- | | |
 
 For qubits and callables, the default is an invalid reference that cannot be used without causing a runtime error.
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
