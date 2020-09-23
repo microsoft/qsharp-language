@@ -37,3 +37,6 @@ fail $"Syndrome {syn} is incorrect";
 ```
 
 In addition to the given `String`, ideally a `fail`- statement collects and permit to retrieve information about the program state that facilitate diagnosing and remedying the source of the error. This requires support from the executing runtime and firmware which may vary across different targets. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

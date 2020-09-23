@@ -172,3 +172,5 @@ Type | Default
 
 For qubits and callables, the default is an invalid reference that cannot be used without causing a runtime error.
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

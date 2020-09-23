@@ -33,3 +33,6 @@ In EBNF,
 As one would expect, `*` has higher precedence than `+` and both are left-associative. The type of a unitary operation for example is expressed as `(<TIn> => <TOut> is Adj + Ctl)` where `<TIn>` should be replace with the type of the operation argument, and `<TOut>` with the type of the returned value. 
 
 Indicating the characteristics of an operation in this form has two major advantages; for one, new labels can be introduced without having exponentially many language keywords for all combinations of labels. Perhaps more importantly, using expressions to indicate the characteristics of an operation also permits to support parameterizations over operation characteristics in the future. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

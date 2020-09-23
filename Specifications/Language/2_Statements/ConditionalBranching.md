@@ -37,3 +37,5 @@ A tight integration between control-flow constructs and quantum computations pos
 
 Other quantum processors support specific kinds of branching based on measurement outcomes. The more general `if`-statements supported in Q# are compiled into suitable instructions that can be executed on such processors. The imposed restrictions are that values of type `Result` may only be compared as part of the condition within if-statements in operations. The conditionally executed blocks furthermore cannot contain any return statements or update mutable variables that are declared outside that block. 
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

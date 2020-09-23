@@ -61,3 +61,5 @@ The implementation for copy-and-update expressions avoids copying the entire arr
 but merely duplicates the necessary parts to achieve the desired behavior, and performs an in-place modification if possible. 
 Suitable ways to initialize an array via, e.g., an initialization function or similar means are provided by the standard libraries. Array initialization via a call to such a core function does not incur additional overhead due to immutability. 
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

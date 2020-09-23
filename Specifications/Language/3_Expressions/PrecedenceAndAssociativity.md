@@ -83,3 +83,6 @@ Then the following expressions are all valid:
 Looking at the precedences defined in the table above, we see that the parentheses around `(Transformation(GetStatePrep()))` are necessary for the subsequent unwrap operator to be applied to the `Transformation` value rather than the returned operation. 
 Similarly, the syntax `GetStatePrep()(arg)` doesn't lead to a valid expression; parenthesis are required around the `GetStatePrep` call in order to invoke the returned callable. 
 Functor applications on the other hand don't require parentheses around them in order to invoke the corresponding specialization. Neither do array or named item access expressions, such that an expression `arr2D[i][j]` is perfectly valid, just like `algorithms[0]::Register![i]` is.
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

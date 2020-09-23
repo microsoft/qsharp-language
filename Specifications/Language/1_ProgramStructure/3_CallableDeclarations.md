@@ -34,3 +34,5 @@ Here, `body` specifies that the given implementation applies to the default body
 The reasoning behind explicitly indicating where the arguments of the parent callable declaration are to be copy-pasted is that for one, it is unnecessary to repeat the argument declaration, but more importantly it ensures that functors that require additional arguments, like the `Controlled` functor, can be introduced in a consistent manner. 
 
 The same applies to operations; when there is exactly one specialization defining the implementation of the default body, the additional wrapping of the form `body (...){ <implementation> }` may be omitted.
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

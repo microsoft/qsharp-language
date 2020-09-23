@@ -27,3 +27,6 @@ Type | Description
  Operation | Represents a non-deterministic [callable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operations-and-functions) that takes one (possibly tuple-valued) input argument returns one (possibly tuple-valued) output. Calls to operation [values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#operation-literals) may have side effects and the output may vary for each call even when invoked with the same argument.
  Function | Represents a deterministic [callable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operations-and-functions) that takes one (possibly tuple-valued) input argument returns one (possibly tuple-valued) output. Calls to function [values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#function-literals) do not have side effects and the output is will always be the same given the same input. 
  | | |
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

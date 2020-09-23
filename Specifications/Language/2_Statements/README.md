@@ -37,3 +37,6 @@ The following statements are currently available in Q#:
 * **Qubit Allocation**    
     Instantiates and initializes qubits and/or arrays of qubits, and binds them to the declared variables. Executes a block of statements.
     The instantiated qubits are available for the duration of the block, and will be automatically released when the statement terminates. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management) for more details.
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

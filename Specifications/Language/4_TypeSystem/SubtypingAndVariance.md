@@ -40,3 +40,5 @@ By induction, it follows that every additional indirection reverses the variance
 Despite that arrays in Q# are [immutable](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md#immutability), they are invariant rather than covariant. This, e.g., means that a value of type `(Qubit => Unit is Adj)[]` cannot be passed to a callable that requires an argument of type `(Qubit => Unit)[]`.
 Keeping arrays invariant allows for more flexibility related to how arrays are handled and optimized in the runtime, but it may be possible to revise that in the future. 
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

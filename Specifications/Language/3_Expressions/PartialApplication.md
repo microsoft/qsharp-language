@@ -9,3 +9,6 @@ For a function `Foo` whose argument type is `(Int, (Double, Bool), Int)` for ins
 
 Because partial application of an operation does not actually evaluate the operation, it has
 no impact on the quantum state. This means that building a new operation from existing operations and computed data may be done in a function; this is useful in many adaptive quantum algorithms and in defining new control flow constructs.
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

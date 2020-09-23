@@ -17,7 +17,4 @@ Like modifiers, function calls and item access can also be seen as a special kin
 The section on [precedence and associativity](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md) contains a complete [list of all operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators) as well as a complete [list of all modifiers and combinators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#modifiers-and-combinators). 
 
 
-
-
-
-
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

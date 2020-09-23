@@ -93,3 +93,6 @@ While for readability's sake it is recommended that each operation is annotated 
 Q# thus supports inference of both operation characteristics and existing specializations based on (partial) annotations as well as explicitly defined specializations.
 
 In a sense, specializations are similar to individual overloads for the same callable, with the caveat that certain restrictions to what overloads can be declared apply, and it is conceivable to allow declaring specializations outside the original callable declaration in a future version of Q#. This, however, still requires significant design and engineering work.
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
