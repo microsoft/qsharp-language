@@ -38,7 +38,7 @@ All parts of the `repeat`-statement (both blocks and the condition) are treated 
 
 ### *Target-Specific Restrictions*
 
-Loops that break based on a condition are a huge challenge to process on quantum hardware if the condition depends on measurement outcomes; this poses an extra challenge since the length of the instruction sequence to execute is not known ahead of time. 
+Loops that break based on a condition are a challenge to process on quantum hardware if the condition depends on measurement outcomes, since the length of the instruction sequence to execute is not known ahead of time. 
 
 Despite their common presence in particular classes of quantum algorithms, current hardware does not yet provide native support for these kind of control flow constructs. Execution on quantum hardware can potentially be supported in the future by imposing a maximum number of iterations.
 
