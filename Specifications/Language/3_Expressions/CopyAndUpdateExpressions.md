@@ -4,9 +4,7 @@ To reduce the need for mutable bindings, Q# supports copy-and-update expressions
 User defined types allow to access items via name, whereas arrays allow to access items via an index or range of indices. 
 
 Copy-and-update expressions instantiate a new value of with all items set to the corresponding value in  the original expression, except certain specified items(s), which are set to the one(s) defined on the right hand side of the expression. 
-
-Copy-and-update expressions are constructed using a ternary operator `w/` `<-`; the syntax `w/` should be read as the commonly used short notation for "with".
-They are of the form 
+They are constructed using a ternary operator `w/` `<-`; the syntax `w/` should be read as the commonly used short notation for "with":
 ```qsharp
     original w/ itemAccess <- modification
 ```
@@ -61,3 +59,5 @@ The implementation for copy-and-update expressions avoids copying the entire arr
 but merely duplicates the necessary parts to achieve the desired behavior, and performs an in-place modification if possible. 
 Suitable ways to initialize an array via, e.g., an initialization function or similar means are provided by the standard libraries. Array initialization via a call to such a core function does not incur additional overhead due to immutability. 
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

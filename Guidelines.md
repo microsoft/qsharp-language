@@ -23,3 +23,6 @@ Rather than attempting to compile an exhaustive list, we present some rough guid
 - Making breaking changes
 - Suggesting features that are slight variations of features that have been declined previously
 - ...
+
+
+Our goal is to achieve stability for each major version; meaning that any changes should not break existing code written in an earlier Q# version with the same major number. However, we may potentially deprecate certain pieces over time, and remove support for them when releasing the next major version. 

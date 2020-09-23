@@ -16,4 +16,7 @@ negative numbers:
 That is, `a % b` will always have the same sign as `a`,
 and `b * (a / b) + a % b` will always equal `a`.
 
-Currently, Q# does not support any automatic conversions between arithmetic data types - or any other data types for that matter. This is of importance especially for the `Result` data type, and facilitates to restrict how runtime information can propagate. It has the benefit of avoiding accidental errors e.g. related to precision loss. 
+Q# does not support any automatic conversions between arithmetic data types - or any other data types for that matter. This is of importance especially for the `Result` data type, and facilitates to restrict how runtime information can propagate. It has the benefit of avoiding accidental errors e.g. related to precision loss. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

@@ -1,6 +1,6 @@
 # Returns and Termination
 
-There are two statements available that conclude the execution of the current subroutine or the program; the `return`- and the `fail`-statement.  
+There are two statements available that conclude the execution of the current subroutine or the program; the `return`- and the `fail`-statement.
 For callables that return any other type than `Unit` each execution path needs to terminate either in a `return`- or a `fail`-statement
 
 ## Return-Statement
@@ -37,3 +37,6 @@ fail $"Syndrome {syn} is incorrect";
 ```
 
 In addition to the given `String`, ideally a `fail`- statement collects and permit to retrieve information about the program state that facilitate diagnosing and remedying the source of the error. This requires support from the executing runtime and firmware which may vary across different targets. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

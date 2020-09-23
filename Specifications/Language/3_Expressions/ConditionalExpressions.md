@@ -24,3 +24,4 @@ then
 See the section on [subtyping](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance) for more detail.
 
 
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
