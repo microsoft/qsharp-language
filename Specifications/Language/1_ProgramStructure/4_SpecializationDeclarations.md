@@ -68,7 +68,6 @@ The following generation directives exist and are valid:
 | `adjoint` specialization: | `self`, `invert` |
 | `controlled` specialization: | `distribute`  |
 | `controlled adjoint` specialization: | `self`, `invert`, `distribute` |
-|   |   |
 
 That all generation directives are valid for a controlled adjoint specialization is not a coincidence; as long as functors commute, the set of valid generation directives for implementing the specialization for a combination of functors is always the union of the set of valid generators for each individual one. 
 
