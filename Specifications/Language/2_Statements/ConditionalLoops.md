@@ -36,7 +36,7 @@ The `repeat`-statement executes a block of statements before evaluating a condit
 
 All parts of the `repeat`-statement (both blocks and the condition) are treated as a single scope for each repetition; i.e. symbols that are defined within the `repeat`-block are visible both to the condition and within the `fixup`-block. As for other loops, symbols go out of scope after each iteration, such that symbols defined in the `fixup`-block are not visible in the `repeat`-block.
 
-### Target-Specific Restrictions
+### *Target-Specific Restrictions*
 
 Loops that break based on a condition are a huge challenge to process on quantum hardware if the condition depends on measurement outcomes; this poses an extra challenge since the length of the instruction sequence to execute is not known ahead of time. 
 

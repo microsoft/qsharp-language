@@ -28,7 +28,7 @@ Function and operation arguments are always immutably bound; in combination with
 Since the states of `Qubit` values are not defined or observable from within Q#, this does not preclude the accumulation of quantum side effects, that are observable (only) via measurements (see also [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits)).
 
 Independent on how a value is bound, the values themselves are immutable. 
-It is worth pointing out explicitly that this in particular also holds for arrays and array items. 
+This in particular also holds for arrays and array items. 
 In contrast to popular classical languages where arrays often are reference types, arrays - like all type - are value types in Q# and always immutable; they cannot be modified after initialization.
 Changing the values accessed by variables of array type thus requires explicitly constructing a new array and reassigning it to the same symbol, see also the section on [immutability](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md) and [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) for more details.
 

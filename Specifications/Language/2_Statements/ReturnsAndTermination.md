@@ -1,6 +1,6 @@
 # Returns and Termination
 
-There are two statements available that conclude the execution of the current subroutine or the program; the `return`- and the `fail`-statement.  
+There are two statements available that conclude the execution of the current subroutine or the program; the `return`- and the `fail`-statement.
 For callables that return any other type than `Unit` each execution path needs to terminate either in a `return`- or a `fail`-statement
 
 ## Return-Statement
