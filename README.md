@@ -2,7 +2,9 @@
 
 Welcome to the official repository for design of the Q# language and core libraries. This is where new Q# features are developed and specified, and where you can share ideas and suggestions about the future evolution of the Q# language and core libraries.
 
-Q# is designed by the Q# Language Design Team in collaboration with many contributors, partners, advisors, and the Quantum Systems team at Microsoft. The decisions about moving things to "approved in principle" are made by the language designer ("BDFL"), Bettina Heim. 
+Q# is designed by the Q# Language Design Team in collaboration with many contributors, partners, advisors, and the Quantum Systems team at Microsoft. The decisions about moving things to "approved in principle" are made by the language designer ("BDFL"), Bettina Heim.
+
+> _For more information about the corresponding library API design process, please see [the QuantumLibraries repo](https://github.com/microsoft/QuantumLibraries/wiki/Q%23-API-Design-Process)._
 
 ## Contributing
 
@@ -11,9 +13,7 @@ We greatly appreciate your feedback and contribution to the discussion in the fo
 
 If you have a suggestion for a feature and would like to share your thoughts, we encourage you to file an issue following our [suggestion template](https://github.com/microsoft/qsharp-language/issues/new?template=suggestion.md). The [following section](#process-and-implementation) describes the process and workflow in more detail. For a suggestion to be adopted it needs to align with the general vision for Q# and the Q# language [design principles](#design-principles). We do not generally revisit design decisions that have been made unless there is new information to consider, e.g. due to scientific or technical breakthroughs. 
 
-We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.   
-
-We refer to this document regarding contributing and the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.  We refer to this document regarding contributing and the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
 # Design Principles
 
@@ -35,7 +35,8 @@ Our goal is to ensure an efficient execution of quantum components, independent 
 5.	**Q# is a living body of work that will grow and evolve over time.**    
 We share a vision of how quantum devices will revolutionize computing in the future. We also believe the quantum stack of the future will go beyond our current imagination. Correspondingly, our vision for Q# will adapt and change as the technology advances.
 
-In addition to these principles, we try to adhere to a general set of good practices, and there are other aspects to consider that factor into a decision whether to pursue a certain feature. Please take a look at other [considerations](https://github.com/microsoft/qsharp-language/blob/main/Guidelines.md) that factor into our decision as well as our [FAQs](https://github.com/microsoft/qsharp-language/blob/main/FAQ.md) for further questions. 
+In addition to these principles, we try to adhere to a general set of good practices, and there are other aspects to consider that factor into a decision whether to pursue a certain feature. Please take a look at other [considerations](https://github.com/microsoft/qsharp-language/blob/main/Guidelines.md) that factor into our decision as well as our [FAQs](https://github.com/microsoft/qsharp-language/blob/main/FAQ.md) and [API design princples](https://docs.microsoft.com/quantum/resources/contributing/api-design-principles) for further questions. 
+
 
 ## Process and Implementation
 
