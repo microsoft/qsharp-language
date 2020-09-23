@@ -40,3 +40,6 @@ let slice10 = arr[...];       // slice10 is [1,2,3,4,5,6];
 ```
 
 Since the information whether the range step is positive or negative is runtime information, the compiler inserts a suitable expression that will be evaluated at runtime. For omitted end values, the inserted expression is `step < 0 ? 0 | Length(arr)-1`, and for omitted start values it is `step < 0 ? Length(arr)-1 | 0`, where `step` is the expression given for the range step, or `1` if no step is specified. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

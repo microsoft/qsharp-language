@@ -13,7 +13,8 @@ We greatly appreciate your feedback and contribution to the discussion in the fo
 
 If you have a suggestion for a feature and would like to share your thoughts, we encourage you to file an issue following our [suggestion template](https://github.com/microsoft/qsharp-language/issues/new?template=suggestion.md). The [following section](#process-and-implementation) describes the process and workflow in more detail. For a suggestion to be adopted it needs to align with the general vision for Q# and the Q# language [design principles](#design-principles). We do not generally revisit design decisions that have been made unless there is new information to consider, e.g. due to scientific or technical breakthroughs. 
 
-We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.  We refer to this document regarding contributing and the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+We also highly welcome contributions to help implement new features. Please take a look at the section on [implementation](#implementation) for information regarding how to engage.   
+We refer to [this document](https://github.com/microsoft/qsharp-language/blob/main/CODE_OF_CONDUCT.md) regarding contributing and the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
 # Design Principles
 

@@ -66,3 +66,6 @@ If there aren't enough qubits available to borrow, then qubits will be allocated
 ### *Discussion*
 >Among the known use cases of dirty qubits are implementations of multi-controlled CNOT gates that require only very few qubits and implementations of incrementers.
 >This [paper](https://arxiv.org/abs/1611.07995) gives an example for an algorithm which utilizes borrowed qubits.
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

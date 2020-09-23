@@ -36,9 +36,9 @@ The `repeat`-statement executes a block of statements before evaluating a condit
 
 All parts of the `repeat`-statement (both blocks and the condition) are treated as a single scope for each repetition; i.e. symbols that are defined within the `repeat`-block are visible both to the condition and within the `fixup`-block. As for other loops, symbols go out of scope after each iteration, such that symbols defined in the `fixup`-block are not visible in the `repeat`-block.
 
-### Target-Specific Restrictions
+### *Target-Specific Restrictions*
 
-Loops that break based on a condition are a huge challenge to process on quantum hardware if the condition depends on measurement outcomes; this poses an extra challenge since the length of the instruction sequence to execute is not known ahead of time. 
+Loops that break based on a condition are a challenge to process on quantum hardware if the condition depends on measurement outcomes, since the length of the instruction sequence to execute is not known ahead of time. 
 
 Despite their common presence in particular classes of quantum algorithms, current hardware does not yet provide native support for these kind of control flow constructs. Execution on quantum hardware can potentially be supported in the future by imposing a maximum number of iterations.
 
@@ -61,3 +61,6 @@ The statement block is executed as long as the condition evaluates to `true`.
 
 ### *Discussion*
 >Due to the challenge they pose for execution, we would like to discourage the use of loops that break based on a condition and hence do not support while-loops within operations. We may consider allowing the use of `while`-loops within operations in the future, imposing that the condition cannot depend on the outcomes of quantum measurements. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

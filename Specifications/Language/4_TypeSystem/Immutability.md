@@ -16,3 +16,6 @@ it applies to the handle that allows one to access a value rather than to the va
 
 Of course, this is merely a description of the formally defined behavior; under the hood, the actual implementation uses a reference counting scheme to avoid copying memory as much as possible. 
 The modification is specifically done in-place as long as there is only one currently valid handle that accesses a certain value.
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

@@ -48,3 +48,6 @@ A temporarily used storage qubit `anc` is automatically cleaned up before it is 
 
 ### *Discussion*
 >Returning control from within the `apply`-block is not yet supported. It should be possible to support this in the future. The expected behavior in this case is to evaluate the returned value before the adjoint of the `within`-block is executed, any qubits going out of scope are released (`anc` in this case), and the control is returned to the callee. In short, the statement should behave similarly to a `try-finally` pattern in C#. However, the necessary functionality is not yet implemented. 
+
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

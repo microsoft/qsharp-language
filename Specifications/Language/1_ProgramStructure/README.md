@@ -80,3 +80,5 @@ To execute the program after having built it, run the command
 ```
 The invocation above will output that the amplitudes of the quantum state after application of the QFT are evenly distributed and real. Note that the reason that we can so readily output the amplitudes of the state vector is that the above program is by default executed on a full state simulator, which supports outputting the tracked quantum state via `DumpRegister` for debugging purposes. The same would not be possible if we were to execute it on quantum hardware instead, and the two calls to `DumpRegister` in that case won't do anything. This can be seen by targeting the application to a particular hardware platform by adding the project property `<ExecutionTarget>honeywell.qpu</ExecutionTarget>` after `<PropertyGroup>`.
 
+
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
