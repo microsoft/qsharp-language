@@ -4,7 +4,7 @@ Welcome to the official repository for design of the Q# language and core librar
 
 Q# is designed by the Q# Language Design Team in collaboration with many contributors, partners, advisors, and the Quantum Systems team at Microsoft. The decisions about moving things to "approved in principle" are made by the language designer ("BDFL"), Bettina Heim.
 
-> _For more information about the corresponding library API design process, please see [the QuantumLibraries repo](https://github.com/microsoft/QuantumLibraries/wiki/Q%23-API-Design-Process)._
+> _For more information about the corresponding library API design process, please see [CoreLibraries section](https://github.com/microsoft/qsharp-language/blob/main/CoreLibraries/review-process.md)._
 
 ## Contributing
 
