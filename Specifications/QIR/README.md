@@ -43,8 +43,13 @@ of the target platform.
 We know that many current targets will not support the full breadth of possible
 quantum programs that can be expressed in this representation.
 We define a sequence of specification _profiles_ that define
-coherent subsets of functionality that a specific target can support. 
-Please take a look at [this document](Profiles.md) for more details. 
+coherent subsets of functionality that a specific target can support.
+Please take a look at [this document](Profiles.md) for more details.
+
+## Current Projects / Users
+
+The [list page](List.md) may be used to track current public projects that use QIR.
+Please file a pull request to this page if you'd like your project listed.
 
 ## Index
 
