@@ -11,12 +11,12 @@ that may be used by language-specific compilers.
 
 We define the following functions for managing qubits:
 
-| Function                        | Signature       | Description |
-|---------------------------------|-----------------|-------------|
-| quantum.rt.qubit_allocate       | `%Qubit*()`     | Allocates a single qubit. |
-| quantum.rt.qubit_allocate_array | `%Array*(i64)`  | Allocates an array of qubits. |
-| quantum.rt.qubit_release        | `void(%Qubit*)` | Release a single qubit. |
-| quantum.rt.qubit_release_array  | `void(%Array*)` | Release an array of qubits. |
+| Function                            | Signature       | Description |
+|-------------------------------------|-----------------|-------------|
+| __quantum__rt__qubit_allocate       | `%Qubit*()`     | Allocates a single qubit. |
+| __quantum__rt__qubit_allocate_array | `%Array*(i64)`  | Allocates an array of qubits. |
+| __quantum__rt__qubit_release        | `void(%Qubit*)` | Release a single qubit. |
+| __quantum__rt__qubit_release_array  | `void(%Array*)` | Release an array of qubits. |
 
 Allocated qubits are not guaranteed to be in any particular state.
 If a language guarantees that allocated qubits will be in a specific state, the compiler
@@ -25,12 +25,12 @@ Qubits should be unentangled -- measured out -- before they are released.
 
 If borrowing qubits is supported, then the following runtime functions should also be provided:
 
-| Function                        | Signature       | Description |
-|---------------------------------|-----------------|-------------|
-| quantum.rt.qubit_borrow         | `%Qubit*()`     | Borrow a single qubit. |
-| quantum.rt.qubit_borrow_array   | `%Array*(i64)`  | Borrow an array of qubits. |
-| quantum.rt.qubit_return         | `void(%Qubit*)` | Return a borrowed qubit. |
-| quantum.rt.qubit_return_array   | `void(%Array*)` | Return an array of borrowed qubits. |
+| Function                            | Signature       | Description |
+|-------------------------------------|-----------------|-------------|
+| __quantum__rt__qubit_borrow         | `%Qubit*()`     | Borrow a single qubit. |
+| __quantum__rt__qubit_borrow_array   | `%Array*(i64)`  | Borrow an array of qubits. |
+| __quantum__rt__qubit_return         | `void(%Qubit*)` | Return a borrowed qubit. |
+| __quantum__rt__qubit_return_array   | `void(%Array*)` | Return an array of borrowed qubits. |
 
 Borrowing qubits means supplying qubits that are guaranteed not to be otherwise
 accessed while they are borrowed.
