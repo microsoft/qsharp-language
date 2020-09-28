@@ -182,7 +182,7 @@ operation FlipCoin() : Result {
 }
 ```
 
-Each example below is equivalent to the corresponding example in the Current Status section with the same number.
+Each example below is equivalent to the corresponding example in the [Current Status](#current-status) section with the same number.
 
 ### Examples
 
