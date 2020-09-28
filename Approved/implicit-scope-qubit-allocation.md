@@ -214,7 +214,7 @@ operation NestedBlocks(n : Int) : Result {
     use b = Qubit[2 * n + 1];
     use c = Qubit[n];
     // ...
-    return M(q); // q is released here.
+    return M(q); // a, b, and c are released here.
 }
 ```
 
@@ -225,7 +225,7 @@ operation UsingAndBorrowing() : Result {
     use a = Qubit();
     borrow b = Qubit();
     // ...
-    return M(a); // a is released here.
+    return M(a); // a and b are released here.
 }
 ```
 
