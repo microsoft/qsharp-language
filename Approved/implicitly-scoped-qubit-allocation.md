@@ -8,7 +8,7 @@ date: September 28, 2020
 # Proposal
 
 1. Add new `use` and `borrow` statements to allocate qubits that are valid until the end of the current block.
-2. Add new unconditional block statement that does not require a preceding keyword, and is executed exactly once; equivalent to `if (true) { }`.
+2. Add new scope statement that does not require a preceding keyword, and is executed exactly once; equivalent to `if (true) { }`.
 3. Deprecate and remove existing `using` and `borrowing` block statements.
 
 # Justification
@@ -32,7 +32,7 @@ Finally, this proposal aims to be syntactically minimal and consistent with othe
 ## Current Status
 
 Currently, the only mechanism to allocate qubits in Q# is with `using` and `borrowing` block statements.
-These statements will be deprecated and removed, replaced with new `use` and `borrow` statements that do not require a block, as well as a new unconditional block statement that can be used when a new block is desired.
+These statements will be deprecated and removed, replaced with new `use` and `borrow` statements that do not require a block, as well as a new scope statement that can be used when a new block is desired.
 
 No new functionality is provided by this proposal.
 Every example with the existing syntax has a corresponding equivalent example with the proposed syntax, and vice versa.
@@ -140,7 +140,7 @@ operation FlipCoin() : Unit {
 }
 ```
 
-In combination with the new unconditional block statement, the lifetime control provided by `using` can be obtained:
+In combination with the new scope statement, the lifetime control provided by `using` can be obtained:
 
 ```qsharp
 operation FlipCoin() : Result {
@@ -251,10 +251,10 @@ The proposal could be implemented in one of two ways:
 
 1. As syntactic sugar for the existing block statements.
    The new `use` and `borrow` statements are transformed in the AST into `using` and `borrowing` block statements, taking in the remaining statements of the block automatically.
-   The unconditional block statement could be transformed into `if (true) { }`.
+   The scope statement could be transformed into `if (true) { }`.
    This would require no change to code generation.
 2. As new AST nodes, similar to `let` and `mutable` nodes for classical values.
-   A new unconditional block AST node is added.
+   A new scope statement AST node is added.
    Code generation must release qubits at the end of the scope, but this is already analogous to reference counting for certain data types like arrays in QIR.
 
 Both options seem similar in terms of complexity and implementation timeline, but option 2 seems like the cleaner solution.
@@ -274,7 +274,7 @@ It does not change the behavior of qubit management; it only provides new syntax
 
 ## Impact on Existing Mechanisms
 
-The unconditional block statement added in this proposal can also be used to limit the scope of non-qubit variable bindings declared with `let` and `mutable`.
+The scope statement added in this proposal can also be used to limit the scope of non-qubit variable bindings declared with `let` and `mutable`.
 This may be useful for limiting the lifetime of large data structures like arrays or for otherwise communicating the intent that a variable should only be used in a specific section within a callable.
 
 ## Anticipated Interactions with Future Modifications
@@ -324,9 +324,9 @@ This alternative has the advantage of being backwards-compatible, but introduces
 1. The `using` and `borrowing` keywords are re-used in different contexts: sometimes it is a block statement and sometimes it is a non-block statement.
    New keywords `use` and `borrow` could be introduced for the non-block statements, but this adds redundancy and keyword clutter.
 2. The block statement requires parentheses around the declaration, but the non-block statement does not.
-3. Unconditional block statements, as proposed earlier, can also be used to control the scope of non-qubit variables declared with `let` or `mutable`.
+3. Scope statements, as proposed earlier, can also be used to control the scope of non-qubit variables declared with `let` or `mutable`.
    This is not possible with this alternative.
-   If unconditional block statements are added later, the block `using` statement syntax becomes redundant with the combination of an unconditional block and a non-block `using` statement.
+   If scope statements are added later, the block `using` statement syntax becomes redundant with the combination of a scope statement and a non-block `using` statement.
 
 ### Alternative 2
 
