@@ -13,7 +13,7 @@ date: September 28, 2020
 
 # Justification
 
-Qubit allocation is curently awkward in Q# for two reasons:
+Qubit allocation is currently awkward in Q# for two reasons:
 
 1. It requires creating a new block to define the lifetime of the qubit, even when the intended lifetime is the same as the current block.
 2. Allocating multiple qubits at the same time requires either tuple destructuring or nested blocks, both of which can be hard to read.
