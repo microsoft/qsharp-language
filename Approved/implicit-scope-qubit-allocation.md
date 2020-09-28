@@ -247,32 +247,34 @@ operation DifferentLifetime() : Result {
 
 # Implementation
 
-TODO:    
-Describe how the made proposal could be implemented and why it should be implemented in this way.    
-Be specific regarding the efficiency, and potential caveats of such an implementation.    
-Based on that description a user should be able to determine when to use or not to use the proposed modification and how.
+The proposal could be implemented in one of two ways:
+
+1. As syntactic sugar for the existing block statements.
+   The new `use` and `borrow` statements are transformed in the AST into `using` and `borrowing` block statements, taking in the remaining statements of the block automatically.
+   The unconditional block statement could be transformed into `if (true) { }`.
+   This would require no change to code generation.
+2. As new AST nodes, similar to `let` and `mutable` nodes for classical values.
+   A new unconditional block AST node is added.
+   Code generation must release qubits at the end of the scope, but this is already analogous to reference counting for certain data types like arrays in QIR.
+
+Both options seem similar in terms of complexity and implementation timeline, but option 2 seems like the cleaner solution.
+Neither option has any performance differences compared to the existing implementation.
 
 ## Timeline
 
-TODO:    
-List any dependencies that the proposed implementation relies on.    
-Estimate the resources required to accomplish each step of the proposed implementation. 
+There are no dependencies on other proposals or libraries.
+The work needed for either option appears to be minimal, since it is similar to the existing implementation.
 
 # Further Considerations
 
-TODO:    
-Provide any context and background information that is needed to discuss the concepts in detail that are related to or impacted by your proposal.
-
 ## Related Mechanisms
 
-TODO:    
-Provide detailed information about the mechanisms and concepts that are relevant for or related to your proposal,
-as well as their role, realization and purpose within Q#. 
+This proposal relies on the existing qubit management functionality that is already a core feature of Q#.
+It does not change the behavior of qubit management; it only provides new syntax for existing functionality.
 
 ## Impact on Existing Mechanisms
 
-TODO:    
-Describe in detail the impact of your proposal on existing mechanisms and concepts within Q#. 
+There is no impact besides what has been described above.
 
 ## Anticipated Interactions with Future Modifications
 
