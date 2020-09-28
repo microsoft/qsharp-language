@@ -31,7 +31,7 @@ Finally, this proposal aims to be syntactically minimal and consistent with othe
 
 ## Current Status
 
-The only mechanism to allow qubits in Q# currently is with `using` and `borrowing` block statements.
+Currently, the only mechanism to allocate qubits in Q# is with `using` and `borrowing` block statements.
 These statements will be deprecated and removed, replaced with new `use` and `borrow` statements that do not require a block, as well as a new unconditional block statement that can be used when a new block is desired.
 
 No new functionality is provided by this proposal.
