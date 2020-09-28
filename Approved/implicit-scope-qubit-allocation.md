@@ -274,25 +274,64 @@ It does not change the behavior of qubit management; it only provides new syntax
 
 ## Impact on Existing Mechanisms
 
-There is no impact besides what has been described above.
+The unconditional block statement added in this proposal can also be used to limit the scope of non-qubit variable bindings declared with `let` and `mutable`.
+This may be useful for limiting the lifetime of large data structures like arrays or for otherwise communicating the intent that a variable should only be used in a specific section within a callable.
 
 ## Anticipated Interactions with Future Modifications
 
-TODO:    
-Describe how the proposed modification ties in with possible future developments of Q#.
-Describe what developments it can facilitate and/or what functionalities depend on the proposed modification.
+Because the proposed modification is similar to existing functionality, it is not expected to have any impact on future language development.
 
 ## Alternatives
 
-TODO:    
-Explain alternative mechanisms that would serve a similar purpose as the proposed modification.    
-For each one, discuss what the implications are for the future development of Q#.
+### Alternative 1: Add new statements while preserving existing block syntax
+
+Q# could add non-block `using` and `borrowing` statements while preserving existing syntax:
+
+```qsharp
+using q = Qubit();
+// ...
+
+using (q = Qubit()) {
+    // ...
+}
+
+borrowing q = Qubit();
+// ...
+
+borrowing (q = Qubit()) {
+    // ...
+}
+```
+
+### Alternative 2: Add compound using and borrowing block statements
+
+Instead of adding non-block statements, Q# could extend the existing block statement syntax to allow multiple `using` and `borrowing` statements in a row that have only one block attached:
+
+```qsharp
+using (a = Qubit())
+borrowing (b = Qubit())
+using (c = Qubit()) {
+    // ...
+}
+```
 
 ## Comparison to Alternatives
 
-TODO:    
-Compare your proposal to the possible alternatives and compare the advantages and disadvantages of each approach. 
-Compare in particular their impact on the future development of Q#. 
+### Alternative 1
+
+This alternative has the advantage of being backwards-compatible, but introduces inconsistencies and added complexity:
+
+1. The `using` and `borrowing` keywords are re-used in different contexts: sometimes it is a block statement and sometimes it is a non-block statement.
+   New keywords `use` and `borrow` could be introduced for the non-block statements, but this adds redundancy and keyword clutter.
+2. The block statement requires parentheses around the declaration, but the non-block statement does not.
+3. Unconditional block statements, as proposed earlier, can also be used to control the scope of non-qubit variables declared with `let` or `mutable`.
+   This is not possible with this alternative.
+   If unconditional block statements are added later, the block `using` statement syntax becomes redundant with the combination of an unconditional block and a non-block `using` statement.
+
+### Alternative 2
+
+This alternative has syntax that is somewhat unusual and inconsistent with other statements in Q#.
+While it reduces block nesting when multiple variables are needed, it does not address the problem that at least one new block is always needed even if the lifetime of the qubits is the same as the parent block.
 
 # Raised Concerns
 
