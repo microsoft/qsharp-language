@@ -68,7 +68,7 @@ Example 2a: Many qubits allocated in a single `using` statement with tuple destr
 operation QubitTuple(n : Int) : Result {
     using ((a, b, c) = (Qubit(), Qubit[2 * n + 1], Qubit[n])) {
         // ...
-        return M(q);
+        return M(a);
     }
 }
 ```
@@ -81,7 +81,7 @@ operation NestedBlocks(n : Int) : Result {
         using (b = Qubit[2 * n + 1]) {
             using (c = Qubit[n]) {
                 // ...
-                return M(q);
+                return M(a);
             }
         }
     }
@@ -214,7 +214,7 @@ operation NestedBlocks(n : Int) : Result {
     use b = Qubit[2 * n + 1];
     use c = Qubit[n];
     // ...
-    return M(q); // a, b, and c are released here.
+    return M(a); // a, b, and c are released here.
 }
 ```
 
