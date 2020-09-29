@@ -53,6 +53,12 @@ They are represented as follows:
 | `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
 | `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value to or from a compiled routine, ranges should be passed by value. |
 
+LLVM and QIR place some limits on integer values.
+Specifically, when raising an integer to a power, the exponent must fit
+into a 32-bit integer, `i32`.
+Also, bit shifts are limited to shift counts that are non-negative and
+less than 64.
+
 A `%Range` is an expression that represents a sequence of integers.
 The first element of the sequence is the `start` of the range, the second
 element is `start+step`, the third element is `start+2*step`, and so forth.
@@ -89,8 +95,6 @@ simple types:
 
 | Function                          | Signature                | Description |
 |-----------------------------------|--------------------------|-------------|
-| __quantum__rt__int_power          | `i64(i64, i64)`          | Returns the first integer raised to the second integer power. This function is required because the LLVM `llvm.powi`
-intrinsic does not allow `i64` exponents. |
 | __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
 | __quantum__rt__result_reference   | `void(%Result*)`         | Increments the reference count of a Result pointer. |
 | __quantum__rt__result_unreference | `void(%Result*)`         | Decrements the reference count of a Result pointer and releases the result if appropriate. |
@@ -153,13 +157,13 @@ big integers.
 | __quantum__rt__bigint_multiply    | `%BigInt*(%BigInt*, %BigInt*)` | Multiplies two big integers and returns their product. |
 | __quantum__rt__bigint_divide      | `%BigInt*(%BigInt*, %BigInt*)` | Divides the first big integer by the second and returns their quotient. |
 | __quantum__rt__bigint_modulus     | `%BigInt*(%BigInt*, %BigInt*)` | Returns the first big integer modulo the second. |
-| __quantum__rt__bigint_power       | `%BigInt*(%BigInt*, i32)`      | Returns the big integer raised to the integer power. |
+| __quantum__rt__bigint_power       | `%BigInt*(%BigInt*, i32)`      | Returns the big integer raised to the integer power. As with standard integers, the exponent must fit in 32 bits. |
 | __quantum__rt__bigint_bitand      | `%BigInt*(%BigInt*, %BigInt*)` | Returns the bitwise-AND of two big integers. |
 | __quantum__rt__bigint_bitor       | `%BigInt*(%BigInt*, %BigInt*)` | Returns the bitwise-OR of two big integers. |
 | __quantum__rt__bigint_bitxor      | `%BigInt*(%BigInt*, %BigInt*)` | Returns the bitwise-XOR of two big integers. |
 | __quantum__rt__bigint_bitnot      | `%BigInt*(%BigInt*)`           | Returns the bitwise complement of the big integer. |
-| __quantum__rt__bigint_shiftleft   | `%BigInt*(%BigInt*, i64)`      | Returns the big integer arithmetically shifted left by the integer amount of bits. |
-| __quantum__rt__bigint_shiftright  | `%BigInt*(%BigInt*, i64)`      | Returns the big integer arithmetically shifted right by the integer amount of bits. |
+| __quantum__rt__bigint_shiftleft   | `%BigInt*(%BigInt*, i64)`      | Returns the big integer arithmetically shifted left by the (positive) integer amount of bits. |
+| __quantum__rt__bigint_shiftright  | `%BigInt*(%BigInt*, i64)`      | Returns the big integer arithmetically shifted right by the (positive) integer amount of bits. |
 | __quantum__rt__bigint_equal       | `i1(%BigInt*, %BigInt*)`       | Returns true if the two big integers are equal, false otherwise. |
 | __quantum__rt__bigint_greater     | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than the second, false otherwise. |
 | __quantum__rt__bigint_greater_eq  | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than or equal to the second, false otherwise. |
