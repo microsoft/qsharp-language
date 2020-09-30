@@ -34,8 +34,56 @@ Changing the values accessed by variables of array type thus requires explicitly
 
 ## Evaluate-and-Reassign Statements
 
-Statements of the form `set intValue += 1;` are common in many other languages. Here, `intValue` needs to be a mutably bound variable of type `Int`. Similar statements in fact exist for a wide range of [operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators). More precisely, such evaluate-and-reassign statements exist for all operators where the type of the left-most sub-expression matches the expression type.
-This is the case for [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions), for binary logical and bitwise operators including right and left shift, for arithmetic expressions including exponentiation and modulus, as well as for concatenations. The `set` keyword in this case needs to be followed by a single mutable variable, which is inserted as the left-most sub-expression by the compiler. 
+Statements of the form `set intValue += 1;` are common in many other languages. Here, `intValue` needs to be a mutably bound variable of type `Int`.
+Such statements provide a convenient way of concatenation if the right hand side consists of the application of a binary operator and the result is to be rebound to the left argument to the operator. 
+For example,
+```qsharp
+mutable counter = 0;
+for (i in 1 .. 2 .. 10) {
+    set counter += 1;
+    // ...
+}
+```
+increments the value of the counter `counter` in each iteration of the `for` loop. The code above is equivalent to 
+```qsharp
+mutable counter = 0;
+for (i in 1 .. 2 .. 10) {
+    set counter = counter + 1;
+    // ...
+}
+```
+
+Similar statements exist for a wide range of [operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators). The `set` keyword in this case needs to be followed by a single mutable variable, which is inserted as the left-most sub-expression by the compiler.
+Such evaluate-and-reassign statements exist for all operators where the type of the left-most sub-expression matches the expression type. 
+More precisely, they are available for binary logical and bitwise operators including right and left shift, for arithmetic expressions including exponentiation and modulus, for concatenations, as well as for [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions).
+
+The following function for example computes the sum of an array of [`Complex`](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations) numbers:
+
+```qsharp
+function ComplexSum(values : Complex[]) : Complex {
+
+    mutable res = Complex(0.,0.);
+    for (complex in values) {
+        set res w/= Re <- res::Re + complex::Re; 
+        set res w/= Im <- res::Im + complex::Im; 
+    }
+    return res;
+}
+```
+
+Similarly, the following function multiplies each item in an array with the given factor:
+
+```qsharp
+function Multiplied(factor : Double, array : Double[]) : Double[] {
+
+    mutable res = new Double[Length(array)];
+    for (i in IndexRange(res)) {
+        set res w/= i <- factor * array[i];
+    }
+    return res;
+}
+```
+
 
 The section on [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) contains other examples where expressions can be omitted in a certain context when a suitable expression can be inferred by the compiler.
 

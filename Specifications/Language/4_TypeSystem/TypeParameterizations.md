@@ -28,7 +28,7 @@ A type parametrized callable needs to be concretized before it can be assigned o
     }
 ```
 
-The function `CControlled` is defined in the Microsoft.Quantum.Canon namespace. It takes an operation `op` of type `('TIn => Unit)` as argument and returns a new operation of type `((Bool, 'TIn) => Unit)` that applies the original operation provided a classical bit (of type `Bool`) is set to true; this is often referred to as the classically controlled version of `op`. 
+The function `CControlled` is defined in the `Microsoft.Quantum.Canon` namespace. It takes an operation `op` of type `('TIn => Unit)` as argument and returns a new operation of type `((Bool, 'TIn) => Unit)` that applies the original operation provided a classical bit (of type `Bool`) is set to true; this is often referred to as the classically controlled version of `op`. 
 
 The function `Mapped` takes an array of an arbitrary item type `'T1` as argument, applies the given `mapper` function to each item and returns a new array of type `'T2[]` containing the mapped items. It is defined in the `Microsoft.Quantum.Array` namespace. For the purpose of the example, the type parameters are numbered to avoid making the discussion more confusing by giving the type parameters in both functions the same name. This is not necessary; type parameters for different callables may have the same name, and the chosen name is only visible and relevant within the definition of that callable. 
 
