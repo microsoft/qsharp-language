@@ -11,16 +11,25 @@ The reason that this may be somewhat misleading is that `let`-statements define 
     set var2 = var2 + 1; 
 ```
 
-Line 1 declares a variable named `var1` that cannot be reassigned and will always contain the value `3`. Line 2 on the other hand defines a variable `var2` that is temporarily bound to the value `3`, but can be reassigned to a different value later on. Such a reassignment can be done via a `set`-statement, as shown in Line 3. The same could have been expressed with the shorter version `set var2 += 1;` explained further below, as it is common in other languages as well. 
-
-For all three statements, the left hand side consists of a symbol or a symbol tuple.
-It may contain nested symbols and/or omitted symbols, indicated by an underscore. 
-This is in fact obeyed by all assignments in Q#, including, e.g., qubit allocations and loop-variable assignments. 
+Line 1 declares a variable named `var1` that cannot be reassigned and will always contain the value `3`. Line 2 on the other hand defines a variable `var2` that is temporarily bound to the value `3`, but can be reassigned to a different value later on. Such a reassignment can be done via a `set`-statement, as shown in Line 3. The same could have been expressed with the shorter version `set var2 += 1;` explained further [below](#evaluate-and-reassign-statements), as it is common in other languages as well. 
 
 To summarize:
 * `let` is used to create an immutable binding.
 * `mutable` is used to create a mutable binding.
 * `set` is used to change the value of a mutable binding.
+
+For all three statements, the left hand side consists of a symbol or a symbol tuple;
+i.e. if the right-hand side of the binding is a tuple, then that tuple may be fully or partially deconstructed upon assignment. The only requirement for deconstruction is that the shape of the tuple on the right hand side matches the shape of the symbol tuple.
+The symbol tuple may contain nested tuples and/or omitted symbols, indicated by an underscore. 
+For example:
+
+```qsharp
+let (a, (_, b)) = (1, (2, 3)); // a is bound to 1, b is bound to 3
+mutable (x, y) = ((1, 2), [3, 4]); // x is bound to (1, 2), y is bound to [3, 4]
+set (x, _, y) = ((5, 6), 7, [8]);  // x is re-bound to (5,6), y is re-bound to [8]
+```
+
+The same deconstruction rules are obeyed by all assignments in Q#, including, e.g., qubit allocations and loop-variable assignments. 
 
 For both kinds of binding, the types of the variables are inferred from the right-hand side of the binding. The type of a variable always remains the same and a `set`-statement cannot change it.
 Local variable can be declared as either being mutable or immutable, with some exceptions like loop-variables in `for`-loops for which the behavior is predefined and cannot be specified.
