@@ -355,9 +355,9 @@ There might be a cleaner way to separate the operation characteristics from the 
 
 ## Comparison to Alternatives
 
-1. While a complete inference of operation characteristics might be desireable, it would involve a significant amount of non-trivial work. 
+1. While a complete inference of operation characteristics might be desirable, it would involve a significant amount of non-trivial work. 
 For now and in the near future, it makes sent to prioritize other improvements to the language. 
-If Q# at some point supports full inference in that regard, it would still be desireable to allow explicit annotations on operation declarations for the sake of clarity and code safety. 
+If Q# at some point supports full inference in that regard, it would still be desirable to allow explicit annotations on operation declarations for the sake of clarity and code safety. 
 Introducing partial inference as proposed here therefore seems like a reasonable step independent of future developments. 
 
 2. Making the characteristics annotation optional seems reasonable in order to avoid an unnecessary breaking change relative to what is supported today. 

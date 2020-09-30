@@ -13,7 +13,7 @@ Insert a short outline for what the proposal is.
 # Justification
 
 TODO:    
-Explain why this modification to the Q# language is needed or desireable.    
+Explain why this modification to the Q# language is needed or desirable.    
 Explain both the benefit of the proposed modification as well as briefly summarize the benefits of the chosen mechanism opposed to other ways of achieving a similar functionality. 
 
 # Description
