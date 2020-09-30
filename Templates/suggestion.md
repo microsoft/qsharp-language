@@ -13,7 +13,7 @@ Insert a short outline for what the proposed modification is.
 ## Considerations
 
 TODO:    
-Explain why this modification to the Q# language is desireable.    
+Explain why this modification to the Q# language is desirable.    
 Briefly summarize the benefits and drawbacks of the chosen mechanism opposed to other ways of achieving a similar functionality. 
 
 ## Context

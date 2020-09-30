@@ -244,7 +244,7 @@ and the existing data structures for set-statements need to be modified to expec
 
 An efficient processing of copy-and-update expressions for arrays in the backend is possible by detecting copy-and-update expressions followed by re-assignment to the same symbol and leveraging the existing setup. 
 
-To mitigate the impact on user code, support for processing no longer supported set-statement in the formatting tool is desireable. 
+To mitigate the impact on user code, support for processing no longer supported set-statement in the formatting tool is desirable. 
 However, due to avoid further confusion, the suggestion is to make it a clear breaking change giving a compilation error for no longer supported syntax rather than merely a deprecated warning. 
 
 ## Timeline
@@ -260,14 +260,14 @@ Arrays provide the only means to store an amount of data that is only determined
 Keeping arrays as value types is desirable due to the vast implications that introducing reference types within operations would have. 
 The restriction to value types - combined with the imposed limitations on qubit allocations and de-allocations - allows to provide guarantees about program state that may be used for optimization with with little overhead and required infrastructure within the compiler. 
 Extending the type system while maintaining these guarantees may be possible at a later point in time but requires careful evaluation and consideration. 
-In any case, providing immutable arrays as data structures in Q# remains desireable. 
+In any case, providing immutable arrays as data structures in Q# remains desirable. 
 
 ## Related Mechanisms
 
 The behavior of a value is fully determined by its type. 
 In particular, the behavior related to item access and manipulations should be the same for all types that follow value semantic and provide item access.
 Correspondingly, this modification needs to be coordinated with any item access that we provide for tuples and user-defined types. 
-There should be no direct interactions, but a consistent syntax for copy-and-update expressions is desireable.
+There should be no direct interactions, but a consistent syntax for copy-and-update expressions is desirable.
 
 Clarifying the concept of mutability and its role in Q# also allows us to meaningfully support syntactic abbreviations of the form "apply-and-reassign" like e.g. an increment-and-reassign operator `+=`. 
 Since this proposal introduces such a construct into the language for the first time, it stands to reason that similar operators should be introduced as well. 
