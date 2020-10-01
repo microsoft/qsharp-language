@@ -267,6 +267,8 @@ The work needed for either option appears to be minimal, since it is similar to 
 
 # Further Considerations
 
+Development tools should consider adding support for transitioning from the current syntax to the proposed syntax, such as a code action in IDEs.
+
 ## Related Mechanisms
 
 This proposal relies on the existing qubit management functionality that is already a core feature of Q#.
