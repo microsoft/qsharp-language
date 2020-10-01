@@ -276,6 +276,9 @@ It does not change the behavior of qubit management; it only provides new syntax
 
 ## Impact on Existing Mechanisms
 
+The new keywords `use` and `borrow` were previously valid Q# identifiers.
+Adding them is a breaking change, unless an opt-in mechanism for new keywords is added to the language.
+
 The scope statement added in this proposal can also be used to limit the scope of non-qubit variable bindings declared with `let` and `mutable`.
 This may be useful for limiting the lifetime of large data structures like arrays or for otherwise communicating the intent that a variable should only be used in a specific section within a callable.
 
