@@ -20,6 +20,7 @@ programs are implemented in terms of statements and expressions, much like in cl
     1. [Specialization Declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations)
     1. [Attributes](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/5_Attributes.md#attributes)
     1. [Access Modifiers](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/6_AccessModifiers.md#access-modifiers)
+    1. [Comments](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/7_Comments.md#comments)
 
 1. [Statements](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/2_Statements#statements)
     1. [Quantum Memory Management](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management)
