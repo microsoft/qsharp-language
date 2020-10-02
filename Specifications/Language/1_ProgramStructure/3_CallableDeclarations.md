@@ -40,4 +40,10 @@ Here, `body` specifies that the given implementation applies to the default body
 
 The same applies to operations; when there is exactly one specialization defining the implementation of the default body, the additional wrapping of the form `body (...){ <implementation> }` may be omitted.
 
+## Recursion
+
+Q# callables can be directly or indirectly recursive and can be declared in any order; an operation or function may call itself, or it may call another callable that directly or indirectly calls the caller. 
+
+When executing on quantum hardware, stack space may be limited, and recursions that exceed that limit will result in a runtime error.
+
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
