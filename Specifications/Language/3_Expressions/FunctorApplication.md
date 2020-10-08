@@ -4,7 +4,7 @@ Functors are factories that allow to access particular specialization implementa
 
 The `Controlled` and `Adjoint` functors commute; if `ApplyUnitary` is an operation that supports both functors, then there is no difference between `Controlled Adjoint ApplyUnitary` and `Adjoint Controlled ApplyUnitary`; both have the same type and upon invocation execute the implementation defined for the `controlled adjoint` [specialization](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations).
 
-## Adjoint functor
+## Adjoint Functor
 
 If the operation `ApplyUnitary` defines a unitary transformation *U* of the quantum state, `Adjoint ApplyUnitary` accesses the implementation of *U†*. The `Adjoint` functor is its own inverse, since *(U†)† = U* by definition; i.e. `Adjoint Adjoint ApplyUnitary` is the same as `ApplyUnitary`.
 
@@ -13,7 +13,7 @@ The expression `Adjoint ApplyUnitary` is an operation of the same type as `Apply
 Adjoint ApplyUnitary(arg) 
 ```
 
-## Controlled functor
+## Controlled Functor
 
 For an operation `ApplyUnitary` that defines a unitary transformation *U* of the quantum state, `Controlled ApplyUnitary` accesses the implementation that applies *U* conditional on all qubits in an array of control qubits being in a state |1⟩. 
 
