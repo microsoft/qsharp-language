@@ -25,7 +25,7 @@ It takes an argument of type `(Qubit[], <TIn>)`, where `<TIn>` should be replace
 | X | `Qubit` | `(Qubit[], Qubit)` | 
 | SWAP | `(Qubit, Qubit)` | `(Qubit[], (Qubit, Qubit))` |
 
-Concretely, if `cs` contains an array of qubits, `q1` and `q2` are two qubits, and the operation `SWAP` is as defined [here](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations), then the following expression exchanges the state of `q1` and `q2` if all qubits in `cs` are in a |1⟩ state:
+Concretely, if `cs` contains an array of qubits, `q1` and `q2` are two qubits, and the operation `SWAP` is as defined [here](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations), then the following expression exchanges the state of `q1` and `q2` if all qubits in `cs` are in the |1⟩ state:
 ```qsharp
 Controlled SWAP(cs, (q1, q2))
 ```
