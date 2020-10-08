@@ -2,14 +2,14 @@
 title: Implicitly-scoped qubit allocation
 description: Provides more convenient syntax for allocating qubits.
 author: Sarah Marshall
-date: September 28, 2020
+date: TBD
 ---
 
 # Proposal
 
-1. Add new `use` and `borrow` statements to allocate qubits that are valid until the end of the current block.
-2. Add new scope statement that does not require a preceding keyword, and is executed exactly once; equivalent to `if (true) { }`.
-3. Deprecate and remove existing `using` and `borrowing` block statements.
+1. Rename `using` and `borrowing` keywords to `use` and `borrow`.
+2. Allow `use` and `borrow` statements to be followed by either a block `{ ... }` or a semicolon `;`.
+3. Remove the requirement for parentheses around headers for all block statements.
 
 # Justification
 
@@ -32,8 +32,6 @@ Finally, this proposal aims to be syntactically minimal and consistent with othe
 ## Current Status
 
 Currently, the only mechanism to allocate qubits in Q# is with `using` and `borrowing` block statements.
-These statements will be deprecated and removed, replaced with new `use` and `borrow` statements that do not require a block, as well as a new scope statement that can be used when a new block is desired.
-
 No new functionality is provided by this proposal.
 Every example with the existing syntax has a corresponding equivalent example with the proposed syntax, and vice versa.
 However, the proposed syntax addresses several problems with the existing syntax:
@@ -47,7 +45,7 @@ However, the proposed syntax addresses several problems with the existing syntax
 4. Example 4a: When `using` and `borrowing` statements are mixed, nested blocks are required; tuple destructuring is not possible.
 
 Example 5a shows the main benefit of the current syntax: it allows the lifetime of a qubit to be shorter than the parent block.
-While this exact syntax will be removed, the proposed syntax can also express this in a simple way.
+This syntax is preserved by this proposal with only minor changes.
 
 ### Examples
 
@@ -66,9 +64,9 @@ Example 2a: Many qubits allocated in a single `using` statement with tuple destr
 
 ```qsharp
 operation QubitTuple(n : Int) : Result {
-    using ((a, b, c) = (Qubit(), Qubit[2 * n + 1], Qubit[n])) {
+    using ((a, b, c) = (Qubit[2 * n + 1], Qubit[n], Qubit())) {
         // ...
-        return M(a);
+        return M(c);
     }
 }
 ```
@@ -77,11 +75,11 @@ Example 3a: Many qubits allocated with a separate `using` block for each variabl
 
 ```qsharp
 operation NestedBlocks(n : Int) : Result {
-    using (a = Qubit()) {
+    using (a = Qubit[n]) {
         using (b = Qubit[2 * n + 1]) {
-            using (c = Qubit[n]) {
+            using (c = Qubit()) {
                 // ...
-                return M(a);
+                return M(c);
             }
         }
     }
@@ -117,70 +115,12 @@ operation DifferentLifetime() : Result {
 
 ## Proposed Modification
 
-The new `use` and `borrow` statements behave identically to `using` and `borrowing`, but the new block is implicitly defined to start at the statement and end at the end of the current block:
+The new `use` and `borrow` statements behave like the existing `using` and `borrowing` statements with two differences:
 
-```qsharp
-operation FlipCoin() : Result {
-    let x = 10;
-    use q = Qubit();
-    H(q);
-    return M(q);
-}
-```
-
-is equivalent to
-
-```qsharp
-operation FlipCoin() : Unit {
-    let x = 10;
-    using (q = Qubit()) {
-        H(q);
-        return M(q);
-    }
-}
-```
-
-In combination with the new scope statement, the lifetime control provided by `using` can be obtained:
-
-```qsharp
-operation FlipCoin() : Result {
-    mutable r = Zero;
-    {
-        use q = Qubit();
-        H(q);
-        set r = M(q);
-    }
-    return r;
-}
-```
-
-is equivalent to
-
-```qsharp
-operation FlipCoin() : Result {
-    mutable r = Zero;
-    if (true) {
-        using (q = Qubit()) {
-            H(q);
-            set r = M(q);
-        }
-    }
-    return r;
-}
-```
-
-or more simply
-
-```qsharp
-operation FlipCoin() : Result {
-    mutable r = Zero;
-    using (q = Qubit()) {
-        H(q);
-        set r = M(q);
-    }
-    return r;
-}
-```
+1. The block is optional.
+   If no block is provided, the scope of the qubit is implicitly defined to be from the `use` or `borrow` statement until the end of the current block.
+2. Parentheses around the header are not required.
+   For consistency, parentheses are no longer required around any block statement header.
 
 Each example below is equivalent to the corresponding example in the [Current Status](#current-status) section with the same number.
 
@@ -200,9 +140,9 @@ Example 2b: Many qubits allocated in a single `use` statement with tuple destruc
 
 ```qsharp
 operation QubitTuple(n : Int) : Result {
-    use (a, b, c) = (Qubit(), Qubit[2 * n + 1], Qubit[n]);
+    use (a, b, c) = (Qubit[2 * n + 1], Qubit[n], Qubit());
     // ...
-    return M(a); // a, b, and c are released here.
+    return M(c); // a, b, and c are released here.
 }
 ```
 
@@ -210,11 +150,11 @@ Example 3b: Many qubits allocated with a separate `use` statement for each varia
 
 ```qsharp
 operation NestedBlocks(n : Int) : Result {
-    use a = Qubit();
-    use b = Qubit[2 * n + 1];
-    use c = Qubit[n];
+    use a = Qubit[2 * n + 1];
+    use b = Qubit[n];
+    use c = Qubit();
     // ...
-    return M(a); // a, b, and c are released here.
+    return M(c); // a, b, and c are released here.
 }
 ```
 
@@ -229,13 +169,12 @@ operation UsingAndBorrowing() : Result {
 }
 ```
 
-Example 5b: A qubit allocated in new block and released before the end of the outer block.
+Example 5b: A qubit allocated within a new block and released before the end of the outer block.
 
 ```qsharp
 operation DifferentLifetime() : Result {
     mutable r = Zero;
-    {
-        use q = Qubit();
+    use q = Qubit() {
         // Apply operations...
         set r = M(q);
         // q is released here.
@@ -247,18 +186,12 @@ operation DifferentLifetime() : Result {
 
 # Implementation
 
-The proposal could be implemented in one of two ways:
+The `use` and `borrow` keywords can be added, and the `using` and `borrowing` keywords can be deprecated.
+Until `using` and `borrowing` are removed, they can be used in place of `use` and `borrow` for both the block and non-block statements.
 
-1. As syntactic sugar for the existing block statements.
-   The new `use` and `borrow` statements are transformed in the AST into `using` and `borrowing` block statements, taking in the remaining statements of the block automatically.
-   The scope statement could be transformed into `if (true) { }`.
-   This would require no change to code generation.
-2. As new AST nodes, similar to `let` and `mutable` nodes for classical values.
-   A new scope statement AST node is added.
-   Code generation must release qubits at the end of the scope, but this is already analogous to reference counting for certain data types like arrays in QIR.
-
-Both options seem similar in terms of complexity and implementation timeline, but option 2 seems like the cleaner solution.
-Neither option has any performance differences compared to the existing implementation.
+The block for the existing `using` and `borrowing` syntax nodes can be made optional.
+Either the block remains optional throughout all stages of the syntax tree, or the non-block form is transformed into the block form by automatically moving all statements below it into a new block.
+In the former case, all syntax tree consumers need to be aware of both forms, while in the latter case consumers would notice no change from the current syntax tree node.
 
 ## Timeline
 
@@ -279,38 +212,54 @@ It does not change the behavior of qubit management; it only provides new syntax
 The new keywords `use` and `borrow` were previously valid Q# identifiers.
 Adding them is a breaking change, unless an opt-in mechanism for new keywords is added to the language.
 
-The scope statement added in this proposal can also be used to limit the scope of non-qubit variable bindings declared with `let` and `mutable`.
-This may be useful for limiting the lifetime of large data structures like arrays or for otherwise communicating the intent that a variable should only be used in a specific section within a callable.
-
-## Anticipated Interactions with Future Modifications
-
-Because the proposed modification is similar to existing functionality, it is not expected to have any impact on future language development.
-
-## Alternatives
-
-### Alternative 1: Add new statements while preserving existing block syntax
-
-Q# could add non-block `using` and `borrowing` statements while preserving existing syntax:
+For consistency, parentheses are no longer required for all block statement headers.
+That means that the following code is now valid:
 
 ```qsharp
-using q = Qubit();
-// ...
-
-using (q = Qubit()) {
-    // ...
+if M(q) == One {
+    X(q);
 }
 
-borrowing q = Qubit();
-// ...
-
-borrowing (q = Qubit()) {
-    // ...
+for x in xs {
+    Message(x);
 }
 ```
 
-### Alternative 2: Add compound using and borrowing block statements
+## Anticipated Interactions with Future Modifications
 
-Instead of adding non-block statements, Q# could extend the existing block statement syntax to allow multiple `using` and `borrowing` statements in a row that have only one block attached:
+Removing parentheses around block statement headers may affect future syntax development.
+For example, it would not be possible to make the braces optional without also re-introducing parentheses or another token, because of parsing issues with code like:
+
+```qsharp
+if M(q) == One
+    X(q);
+```
+
+## Alternatives
+
+### Alternative 1: Remove `use` and `borrow` block statements and add scope statement
+
+Instead of allowing both block and non-block `use` and `borrow` statements, only the non-block form could be allowed.
+A scope statement could be added to limit the lifetime of qubits.
+
+```qsharp
+{
+    use q = Qubit();
+    X(q);
+}
+```
+
+This would be equivalent to:
+
+```qsharp
+use q = Qubit() {
+    X(q);
+}
+```
+
+### Alternative 2: Add compound `using` and `borrowing` block statements
+
+Instead of adding non-block statements, the existing block statement syntax could be extended to allow multiple `using` and `borrowing` statements in a row that have only one block attached:
 
 ```qsharp
 using (a = Qubit())
@@ -324,14 +273,9 @@ using (c = Qubit()) {
 
 ### Alternative 1
 
-This alternative has the advantage of being backwards-compatible, but introduces inconsistencies and added complexity:
-
-1. The `using` and `borrowing` keywords are re-used in different contexts: sometimes it is a block statement and sometimes it is a non-block statement.
-   New keywords `use` and `borrow` could be introduced for the non-block statements, but this adds redundancy and keyword clutter.
-2. The block statement requires parentheses around the declaration, but the non-block statement does not.
-3. Scope statements, as proposed earlier, can also be used to control the scope of non-qubit variables declared with `let` or `mutable`.
-   This is not possible with this alternative.
-   If scope statements are added later, the block `using` statement syntax becomes redundant with the combination of a scope statement and a non-block `using` statement.
+This alternative has simpler `use` and `borrow` statements, because they only have one form (no block) rather than two (block and no block).
+However, it is somewhat less readable than the proposed syntax because the declared qubits occur after the scope starts rather than before.
+This makes it harder to tell what the purpose of the block scope is.
 
 ### Alternative 2
 
