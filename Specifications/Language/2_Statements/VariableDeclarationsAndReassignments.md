@@ -70,8 +70,7 @@ The following function for example computes the sum of an array of [`Complex`](h
 
 ```qsharp
 function ComplexSum(values : Complex[]) : Complex {
-
-    mutable res = Complex(0.,0.);
+    mutable res = Complex(0., 0.);
     for (complex in values) {
         set res w/= Re <- res::Re + complex::Re; 
         set res w/= Im <- res::Im + complex::Im; 
