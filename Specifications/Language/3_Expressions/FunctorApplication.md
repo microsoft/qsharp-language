@@ -31,7 +31,7 @@ Controlled SWAP(cs, (q1, q2))
 ```
 
 ### Discussion
-> Conditionally applying an operation based on the control qubits being in another state than a zero-state may be achieved by applying the appropriate adjointable transformation to the control qubits before invocation, and applying is inverses after. Conditioning the transformation on all control qubits being in a state |0⟩, for example, can be achieved by applying the `X` operation before and after. This can be conveniently expressed using a [conjugation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations). Nonetheless, the verbosity of such a construct may merit additional support for a more compact syntax in the future.
+> Conditionally applying an operation based on the control qubits being in another state than a zero-state may be achieved by applying the appropriate adjointable transformation to the control qubits before invocation, and applying is inverses after. Conditioning the transformation on all control qubits being in the |0⟩ state, for example, can be achieved by applying the `X` operation before and after. This can be conveniently expressed using a [conjugation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations). Nonetheless, the verbosity of such a construct may merit additional support for a more compact syntax in the future.
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
