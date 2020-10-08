@@ -73,9 +73,6 @@ Initializers built by elevating adjointable operations:
 
 ## Current Status
 
-The right hand side of the assignment in using- and borrowing-statements consists of an initializer or a tuple of initializers. Curre
-
-
 TODO:   
 Describe all aspects of the current version of Q# that will be impacted by the proposed modification.     
 Describe in detail the current behavior or limitations that make the proposed change necessary.      
@@ -83,14 +80,6 @@ Describe how the targeted functionality can be achieved with the current version
 Refer to the examples given below to illustrate your descriptions. 
 
 ### Examples
-
-```qsharp
-initializer BigEndian(nrQs : Int) : BigEndian {
-
-    initialize register = Qubits(nrQs);
-    return BigEndian(register);
-}
-```
 
 Example 1:    
 TODO: insert title and caption
@@ -126,39 +115,7 @@ TODO: insert title and caption
 TODO:   
 Add more examples following the structure above. 
 
-
-Example 2: Nesting of initializer expressions and potential future syntax enhancements   
-Introducing additional syntax sugar for particular operations, such as e.g. a coherent version of a logical `AND` would allow to express oracles constructed from such operators in the following way, if this suggestion is adopted:
-
-```qsharp
-use res = q1 <and> q2 <and> q3; 
-```
-where the right hand side is syntactic sugar ` init And(init And(q1, q2, _), q3, _)`, and q1, q2, q3 are existing qubits that are in scope. If quantum operations are applied to the a qubit that is used as part of the initializer, then an additional qubit is required to preserve the state of that qubit at initialization time. Supposed this is the case for `q1` but not for `q2` or `q3`, then the statement above would be translated into the following upon compilation:
-
-```qsharp
-use res = Qubit();
-use __q1__ = Qubit() {
-    within {
-        CNOT(q1, __q1__);
-        use __var1__ = Qubit() {
-            within { And (__q1__, q2, __var1__); } 
-            apply { And (__var1__, q3, res); }
-        }
-    }
-    apply {
-        // code within the allocation scope
-    }
-}
-```
-
-
 # Implementation
-
-All of the proposed concepts can and should be translated into the existing representation, such that no additional support within the intermediate representation or runtime is needed. The code examples above illustrate how this translation should look like. 
-
-Do we need a special allocation statement for initializers? probably yes; would be nice
-
-All qubits that are in scope and used as part of and initializer need to be "copied out" -> is that possible?? 
 
 TODO:    
 Describe how the made proposal could be implemented and why it should be implemented in this way.    
@@ -166,8 +123,6 @@ Be specific regarding the efficiency, and potential caveats of such an implement
 Based on that description a user should be able to determine when to use or not to use the proposed modification and how.
 
 ## Timeline
-
-The amount of work to implement this is significant. The implementation of the concepts discussed in this proposal will likely happen in stages. 
 
 TODO:    
 List any dependencies that the proposed implementation relies on.    
@@ -191,23 +146,11 @@ Describe in detail the impact of your proposal on existing mechanisms and concep
 
 ## Anticipated Interactions with Future Modifications
 
-allows to define usable(!) custom constructors for udts that contain qubits without having to pass in the qubits as arguments to the constructor!
-
-Might make it harder to give guarantees around safe qubit deallocations in the future? -> not really, since everything can be expressed with the syntax as well...
-
 TODO:    
 Describe how the proposed modification ties in with possible future developments of Q#.
 Describe what developments it can facilitate and/or what functionalities depend on the proposed modification.
 
 ## Alternatives
-
-we could skip application of adjoint if *all* deallocated qubits were measured - runtime error if some were measured?? or just go with `init within` and `init`??
-or go with 
-```qsharp
-use qs = _ within H 
-use qs = _ then M into res;
-```
-other alternative: always apply adjoint unless a special release is explicitly called on the variable(s) bound upon initialization?
 
 TODO:    
 Explain alternative mechanisms that would serve a similar purpose as the proposed modification.    
@@ -224,6 +167,4 @@ Compare in particular their impact on the future development of Q#.
 Any concerns about the proposed modification will be listed here and can be addressed in the [Response](#response) section below. 
 
 ## Response 
-
-
 
