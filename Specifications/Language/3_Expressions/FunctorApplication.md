@@ -16,7 +16,7 @@ Adjoint ApplyUnitary(arg)
 
 ## Controlled functor
 
-For an operation `ApplyUnitary` that defines a unitary transformation *U* of the quantum state, `Controlled ApplyUnitary` accesses the implementation that applies *U* conditional on all qubits in an array of control qubits being in a state |1⟩. 
+For an operation `ApplyUnitary` that defines a unitary transformation *U* of the quantum state, `Controlled ApplyUnitary` accesses the implementation that applies *U* conditional on all qubits in an array of control qubits being in the |1⟩ state. 
 
 The expression `Controlled ApplyUnitary` is an operation with the same return type and [operation characteristics](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operation-characteristics) as `ApplyUnitary`, meaning it supports the same functors.
 It takes an argument of type `(Qubit[], <TIn>)`, where `<TIn>` should be replace with the argument type of `ApplyUnitary`, taking [singleton tuple equivalence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence) into account. 
