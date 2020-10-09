@@ -10,7 +10,7 @@ date: 10/03/2020
 The proposal is to introduce a more general notion of initializers for qubit allocations. It achieves to support three important functionalities as part of using- and borrowing statements:
 - Creating instances of user defined types containing qubits
 - Initializing the allocated qubits with a certain operation upon allocation
-- Automatic allocation and deallocation of temporary qubits used during initialization
+- Automatic allocation and de-allocation of temporary qubits used during initialization
 
 # Justification
 
@@ -21,6 +21,8 @@ The proposed modification allows for nesting of initializers; i.e. the initializ
 Furthermore, this proposal makes it possible to support defining custom constructors for user defined types that contain qubits, without requiring that the necessary qubits are passed as arguments to the constructor.    
 
 # Description
+
+This proposal formalizes/introduces a couple of concepts that are outlined in the following. See [this section](#overview-over-different-kinds-of-initializer-expressions) for an overview based on examples of the different kinds of initializers and initializer expressions.
 
 ### *Allocatable types*:   
 A type is allocatable if it either is one of the built-in allocatable types, or if it contains one or more items which are allocatable. There are two built-in allocatable types: the type Qubit and the type Qubit[], or more generally n-dimensional rectangular Qubit arrays (as suggested [here](https://github.com/microsoft/qsharp-language/issues/39)). 
@@ -37,19 +39,22 @@ Additionally, a default initializer based on the default constructor is generate
 Support for defining custom initializers for user defined types is intended to be added if and when custom constructors can be defined. Important considerations for what can and cannot be supported for such custom initializers, however, are part of this proposal to ensure that the proposed additions can be extended to cover that scenario as well.    
 In contrast to operations, initializers allocate and return qubits that remain live after their execution terminates. Such qubits are allocated via a dedicated statement, consisting of the keyword `initialize` followed by a symbol or symbol tuple, an equals sign `=`, and either an initializer or an initializer tuple.      
 Initializers may thus call other initializers, but they cannot be directly or indirectly recursive. Furthermore, they are not allowed to call operations, or allocate temporary qubits that are released when the initializer terminates. If a common usage of the type requires contained qubits to be initialized to a certain state, then a suitable operation that can be elevated to an initializer expression should be defined instead. 
-Custom initializers take an argument of an arbitrary type, provided it does not contain items of allocatable types. This restriction makes it possible to safely allocate and deallocate temporary qubits when nesting initializer expressions (see the paragraph further below). 
+Custom initializers take an argument of an arbitrary type, provided it does not contain items of allocatable types. This restriction makes it possible to safely allocate and de-allocate temporary qubits when nesting initializer expressions (see the paragraph further below). 
 
 ### *Creating initializers on the fly by elevating operations*:   
 Since it is a common scenario to initialize qubits to a certain state, this proposal includes the means to construct initializers on the fly that do just that. There are two distinct cases that are common. 
 1. One is that an operation should be invoked on the allocated qubits after initialization, followed by further computations before the qubits are measured and released. In this case, it is not necessary or desirable that the operation performed upon initialization is un-computed upon release. 
-2. In the second case, the computations following the initialization lead to the qubits being in the same state as they were initialized. In this case, the adjoint of the operation used for initialization needs to be applied upon releasing the qubits. The proposal is to syntactically distinguish the two cases. The table below contains examples for both cases. 
+2. In the second case, the computations following the initialization lead to the qubits being in the same state as they were initialized. In this case, the adjoint of the operation used for initialization needs to be applied upon releasing the qubits. 
 
-In the first case, the initializer consists of the keyword `init`, followed by the initializer argument tuple, the keyword `then` and an operation-valued expression. The initializer argument tuple may be omitted if the required argument is of type `Unit`.   
-The second case follows the same pattern with the exception that instead of the keyword `then`, then keyword `within` should be used, and the operation-valued expression needs to support the `Adjoint` functor.   
+The proposal is to syntactically distinguish the two cases. The table below contains examples for both cases. In the first case, the initializer consists of the keyword `init`, followed by the initializer argument tuple, the keyword `then` and an operation-valued expression. The initializer argument tuple may be omitted if the required argument is of type `Unit`. The second case follows the same pattern with the exception that instead of the keyword `then`, then keyword `within` should be used, and the operation-valued expression needs to support the `Adjoint` functor.   
+In both cases, the elevated operation has to return `Unit`.
+The allocated value matches the argument of the elevated operation and will be bound to the symbol(s) specified on the left hand side of the allocation statement.  
 
 ### *Initializer expressions and nesting of initializers*:    
-An initializer expressions consists either of a call to an initializer, or of a tuple of multiple calls. The left hand side of an initializer call 
- 
+An initializer expressions consists either of a call to an initializer, or of a tuple of multiple calls. ...
+
+### Overview over different kinds of initializer expressions
+
 Initializers for built-in types:
 | Built-in Initializer | Description | Allocated Type | Initializer Argument Type | Initializer Expression | 
 | --- | --- | --- | --- | --- |
@@ -57,17 +62,17 @@ Initializers for built-in types:
 | Qubits | allocates a 1D array of qubits | `Qubit[]` | `Int` | `Qubits(4)` |
 | Qubits | allocates a [2D array](https://github.com/microsoft/qsharp-language/issues/39) of qubits | `Qubit[,]` | `(Int, Int)` | `Qubits(2,4)` |
 
-Initializers for custom types:
+Generated default initializers for custom types:
 | Allocated Type | Type of Contained Items | Initializer Argument Type | Initializer Expression |
 | --- | --- | --- | --- |
 | BigEndian | `Qubit[]` | `Int` | `BigEndian(4)` |
 | QubitArray | `(Int, Qubit[])` | `(Int, Int)` | `QubitArray(4, 4)` |
 
-Initializers built by elevating adjointable operations:
+Initializers built by elevating operations:
 | Operation Valued Expression | Allocated Type | Initializer Argument Type | Initializer Expression | Uncompute upon Release |
 | --- | --- | --- | --- | --- |
 | `H` | `Qubit` | `Unit` | `init within H` | Yes |
-| `M` | `Qubit` | `Int` | `init then M` | No |
+| `Reset` | `Qubit` | `Int` | `init then Reset` | No |
 | `ApplyToEachA(H, _)` | `Qubit[]` | `Int` | `init(3) within ApplyToEachA(H, _)` | Yes |
 | `ApplyToEach(H, _)` | `Qubit[]` | `Int` | `init(3) then ApplyToEach(H, _)` | No |
 
