@@ -68,6 +68,9 @@ The following names are recognized as documentation comment headers.
 - **Output**: A description of the tuple returned by an operation or function.
 - **Type Parameters**: An empty section which contains one additional
   subsection for each generic type parameter.
+- **Named Items**: A description of the named items in a user defined type.
+  May contain additional Markdown subsections with the description for each 
+  individual named item.
 - **Example**: A short example of the operation, function or type in use.
 - **Remarks**: Miscellaneous prose describing some aspect of the operation,
   function, or type.
