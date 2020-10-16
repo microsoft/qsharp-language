@@ -1,6 +1,6 @@
 # Namespaces
 
-At the top-level, a Q# program consists of a set of namespaces; namespaces are the only top-level elements, and anything else needs to be contained in a namespace. 
+At the top-level, a Q# program consists of a set of namespaces; namespaces are the only top-level elements (aside from [comments](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/7_Comments.md#comments)), and anything else needs to be contained in a namespace. 
 Q# does not support nested namespaces. Each file may contain zero or more namespaces, and each namespace may span multiple files. 
 
 A namespace block consists of the keyword `namespace`, followed by the name of the namespace, and the content of that block inside curly brackets `{` and `}`. 
