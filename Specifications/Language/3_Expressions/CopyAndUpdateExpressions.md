@@ -34,11 +34,7 @@ The second statement is nothing but a short-hand for the more verbose syntax `se
 If the value `original` is of user defined type, then `itemAccess` denotes the name of the item that diverges from the original value. The reason that this is not simply another expression, like `original` and `modification`, is that the ability to simply use the item name without any further qualification is limited to this context; it is one of two [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) in Q#. 
 
 The type of the `modification` expression needs to match the type of the named item that diverges. 
-For instance, for a type `Complex` defined as 
-```qsharp
-newtype Complex = (Re : Double, Im : Double);
-```
-if `complex` contains the value `Complex(0.,0.)`, then 
+For instance, if `complex` contains the value `Complex(0., 0.)`, where the type `Complex` is defined [here](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations), then 
 ```qsharp
 complex w/ Re <- 1. 
 ```
@@ -56,8 +52,16 @@ For example, if `arr` contains an array `[0,1,2,3]`, then
 
 Copy-and-update expressions allow efficient creation of new arrays based on existing ones. 
 The implementation for copy-and-update expressions avoids copying the entire array 
-but merely duplicates the necessary parts to achieve the desired behavior, and performs an in-place modification if possible. 
-Suitable ways to initialize an array via, e.g., an initialization function or similar means are provided by the standard libraries. Array initialization via a call to such a core function does not incur additional overhead due to immutability. 
+but merely duplicates the necessary parts to achieve the desired behavior, and performs an in-place modification if possible. Array initializations hence do not incur additional overhead due to immutability.
 
+The `Microsoft.Quantum.Arrays` namespace provides and arsenal of convenient tools for array creation and manipulation. 
+For instance, the function `ConstantArray` creates an array of the specified length and initializes each item to a given value. 
+
+
+Copy-and-update expressions are a convenient way to construct new arrays on the fly;
+the following expression, e.g., evaluates to an array with all items set to `PauliI`, except the item at index `i`, which is set to `PauliZ`:
+```qsharp
+ConstantArray(n, PauliI) w/ i <- PauliZ
+``` 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
