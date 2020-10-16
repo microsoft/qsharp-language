@@ -8,7 +8,7 @@ Q# supports type-parameterized operations and functions. The Q# standard librari
 Any operation or function declaration may specify one or more type parameters that can be used as the types or part of the types of the callable's input and/or output. The exception are entry points, which must be concrete and cannot be type parametrized. Type parameter names start with a tick (') and may appear multiple times in the input and output types. 
 All arguments that correspond to the same type parameter in the callable signature must be of the same type.
 
-A type parametrized callable needs to be concretized - i.e. provided with the necessary type argument(s) - before it can be assigned or passed as argument, such that all type parameters can be replaced with concrete types. A type is considered to be concrete if it is either one of the built-in types, a user defined type, or if it is concrete within the current scope. The following example illustrates what it means for a type to be concrete within the current scope, and is explained in more detail below:
+A type parametrized callable needs to be concretized — i.e. provided with the necessary type argument(s) — before it can be assigned or passed as argument, such that all type parameters can be replaced with concrete types. A type is considered to be concrete if it is either one of the built-in types, a user defined type, or if it is concrete within the current scope. The following example illustrates what it means for a type to be concrete within the current scope, and is explained in more detail below:
 
 ```qsharp
     function Mapped<'T1, 'T2> (
