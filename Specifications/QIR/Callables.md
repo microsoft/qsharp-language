@@ -50,6 +50,18 @@ LLVM type.
 The name of a wrapper function should be the same as the name of the function
 it is wrapping, with "__wrapper" appended.
 
+The four specializations of a callable are:
+
+- The "body", which is the normal, unmodified callable.
+- The "adj", which implements the adjoint of the quantum operation defined by
+  the callable.
+- The "ctl", which implements the controlled version of the quantum operation
+  defined by the callable.
+- The "ctladj", which implements the adjoint of the controlled version.
+
+A callable may define a "ctladj" specialization if and only if it defines both
+"adj" and "ctl" specializations.
+
 There is no need to create wrappers for callables that are never pointed to.
 That is, **a callable that is never turned into a callable value doesn't need wrapper functions**.
 
@@ -183,7 +195,7 @@ The Adjoint and Controlled functors are important for expressing quantum
 algorithms.
 They are implemented by the `__quantum__rt__callable_make_adjoint` and
 `__quantum__rt__callable_make_control` runtime functions, which update a
-`%Callable` in place by applying the Adjoint or Controlled functors
+`%Callable` in place by applying the `Adjoint` or `Controlled` functors
 respectively.
 
 To support cases where the original, unmodified `%Callable` is still needed
@@ -205,8 +217,79 @@ The following snippet of LLVM code could be generated:
   [4 x void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*]* @someOp,
   %TupleHeader* null)
 %g = call %__quantum__rt__callable_copy(%f)
-call %__quantum__rt__callable_adjoint(%g)
+call %__quantum__rt__callable_make_adjoint(%g)
 ```
+
+The actual implementation of the `%Callable` needs to support the following
+behavior:
+
+- For `__quantum__rt__callable_make_adjoint`, the parity of the number of
+  times this function has been applied should be tracked. The `Adjoint` functor
+  is its own inverse, so applying it twice is the same as not applying it at all.
+  Applying this function to a `%Callable` whose implementation table has a null
+  "adj" entry should cause a runtime failure.
+- For `__quantum__rt__callable_make_control`, the count of the number of 
+  times the function has been applied must be tracked. The `Controlled` functor
+  is not its own inverse.
+  Applying this function to a `%Callable` whose implementation table has a null
+  "ctl" entry should cause a runtime failure.
+- The order of applying these two functions does not need to be tracked. The
+  `Adjoint` and `Controlled` functors commute.
+
+When `__quantum__rt__callable_invoke` is called, the entry in the callable's
+implementation table to be used is selected as follows:
+
+- If the adjoint parity is even and the controlled count is zero, the "body"
+  entry (index 0) should be used.
+- If the adjoint parity is odd and the controlled count is zero, the "adj"
+  entry (index 1) should be used.
+- If the adjoint parity is even and the controlled count is greater than zero,
+  the "ctl" entry (index 2) should be used.
+- If the adjoint parity is odd and the controlled count is greater than zero,
+  the "ctladj" entry (index 3) should be used.
+
+If the controlled count is greater than one, then `__quantum__rt__callable_invoke`
+also needs to do some manipulation of the input tuple.
+Each application of the `Controlled` functor modifies the signature of the
+specialization by adding replacing the current argument tuple with a two-tuple
+containing the array of control qubits as the first element and a tuple of
+the remaining arguments as the second tuple.
+
+For instance, if the base callable expects an argument tuple
+`{ %TupleHeader, i64, %Qubit* }`, then the `Controlled` version expects
+`{ %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }`, and the twice-`Controlled`
+version expects
+`{ %TupleHeader, %Array*, { %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }* )`.
+The "ctl" implementation function always expects
+`{ %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }`.
+Thus, if the controlled count is greater than 1,
+`__quantum__rt__callable_invoke` needs to disassemble the argument tuple,
+concatenate the control qubit arrays, and form the expected argument tuple.
+
+One additional complexity is that the above is modified slightly if the base
+callable expects an argument tuple with exactly one element.
+In this case, the `Controlled` version expects a two-element tuples as
+above, but with the actual base argument as the second element.
+For instance, if the base callable expects `{ %TupleHeader, %Qubit* }`,
+the singly-`Controlled` version expects `{ %TupleHeader, %Array*, %Qubit* }`
+rather than `{ %TupleHeader, %Array*, { %TupleHeader, %Qubit* }* }`.
+This means that the second element of the singly-`Controlled` argument tuple
+is not always a pointer to a struct, and in particular may have variable length
+up to the size of a `%Range`.
+
+To resolve this, `__quantum__rt__callable_invoke` needs to have access to the
+length of the inner argument tuple once it has unwrapped down to that point.
+This could be stored in the `%TupleHeader` by `__quantum__rt__tuple_create`,
+or it could be provided by the classical runtime from the length originally
+provided for the heap allocation.
+
+The "ctl" implementation function can't do this manipulation itself because
+it doesn't have access to the controlled count and so can't tell what the actual
+argument tuple's structure is.
+Similarly, while the calling code knows the exact signature, it also doesn't
+have access to the controlled count, and so can't unambiguously determine the
+expected argument tuple; specifically, it can't tell if an inner tuple is the
+result of an application of `Controlled` or just part of the base signature.
 
 #### Implementing Lambdas
 
