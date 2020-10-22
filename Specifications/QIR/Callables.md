@@ -259,7 +259,7 @@ For instance, if the base callable expects an argument tuple
 `{ %TupleHeader, i64, %Qubit* }`, then the `Controlled` version expects
 `{ %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }`, and the twice-`Controlled`
 version expects
-`{ %TupleHeader, %Array*, { %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }* )`.
+`{ %TupleHeader, %Array*, { %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }* }`.
 The "ctl" implementation function always expects
 `{ %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }`.
 Thus, if the controlled count is greater than 1,
