@@ -62,3 +62,4 @@ programs are implemented in terms of statements and expressions, much like in cl
     1. [Type Parameterizations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations)
     1. [Type Inference](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeInference.md#type-inference)
 
+1. [Grammar](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/5_Grammar#grammar)
