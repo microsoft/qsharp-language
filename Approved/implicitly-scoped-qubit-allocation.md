@@ -264,6 +264,8 @@ use q = Qubit() {
 This alternative has simpler `use` and `borrow` statements, because they only have one form (no block) rather than two (block and no block).
 However, it is less readable than the proposed syntax because it is less clear what the intended purpose of the new scope is, since the qubit allocation occurs after the scope starts instead of before.
 
+We may revisit changes to qubit block scopes in the future if the proposed syntax is not adequate, including potentially adding a scope statement.
+
 ### Alternative 2: Add compound `using` and `borrowing` block statements
 
 The existing block statement syntax could be extended to allow multiple `using` and `borrowing` statements in a row that have only one block attached:
