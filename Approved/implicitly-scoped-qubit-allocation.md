@@ -284,8 +284,8 @@ While it reduces block nesting when multiple variables are needed, it does not a
 
 # Raised Concerns
 
-Any concerns about the proposed modification will be listed here and can be addressed in the [Response](#response) section below. 
+## The renaming of the `using` and `borrowing` keywords to `use` and `borrow` is not necessary, and will break existing code.
 
-## Response 
-
-N/A
+We believe that the new keywords come with enough benefits to make the breaking change worth it.
+The `use` and `borrow` keywords are more concise, and more consistent with the rest of the language because there are no other keywords in Q# that end in -ing.
+The old keywords will continue to be supported in a deprecated state until Q# 1.0, and can be easily updated with code actions in IDEs.
