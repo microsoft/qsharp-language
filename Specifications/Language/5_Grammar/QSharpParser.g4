@@ -50,16 +50,12 @@ namedItem : Identifier ':' type;
 
 // Callable Declaration
 
-callableDeclaration :
-    declarationPrefix
-    ('function' | 'operation')
-    Identifier
-    typeParameterBinding?
-    parameterTuple
-    ':'
-    type
-    characteristics?
-    callableBody;
+callableDeclaration
+    : declarationPrefix ('function' | 'operation')
+      Identifier typeParameterBinding? parameterTuple
+      ':' type characteristics?
+      callableBody
+    ;
 
 typeParameterBinding : '<' (TypeParameter (',' TypeParameter)*)? '>';
 
