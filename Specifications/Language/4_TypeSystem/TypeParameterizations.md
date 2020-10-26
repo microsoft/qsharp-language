@@ -2,10 +2,13 @@
 
 Q# supports type-parameterized operations and functions. The Q# standard libraries make heavy use of type parametrized callables to provide a host of useful abstractions, including functions like `Mapped` and `Fold` that are familiar from functional languages.
 
+### Discussion
+>To motivate the concept of type parameterizations, consider the example of the function `Mapped`, which applies a given function to each value in an array and returns a new array with the computed values. This functionality can be perfectly described without specifying the item types of the in- and output array. Since the exact types do not change the implementation of the function `Mapped`, it makes sense that it should be possible to define this implementation for arbitrary item types; we want to define a *factory* or *template* that given the concrete types for the items in the in- and output array returns the corresponding function implementation. This notion is formalized in the form of type parameters.
+
 Any operation or function declaration may specify one or more type parameters that can be used as the types or part of the types of the callable's input and/or output. The exception are entry points, which must be concrete and cannot be type parametrized. Type parameter names start with a tick (') and may appear multiple times in the input and output types. 
 All arguments that correspond to the same type parameter in the callable signature must be of the same type.
 
-A type parametrized callable needs to be concretized before it can be assigned or passed as argument, meaning all type parameters need to be resolved to concrete types. A type is considered to be concrete if it is either one of the built-in types, a user defined type, or if it is concrete within the current scope. The following example illustrates what it means for a type to be concrete within the current scope, and is explained in more detail below:
+A type parametrized callable needs to be concretized — i.e. provided with the necessary type argument(s) — before it can be assigned or passed as argument, such that all type parameters can be replaced with concrete types. A type is considered to be concrete if it is either one of the built-in types, a user defined type, or if it is concrete within the current scope. The following example illustrates what it means for a type to be concrete within the current scope, and is explained in more detail below:
 
 ```qsharp
     function Mapped<'T1, 'T2> (
@@ -28,7 +31,7 @@ A type parametrized callable needs to be concretized before it can be assigned o
     }
 ```
 
-The function `CControlled` is defined in the Microsoft.Quantum.Canon namespace. It takes an operation `op` of type `('TIn => Unit)` as argument and returns a new operation of type `((Bool, 'TIn) => Unit)` that applies the original operation provided a classical bit (of type `Bool`) is set to true; this is often referred to as the classically controlled version of `op`. 
+The function `CControlled` is defined in the `Microsoft.Quantum.Canon` namespace. It takes an operation `op` of type `('TIn => Unit)` as argument and returns a new operation of type `((Bool, 'TIn) => Unit)` that applies the original operation provided a classical bit (of type `Bool`) is set to true; this is often referred to as the classically controlled version of `op`. 
 
 The function `Mapped` takes an array of an arbitrary item type `'T1` as argument, applies the given `mapper` function to each item and returns a new array of type `'T2[]` containing the mapped items. It is defined in the `Microsoft.Quantum.Array` namespace. For the purpose of the example, the type parameters are numbered to avoid making the discussion more confusing by giving the type parameters in both functions the same name. This is not necessary; type parameters for different callables may have the same name, and the chosen name is only visible and relevant within the definition of that callable. 
 

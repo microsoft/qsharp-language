@@ -13,24 +13,22 @@ namespace Microsoft.Quantum.Samples {
     open Microsoft.Quantum.Math;
     open Microsoft.Quantum.Preparation; 
 
-    operation ApproximateQFT (a : Int, reg : LittleEndian) : Unit 
+    operation ApplyQFT (reg : LittleEndian) : Unit 
     is Adj + Ctl {
         
         let qs = reg!;        
         SwapReverseRegister(qs);
         
         for (i in Array.IndexRange(qs)) {
-            for (j in 0..(i-1)) {
-                if ( (i-j) < a ) {
-                    Controlled R1Frac([qs[i]], (1, i - j, qs[j]));
-                }
+            for (j in 0 .. i-1) {
+                Controlled R1Frac([qs[i]], (1, i - j, qs[j]));
             }
             H(qs[i]);
         }
     }
 
     @EntryPoint() 
-    operation Main(vector : Double[]) : Unit {
+    operation RunProgram(vector : Double[]) : Unit {
 
         let n = Floor(Log(IntAsDouble(Length(vector))) / LogOf2());
         if (1 <<< n != Length(vector)) {
@@ -45,7 +43,7 @@ namespace Microsoft.Quantum.Samples {
             Message("Before QFT:");
             Diagnostics.DumpRegister((), qs);
 
-            ApproximateQFT(n, reg); 
+            ApplyQFT(reg); 
             Message("After QFT:");
             Diagnostics.DumpRegister((), qs);
 
@@ -67,7 +65,6 @@ The corresponding project file to build the application is the following:
   </PropertyGroup>
 
 </Project>
-
 ```
 
 Line 1 specifies the version number of the software development kit used to build the application, and line 4 indicates that the project is executable opposed to e.g. a library that cannot be invoked from the command line.
