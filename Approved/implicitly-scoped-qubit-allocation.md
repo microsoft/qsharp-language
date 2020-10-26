@@ -34,22 +34,11 @@ Finally, this proposal aims to be syntactically minimal and consistent with othe
 Currently, the only mechanism to allocate qubits in Q# is with `using` and `borrowing` block statements.
 No new functionality is provided by this proposal.
 Every example with the existing syntax has a corresponding equivalent example with the proposed syntax, and vice versa.
-However, the proposed syntax addresses several problems with the existing syntax:
-
-1. Example 1a: The lifetime of the qubit `q` is the same as the lifetime of the surrounding block.
-   A new block is syntactically required, but does not serve any purpose other than increasing the indentation level.
-2. Example 2a: Allocating multiple qubits requires either a single `using` statement with tuple destructuring, or multiple nested `using` statements.
-   Tuple destructuring is hard to read when many variables are declared or when the qubit initializer expression is long.
-   It is hard to tell which tuple item corresponds to which variable name.
-3. Example 3a: Allocating multiple qubits with nested `using` statements makes it clear which qubit initializer expression corresponds to which variable name, but at the cost of many levels of unnecessary indentation.
-4. Example 4a: When `using` and `borrowing` statements are mixed, nested blocks are required; tuple destructuring is not possible.
-
-Example 5a shows the main benefit of the current syntax: it allows the lifetime of a qubit to be shorter than the parent block.
-This syntax is preserved by this proposal with only minor changes.
+However, the proposed syntax addresses several problems with the existing syntax.
 
 ### Examples
 
-Example 1a: A single qubit allocated and released at the same time as the end of the outer block.
+**Example 1a:** A single qubit allocated and released at the same time as the end of the outer block.
 
 ```qsharp
 operation FlipCoin() : Result {
@@ -60,7 +49,10 @@ operation FlipCoin() : Result {
 }
 ```
 
-Example 2a: Many qubits allocated in a single `using` statement with tuple destructuring.
+The lifetime of the qubit `q` is the same as the lifetime of the surrounding block.
+A new block is syntactically required, but does not serve any purpose other than increasing the indentation level.
+
+**Example 2a:** Many qubits allocated in a single `using` statement with tuple destructuring.
 
 ```qsharp
 operation QubitTuple(n : Int) : Result {
@@ -71,7 +63,11 @@ operation QubitTuple(n : Int) : Result {
 }
 ```
 
-Example 3a: Many qubits allocated with a separate `using` block for each variable.
+Allocating multiple qubits requires either a single `using` statement with tuple destructuring, or multiple nested `using` statements.
+Tuple destructuring is hard to read when many variables are declared or when the qubit initializer expression is long.
+It is hard to tell which tuple item corresponds to which variable name.
+
+**Example 3a:** Many qubits allocated with a separate `using` block for each variable.
 
 ```qsharp
 operation NestedBlocks(n : Int) : Result {
@@ -86,7 +82,10 @@ operation NestedBlocks(n : Int) : Result {
 }
 ```
 
-Example 4a: A clean qubit and a borrowed qubit. This can only be expressed with nested blocks, not with tuple destructuring.
+Allocating multiple qubits with nested `using` statements makes it clear which qubit initializer expression corresponds to which variable name, but at the cost of many levels of unnecessary indentation.
+
+**Example 4a:** A clean qubit and a borrowed qubit.
+When `using` and `borrowing` statements are mixed, nested blocks are required; tuple destructuring is not possible.
 
 ```qsharp
 operation UsingAndBorrowing() : Result {
@@ -99,7 +98,7 @@ operation UsingAndBorrowing() : Result {
 }
 ```
 
-Example 5a: A qubit allocated in a `using` block but released before the end of the outer block.
+**Example 5a:** A qubit allocated in a `using` block but released before the end of the outer block.
 
 ```qsharp
 operation DifferentLifetime() : Result {
@@ -112,6 +111,9 @@ operation DifferentLifetime() : Result {
     return r;
 }
 ```
+
+This example shows the main benefit of the current syntax: it allows the lifetime of a qubit to be shorter than the parent block.
+This syntax is preserved by this proposal with only minor changes.
 
 ## Proposed Modification
 
