@@ -227,6 +227,10 @@ for x in xs {
 
 ## Anticipated Interactions with Future Modifications
 
+There will likely be changes to qubit initializers soon.
+See [Issue #40: Allocatable types and generalization of initializers](https://github.com/microsoft/qsharp-language/issues/40).
+We expect the changes to initializers to integrate well with this proposal, because this proposal only changes the syntax *around* qubit initializers, not the initializers themselves.
+
 Removing parentheses around block statement headers may affect future syntax development.
 For example, it would not be possible to make the braces optional without also re-introducing parentheses or another token, because of parsing issues with code like:
 
