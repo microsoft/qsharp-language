@@ -257,9 +257,12 @@ use q = Qubit() {
 }
 ```
 
+This alternative has simpler `use` and `borrow` statements, because they only have one form (no block) rather than two (block and no block).
+However, it is less readable than the proposed syntax because it is less clear what the intended purpose of the new scope is, since the qubit allocation occurs after the scope starts instead of before.
+
 ### Alternative 2: Add compound `using` and `borrowing` block statements
 
-Instead of adding non-block statements, the existing block statement syntax could be extended to allow multiple `using` and `borrowing` statements in a row that have only one block attached:
+The existing block statement syntax could be extended to allow multiple `using` and `borrowing` statements in a row that have only one block attached:
 
 ```qsharp
 using (a = Qubit())
@@ -269,22 +272,34 @@ using (c = Qubit()) {
 }
 ```
 
-## Comparison to Alternatives
-
-### Alternative 1
-
-This alternative has simpler `use` and `borrow` statements, because they only have one form (no block) rather than two (block and no block).
-However, it is somewhat less readable than the proposed syntax because the declared qubits occur after the scope starts rather than before.
-This makes it harder to tell what the purpose of the block scope is.
-
-### Alternative 2
-
 This alternative has syntax that is somewhat unusual and inconsistent with other statements in Q#.
 While it reduces block nesting when multiple variables are needed, it does not address the problem that at least one new block is always needed even if the lifetime of the qubits is the same as the parent block.
 
+### Alternative 3: Replace `using` and `borrowing` statements with `use` and `borrow` expressions
+
+`use` and `borrow` expressions could be used in conjunction with the `let` statement:
+
+```qsharp
+let q1 = use Qubit();
+let q2 = borrow Qubit();
+```
+
+This syntax makes the variable binding look identical for both classical values and qubits.
+But the lifetime of a qubit is bound to the variable: the qubit is deallocated when the *variable* goes out of scope, not when the *value* created by a `use` expression becomes inaccessible.
+This syntax, unless it's constrained further, also opens up possibilities such as:
+
+```qsharp
+mutable q = use Qubit();
+set q = use Qubit();
+Foo(use Qubit());
+```
+
+which we do not want to support.
+It is clearer to have a dedicated variable binding for qubits.
+
 # Raised Concerns
 
-## The renaming of the `using` and `borrowing` keywords to `use` and `borrow` is not necessary, and will break existing code.
+## The renaming of the `using` and `borrowing` keywords to `use` and `borrow` is not necessary and will break existing code.
 
 We believe that the new keywords come with enough benefits to make the breaking change worth it.
 The `use` and `borrow` keywords are more concise, and more consistent with the rest of the language because there are no other keywords in Q# that end in -ing.
