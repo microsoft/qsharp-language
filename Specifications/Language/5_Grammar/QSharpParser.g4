@@ -69,16 +69,16 @@ parameter
 characteristics : 'is' characteristicsExpression;
 
 characteristicsExpression
-    : 'Adj' # AdjointCharacteristic
-    | 'Ctl' # ControlledCharacteristic
-    | '(' characteristicsExpression ')' # CharacteristicsGroup
-    | characteristicsExpression '*' characteristicsExpression # IntersectCharacteristics
-    | characteristicsExpression '+' characteristicsExpression # UnionCharacteristics
+    : 'Adj'
+    | 'Ctl'
+    | '(' characteristicsExpression ')'
+    | characteristicsExpression '*' characteristicsExpression
+    | characteristicsExpression '+' characteristicsExpression
     ;
 
 callableBody
-    : BraceLeft specialization* BraceRight # CallableSpecialization
-    | scope # CallableScope
+    : BraceLeft specialization* BraceRight
+    | scope
     ;
 
 specialization : specializationName+ specializationGenerator;
@@ -90,12 +90,12 @@ specializationName
     ;
 
 specializationGenerator
-    : 'auto' ';' # AutoGenerator
-    | 'self' ';' # SelfGenerator
-    | 'invert' ';' # InvertGenerator
-    | 'distribute' ';' # DistributeGenerator
-    | 'intrinsic' ';' # IntrinsicGenerator
-    | providedSpecialization # ProvidedGenerator
+    : 'auto' ';'
+    | 'self' ';'
+    | 'invert' ';'
+    | 'distribute' ';'
+    | 'intrinsic' ';'
+    | providedSpecialization
     ;
 
 providedSpecialization : specializationParameterTuple? scope;
@@ -103,29 +103,29 @@ providedSpecialization : specializationParameterTuple? scope;
 specializationParameterTuple : '(' (specializationParameter (',' specializationParameter)*)? ')';
 
 specializationParameter
-    : Identifier # SpecializationNamedParameter
-    | '...' # SpecializationImplicitParameter
+    : Identifier
+    | '...'
     ;
 
 // Type
 
 type
-    : '_' # MissingType
-    | TypeParameter # TypeParameter
-    | 'BigInt' # BigIntType
-    | 'Bool' # BoolType
-    | 'Double' # DoubleType
-    | 'Int' # IntType
-    | 'Pauli' # PauliType
-    | 'Qubit' # QubitType
-    | 'Range' # RangeType
-    | 'Result' # ResultType
-    | 'String' # StringType
-    | 'Unit' # UnitType
-    | qualifiedName # UserDefinedType
-    | '(' (type (',' type)* ','?)? ')' # TupleType
-    | '(' arrowType characteristics? ')' # CallableType
-    | type '[' ']' # ArrayType
+    : '_'
+    | TypeParameter
+    | 'BigInt'
+    | 'Bool'
+    | 'Double'
+    | 'Int'
+    | 'Pauli'
+    | 'Qubit'
+    | 'Range'
+    | 'Result'
+    | 'String'
+    | 'Unit'
+    | qualifiedName
+    | '(' (type (',' type)* ','?)? ')'
+    | '(' arrowType characteristics? ')'
+    | type '[' ']'
     ;
 
 arrowType
@@ -136,33 +136,33 @@ arrowType
 // Statement
 
 statement
-    : expression ';' # ExpressionStatement
-    | 'return' expression ';' # Return
-    | 'fail' expression ';' # Fail
-    | 'let' symbolBinding '=' expression ';' # Let
-    | 'mutable' symbolBinding '=' expression ';' # Mutable
-    | 'set' symbolBinding '=' expression ';' # Set
-    | 'set' Identifier updateOperator expression ';' # SetUpdate
-    | 'set' Identifier 'w/=' expression '<-' expression ';' # SetWith
-    | 'if' '(' expression ')' scope # If
-    | 'elif' '(' expression ')' scope # Elif
-    | 'else' scope # Else
-    | 'for' '(' symbolBinding 'in' expression ')' scope # For
-    | 'while' '(' expression ')' scope # While
-    | 'repeat' scope # Repeat
-    | 'until' '(' expression ')' (';' | 'fixup' scope) # UntilFixup
-    | 'within' scope # Within
-    | 'apply' scope # Apply
-    | 'using' '(' symbolBinding '=' qubitInitializer ')' scope # Using
-    | 'borrowing' '(' symbolBinding '=' qubitInitializer ')' scope # Borrowing
+    : expression ';'
+    | 'return' expression ';'
+    | 'fail' expression ';'
+    | 'let' symbolBinding '=' expression ';'
+    | 'mutable' symbolBinding '=' expression ';'
+    | 'set' symbolBinding '=' expression ';'
+    | 'set' Identifier updateOperator expression ';'
+    | 'set' Identifier 'w/=' expression '<-' expression ';'
+    | 'if' '(' expression ')' scope
+    | 'elif' '(' expression ')' scope
+    | 'else' scope
+    | 'for' '(' symbolBinding 'in' expression ')' scope
+    | 'while' '(' expression ')' scope
+    | 'repeat' scope
+    | 'until' '(' expression ')' (';' | 'fixup' scope)
+    | 'within' scope
+    | 'apply' scope
+    | 'using' '(' symbolBinding '=' qubitInitializer ')' scope
+    | 'borrowing' '(' symbolBinding '=' qubitInitializer ')' scope
     ;
 
 scope : BraceLeft statement* BraceRight;
 
 symbolBinding
-    : '_' # Discard
-    | Identifier # Symbol
-    | '(' (symbolBinding (',' symbolBinding)* ','?)? ')' # SymbolTuple
+    : '_'
+    | Identifier
+    | '(' (symbolBinding (',' symbolBinding)* ','?)? ')'
     ;
 
 updateOperator
@@ -182,50 +182,50 @@ updateOperator
     ;
 
 qubitInitializer
-    : 'Qubit' '(' ')' # Qubit
-    | 'Qubit' '[' expression ']' # QubitArray
-    | '(' (qubitInitializer (',' qubitInitializer)* ','?)? ')' # QubitTuple
+    : 'Qubit' '(' ')'
+    | 'Qubit' '[' expression ']'
+    | '(' (qubitInitializer (',' qubitInitializer)* ','?)? ')'
     ;
 
 // Expression
 
 expression
-    : '_' # MissingExpression
-    | qualifiedName ('<' (type (',' type)* ','?)? '>')? # Identifier
-    | IntegerLiteral # Integer
-    | BigIntegerLiteral # BigInteger
-    | DoubleLiteral # Double
-    | DoubleQuote stringContent* StringDoubleQuote # String
-    | DollarQuote interpStringContent* InterpDoubleQuote # InterpolatedString
-    | boolLiteral # Bool
-    | resultLiteral # Result
-    | pauliLiteral # Pauli
-    | '(' (expression (',' expression)* ','?)? ')' # Tuple
-    | '[' (expression (',' expression)* ','?)? ']' # Array
-    | 'new' type '[' expression ']' # NewArray
-    | expression ('::' Identifier | '[' expression ']') # ItemAccess
-    | expression '!' # Unwrap
-    | <assoc=right> 'Controlled' expression # ControlledFunctor
-    | <assoc=right> 'Adjoint' expression # AdjointFunctor
-    | expression '(' (expression (',' expression)* ','?)? ')' # Call
-    | <assoc=right> ('-' | 'not' | '~~~') expression # Negate
-    | <assoc=right> expression '^' expression # Power
-    | expression ('*' | '/' | '%') expression # MultiplyDivideModulo
-    | expression ('+' | '-') expression # AddSubtract
-    | expression ('>>>' | '<<<') expression # Shift
-    | expression ('>' | '<' | '>=' | '<=') expression # GreaterLess
-    | expression ('==' | '!=') expression # Equal
-    | expression '&&&' expression # BitwiseAnd
-    | expression '^^^' expression # BitwiseXor
-    | expression '|||' expression # BitwiseOr
-    | expression 'and' expression # And
-    | expression 'or' expression # Or
-    | <assoc=right> expression '?' expression '|' expression # Conditional
-    | expression '..' expression # Range
-    | expression '...' # RightOpenRange
-    | '...' expression # LeftOpenRange
-    | '...' # OpenRange
-    | expression 'w/' expression '<-' expression # With
+    : '_'
+    | qualifiedName ('<' (type (',' type)* ','?)? '>')?
+    | IntegerLiteral
+    | BigIntegerLiteral
+    | DoubleLiteral
+    | DoubleQuote stringContent* StringDoubleQuote
+    | DollarQuote interpStringContent* InterpDoubleQuote
+    | boolLiteral
+    | resultLiteral
+    | pauliLiteral
+    | '(' (expression (',' expression)* ','?)? ')'
+    | '[' (expression (',' expression)* ','?)? ']'
+    | 'new' type '[' expression ']'
+    | expression ('::' Identifier | '[' expression ']')
+    | expression '!'
+    | <assoc=right> 'Controlled' expression
+    | <assoc=right> 'Adjoint' expression
+    | expression '(' (expression (',' expression)* ','?)? ')'
+    | <assoc=right> ('-' | 'not' | '~~~') expression
+    | <assoc=right> expression '^' expression
+    | expression ('*' | '/' | '%') expression
+    | expression ('+' | '-') expression
+    | expression ('>>>' | '<<<') expression
+    | expression ('>' | '<' | '>=' | '<=') expression
+    | expression ('==' | '!=') expression
+    | expression '&&&' expression
+    | expression '^^^' expression
+    | expression '|||' expression
+    | expression 'and' expression
+    | expression 'or' expression
+    | <assoc=right> expression '?' expression '|' expression
+    | expression '..' expression
+    | expression '...'
+    | '...' expression
+    | '...'
+    | expression 'w/' expression '<-' expression
     ;
 
 boolLiteral
@@ -246,12 +246,12 @@ pauliLiteral
     ;
 
 stringContent
-    : StringEscape # StringEscape
-    | StringText # StringText
+    : StringEscape
+    | StringText
     ;
 
 interpStringContent
-    : InterpStringEscape # InterpStringEscape
-    | InterpBraceLeft expression BraceRight # InterpStringExpression
-    | InterpStringText # InterpStringText
+    : InterpStringEscape
+    | InterpBraceLeft expression BraceRight
+    | InterpStringText
     ;
