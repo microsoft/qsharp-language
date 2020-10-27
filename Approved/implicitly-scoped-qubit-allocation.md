@@ -7,11 +7,15 @@ date: TBD
 
 # Proposal
 
-1. Rename `using` and `borrowing` keywords to `use` and `borrow`.
+1. Deprecate `using` and `borrowing` keywords and replace with `use` and `borrow`.
 2. Allow `use` and `borrow` statements to be followed by either a block `{ ... }` or a semicolon `;`.
-3. Remove the requirement for parentheses around headers for all block statements.
+3. Deprecate and remove parentheses around block statement headers.
 
 We expect to permanently support the new non-block `use` and `borrow` statements, but we may reconsider how or if the block forms are supported at a later date, after we learn more about how both forms are used in practice.
+
+The parentheses that are currently required by the `for`, `using` or `use`, and `borrowing` or `borrow` statements will be deprecated and removed.
+Using parentheses for these statements will become a syntax error.
+The parentheses for the `if`, `elif`, `while`, and `until` statements will no longer be required, but will still be supported because an expression may always be wrapped in parentheses.
 
 # Justification
 
