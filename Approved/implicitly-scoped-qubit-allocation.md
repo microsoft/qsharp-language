@@ -209,6 +209,9 @@ The work needed for either option appears to be minimal, since it is similar to 
 
 Development tools should consider adding support for transitioning from the current syntax to the proposed syntax, such as a code action in IDEs.
 
+We may consider adding telemetry to learn how the new non-block `use` and `borrow` statements are used in comparison to the block forms.
+This data could be used to determine how to modify the block form in the future if needed.
+
 ## Related Mechanisms
 
 This proposal relies on the existing qubit management functionality that is already a core feature of Q#.
