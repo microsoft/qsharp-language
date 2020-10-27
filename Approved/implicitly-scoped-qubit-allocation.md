@@ -29,7 +29,10 @@ Both the simple case of allocating a single qubit for the remainder of the curre
 
 # Description
 
-Qubits are a managed resource in Q#: when qubits are allocated, they are valid only within the new block declared at allocation, after which they are released and can no longer be used.
+Qubits are a managed resource in Q#: when qubits are allocated, they are valid only within the new block declared at allocation.
+They are automatically released no later than the end of the scope in which they were declared, after which they can no longer be used.
+Qubits may also be released earlier than the end of the scope if the compiler can determine that the qubits are no longer used after a particular point.
+
 This proposal adds the option to allocate qubits that are scoped to the current block, instead of a new block.
 Its aim is to be syntactically concise and consistent with other binding statements like `let`.
 As a consequence, it also modifies the existing block qubit allocation syntax slightly in order to increase consistency with the new non-block form.
