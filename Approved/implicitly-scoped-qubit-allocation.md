@@ -239,10 +239,10 @@ See [Issue #40: Allocatable types and generalization of initializers](https://gi
 We expect the changes to initializers to integrate well with this proposal, because this proposal only changes the syntax *around* qubit initializers, not the initializers themselves.
 
 Removing parentheses around block statement headers may affect future syntax development.
-For example, it would not be possible to make the braces optional without also re-introducing parentheses or another token, because of parsing issues with code like:
+For example, it will no longer be feasible to remove the braces without also re-introducing parentheses or another token, such as `then`:
 
 ```qsharp
-if M(q) == One
+if M(q) == One then
     X(q);
 ```
 
