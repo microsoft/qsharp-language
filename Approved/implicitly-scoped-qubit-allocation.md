@@ -11,6 +11,8 @@ date: TBD
 2. Allow `use` and `borrow` statements to be followed by either a block `{ ... }` or a semicolon `;`.
 3. Remove the requirement for parentheses around headers for all block statements.
 
+We expect to permanently support the new non-block `use` and `borrow` statements, but we may reconsider how or if the block forms are supported at a later date, after we learn more about how both forms are used in practice.
+
 # Justification
 
 Qubit allocation is currently awkward in Q# for two reasons:
@@ -265,8 +267,6 @@ use q = Qubit() {
 
 This alternative has simpler `use` and `borrow` statements, because they only have one form (no block) rather than two (block and no block).
 However, it is less readable than the proposed syntax because it is less clear what the intended purpose of the new scope is, since the qubit allocation occurs after the scope starts instead of before.
-
-We may revisit changes to qubit block scopes in the future if the proposed syntax is not adequate, including potentially adding a scope statement.
 
 ### Alternative 2: Add compound `using` and `borrowing` block statements
 
