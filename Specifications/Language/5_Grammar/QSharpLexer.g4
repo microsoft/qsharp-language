@@ -139,6 +139,7 @@ BigIntegerLiteral : IntegerLiteral ('L' | 'l');
 DoubleLiteral
     : Digit+ '.' Digit+
     | '.' Digit+
+    // "n.." should be interpreted as an integer range, not the double "n." followed by a dot.
     | Digit+ '.' { _input.LA(1) != '.' }?
     | Digit+ ('e' | 'E') Digit+
     ;
