@@ -20,10 +20,12 @@ Value literals for the [`Int` type](https://github.com/microsoft/qsharp-language
 
 ## BigInt Literals
 
-Value literals for the [`BigInt` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are always postfixed with `L` and can be expressed in decimal or hexadecimal representation. Literals expressed in hexadecimal are prefixed with `0x`. There is no prefix for the commonly used decimal representation.
+Value literals for the [`BigInt` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are always postfixed with `L` and can be expressed in binary, octal, decimal, or hexadecimal representation. Literals expressed in binary are prefixed with `0b`, with `0o` for octal, and with `0x` for hexadecimal. There is no prefix for the commonly used decimal representation.
 
 | Representation | Value Literal |
 | --- | --- | 
+| Binary | `0b101010L` | 
+| Octal | `0o52L` |
 | Decimal | `42L` |
 | Hexadecimal | `0x2aL` |
 
