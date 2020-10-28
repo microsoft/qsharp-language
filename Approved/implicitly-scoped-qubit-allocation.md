@@ -2,7 +2,7 @@
 title: Implicitly-scoped qubit allocation
 description: Provides more convenient syntax for allocating qubits.
 author: Sarah Marshall
-date: TBD
+date: October 27, 2020
 ---
 
 # Proposal
