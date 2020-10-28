@@ -16,7 +16,7 @@ The existence of `new Type[N]` has negative effects on the language.
 The most important negative effect is the assumption that every type has a default value.
 This is not a reasonable assumption, because it is not possible to define useful default values of types like `Qubit` and `a -> b`.
 Their current default values are invalid and will trigger an error if they are used.
-But the syntax is the same both for types with valid default values, and those without, which is misleading: while `new Int[3]` is a perfectly well-defined value whose elements can be used immediately, `new Qubit[3]` creates a potential trap that will crash the program if any value in the array is used.
+But the syntax is the same both for types with valid default values, and those without, which is misleading: while `new Int[3]` is a well-defined value whose items can be used safely, `new Qubit[3]` creates a potential trap that will crash the program if any item in the array is used before being set to a valid value first.
 
 This assumption is also invalid in the presence of uninhabited types such as `Void`.
 If Q# requires that every type has a default value, then uninhabited types are not possible to express properly.
