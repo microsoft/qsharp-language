@@ -41,7 +41,6 @@ As a consequence, it also modifies the existing block qubit allocation syntax sl
 
 Currently, the only mechanism to allocate qubits in Q# is with `using` and `borrowing` block statements.
 No new functionality is provided by this proposal.
-Every example with the existing syntax has a corresponding equivalent example with the proposed syntax, and vice versa.
 However, the proposed syntax addresses several problems with the existing syntax.
 
 ### Examples
