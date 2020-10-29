@@ -33,11 +33,7 @@ Provide general information about the relevant mechanisms and their role in Q#, 
 Arrays types in Q# can be constructed from any element type `'T` as `'T[]`, including arrays of arrays such as `Int[][]`.
 These *jagged arrays* can be used to represent multidimensional arrays of data (informally, _tensors_), such as matrices or vectors.
 
-TODO:   
-Describe all aspects of the current version of Q# that will be impacted by the proposed modification.     
-Describe in detail the current behavior or limitations that make the proposed change necessary.      
-Describe how the targeted functionality can be achieved with the current version of Q#.    
-Refer to the examples given below to illustrate your descriptions. 
+While jagged arrays are extremely useful in many contexts, such as representing sparse arrays (e.g.: the "list-of-lists" representation), using jagged arrays to represent vectors, matrices, and tensors requires extensive checking of array bounds to prevent mistakes in the shapes of jagged arrays.
 
 ### Examples
 
@@ -411,14 +407,17 @@ The cases where copies may still be required are when reshaping from more indice
 
 ## Timeline
 
-TODO:    
-List any dependencies that the proposed implementation relies on.    
-Estimate the resources required to accomplish each step of the proposed implementation. 
+This proposal does not depend on any other proposals (though it can be made easier-to-use in combination with other proposals; see _Anticipated Interactions with Future Modifications_, below).
+
+Required implementation steps:
+
+- Adapt compiler to recognize new types, subscript expressions, copy-and-replace expressions, and new literal expressions.
+- Implement new data structures in QIR and simulation runtime to represent values of new type, and fundamental operations on new type (e.g.: `w/` expressions).
+- Design, review, and approve API design for extensions to Microsoft.Quantum.Arrays to support new feature.
+- Implement new library functions from previous step.
+- Document new multidimensional arrays in language specification and conceptual documentation.
 
 # Further Considerations
-
-TODO:    
-Provide any context and background information that is needed to discuss the concepts in detail that are related to or impacted by your proposal.
 
 ## Related Mechanisms
 
@@ -428,14 +427,110 @@ as well as their role, realization and purpose within Q#.
 
 ## Impact on Existing Mechanisms
 
-TODO:    
-Describe in detail the impact of your proposal on existing mechanisms and concepts within Q#. 
+This proposal would not modify or invalidate existing functionality (e.g.: `Int[][]` will continue to be a valid type in Q#), and thus is not a breaking change.
+
+If, in a future proposal, we were to unify multidimensional array with existing functionality using features outlined in _Anticipated Interactions with Future Modifications_, a breaking change would likely be required at that point in time.
 
 ## Anticipated Interactions with Future Modifications
 
-TODO:    
-Describe how the proposed modification ties in with possible future developments of Q#.
-Describe what developments it can facilitate and/or what functionalities depend on the proposed modification.
+### Handling runtime failure modalities
+
+Some of the type conversions described above can fail at runtime, decreasing the safety of Q# programs.
+To assist, the discriminated union and type-parameterized UDT feature suggestions <!-- TODO: link --> could be used to represent the possibility of runtime failures in a typesafe fashion.
+
+For example, the `JaggedAsRectangular2` function above could fail if its input is not actually rectangular.
+Using `Maybe<'T>`, we could represent this directly:
+
+```qsharp
+function MaybeJaggedAsRectangular2<'T>(input : 'T[][]) : Maybe<'T[,]> {
+    if (IsRectangular2(input)) {
+        // convert here
+    } else {
+        return Maybe<'T[,]>::None();
+    }
+}
+```
+
+If in a particular application, it is definitely the case that a given jagged array can be converted, the `Maybe` can be unwrapped using a function that attempts to match on values of type `Maybe<'T>`:
+
+```qsharp
+function Forced<'T>(maybe : Maybe<'T>) : 'T {
+    return maybe match {
+        Some(value) -> value,
+        None() -> fail "was None()"
+    };
+}
+```
+
+### Removing type suffixes with bounded polymorphism
+
+Were the bounded polymorphism feature suggested at <!-- TODO: link --> to be adopted, the different "overloads" for the library functions suggested in this proposal could be consolidated into a smaller number of concepts that then get implemented by each of `'T[,]`, `'T[,,]`, and so forth.
+
+For example:
+
+```qsharp
+// We define a new concept to represent subscripting a
+// value by an index.
+concept 'Array is IndexableBy<'Index, 'Element> when {
+    function ElementAt(index : 'Index, array : 'Array) : 'Element;
+}
+// We can then use that concept to explain that
+// 'T[] is indexed by an Int to return a 'T in the
+// same way that 'T[,] is indexed by (Int, Int).
+example <'T> 'T[] is IndexableBy<Int, 'T> {
+    function ElementAt(index : Int, array : 'T[,]) {
+        return array[index];
+    }
+}
+example <'T> 'T[,] is IndexableBy<(Int, Int), 'T> {
+    function ElementAt(index : (Int, Int), array : 'T[,]) {
+        return array[index];
+    }
+}
+example <'T> 'T[,,] is IndexableBy<(Int, Int, Int), 'T> {
+    function ElementAt(index : (Int, Int, Int), array : 'T[,]) {
+        return array[index];
+    }
+}
+// This allows us to use the concept to write out more
+// general functions acting on arrays of different
+// dimensionality.
+function Subarray<'Array, 'Index, 'Element where 'Array is IndexableBy<'Index, 'Element>>(
+    array : 'Array,
+    indices : 'Index[]
+) : 'Element[] {
+    mutable subarray = EmptyArray<'Element>();
+    for (index in indices) {
+        // We can use ElementAt to handle
+        // arrays of different dimensionality in
+        // a uniform fashion.
+        set subarray += ElementAt(index, array);
+    }
+    return subarray;
+}
+
+// Similarly, if we use type-parameterized UDTs and
+// discriminated unions, we can define a concept that
+// specifies when a value of a given type can possibly
+// be converted to another type.
+concept 'TOutput is MaybeConvertableFrom<'TInput> when {
+    function MaybeAs(input : 'TInput) : Maybe<'TOutput>;
+}
+// With that concept in place, we can say that some jagged
+// arrays can be converted to rectangular arrays, obviating
+// the need for JaggedAsRectangular2, JaggedAsRectangular3,
+// and so forth.
+example <'T> 'T[,] is MaybeConvertableFrom<'T[][]> when {
+    function MaybeAs(input : 'T[][]) : 'T[,] {
+        body intrinsic;
+    }
+}
+example <'T> 'T[,,] is MaybeConvertableFrom<'T[][][]> when {
+    function MaybeAs(input : 'T[][][]) : 'T[,,] {
+        body intrinsic;
+    }
+}
+```
 
 ## Alternatives
 
