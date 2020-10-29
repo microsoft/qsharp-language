@@ -2,7 +2,7 @@
 title: Implicitly-scoped qubit allocation
 description: Provides more convenient syntax for allocating qubits.
 author: Sarah Marshall
-date: October 27, 2020
+date: October 29, 2020
 ---
 
 # Proposal
@@ -14,7 +14,7 @@ date: October 27, 2020
 We expect to permanently support the new non-block `use` and `borrow` statements, but we may reconsider how or if the block forms are supported at a later date, after we learn more about how both forms are used in practice.
 
 The parentheses that are currently required by the `for`, `using` or `use`, and `borrowing` or `borrow` statements will be deprecated and removed.
-Using parentheses for these statements will become a syntax error.
+Including parentheses with these statements will become a syntax error.
 The parentheses for the `if`, `elif`, `while`, and `until` statements will no longer be required, but will still be supported because an expression may always be wrapped in parentheses.
 
 # Justification
@@ -199,9 +199,8 @@ operation DifferentLifetime() : Result {
 The `use` and `borrow` keywords can be added, and the `using` and `borrowing` keywords can be deprecated.
 Until `using` and `borrowing` are removed, they can be used in place of `use` and `borrow` for both the block and non-block statements.
 
-The block for the existing `using` and `borrowing` syntax nodes can be made optional.
-Either the block remains optional throughout all stages of the syntax tree, or the non-block form is transformed into the block form by automatically moving all statements below it into a new block.
-In the former case, all syntax tree consumers need to be aware of both forms, while in the latter case consumers would notice no change from the current syntax tree node.
+When a `use` or `borrow` statement is not followed by a block, it is converted into the block form by moving all remaining statements in the current scope into a new generated block.
+This means that the proposal does not require adding, changing, or removing any syntax tree nodes.
 
 ## Timeline
 
