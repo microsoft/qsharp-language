@@ -14,7 +14,7 @@ date: October 29, 2020
 We expect to permanently support the new non-block `use` and `borrow` statements, but we may reconsider how or if the block forms are supported at a later date, after we learn more about how both forms are used in practice.
 
 The parentheses that are currently required by the `for`, `using` or `use`, and `borrowing` or `borrow` statements will be deprecated and removed.
-Including parentheses with these statements will become a syntax error.
+Including parentheses with these statements will become a syntax error with the next major version.
 The parentheses for the `if`, `elif`, `while`, and `until` statements will no longer be required, but will still be supported because an expression may always be wrapped in parentheses.
 
 # Justification
