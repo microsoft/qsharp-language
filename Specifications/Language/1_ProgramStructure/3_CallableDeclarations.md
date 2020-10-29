@@ -13,7 +13,7 @@ A functor in a sense is a factory that define a new callable implementation
 that has a certain relation to the callable it was applied to. 
 Functors are more than traditional higher-level functions since they require access to the implementation details of the callable they have been applied to. In that sense, they are similar to other factories, such as templates. Correspondingly, they can be applied not just to callable, but in fact to templates as well. 
 
-The [example program](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/ProgramStructure#program-execution) for instance defines the two operations `ApproximateQFT` and `Main`, which is used as entry point. `ApproximateQFT` takes an tuple-valued argument containing an integer and a value of type `LittleEndian`, and returns a value of type `Unit`. The annotation `is Adj + Ctl` in the declaration of `ApproximateQFT` indicates that the operation supports both the `Adjoint` and the `Controlled` functor, see also the section on [operation characteristics](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operation-characteristics). If `Unitary` is an operation that has an adjoint and a controlled specialization, the expression `Adjoint Unitary` accesses the specialization that implements the adjoint of `Unitary`, and `Controlled Unitary` the one that implements the controlled version of `Unitary`.
+The [example program](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/1_ProgramStructure#program-execution) for instance defines the two operations `ApplyQFT` and `RunProgram`, which is used as an entry point. `ApplyQFT` takes an tuple-valued argument containing an integer and a value of type `LittleEndian`, and returns a value of type `Unit`. The annotation `is Adj + Ctl` in the declaration of `ApplyQFT` indicates that the operation supports both the `Adjoint` and the `Controlled` functor, see also the section on [operation characteristics](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operation-characteristics). If `Unitary` is an operation that has an adjoint and a controlled specialization, the expression `Adjoint Unitary` accesses the specialization that implements the adjoint of `Unitary`, and `Controlled Unitary` the one that implements the controlled version of `Unitary`.
 The controlled version of an operation takes an array of control qubits in addition to the argument of the original operation, and applies the original operation conditional on all of these control qubits being in a |1⟩ state. 
 
 While in theory, an operation for which an adjoint version can be defined should also have a controlled version and vice versa, in practice it may be hard to come up with an implementation for one or the other, especially for probabilistic implementations following a repeat-until-success pattern. 
@@ -39,5 +39,11 @@ Here, `body` specifies that the given implementation applies to the default body
 >The reasoning behind explicitly indicating where the arguments of the parent callable declaration are to be copy-pasted is that for one, it is unnecessary to repeat the argument declaration, but more importantly it ensures that functors that require additional arguments, like the `Controlled` functor, can be introduced in a consistent manner. 
 
 The same applies to operations; when there is exactly one specialization defining the implementation of the default body, the additional wrapping of the form `body (...){ <implementation> }` may be omitted.
+
+## Recursion
+
+Q# callables can be directly or indirectly recursive and can be declared in any order; an operation or function may call itself, or it may call another callable that directly or indirectly calls the caller. 
+
+When executing on quantum hardware, stack space may be limited, and recursions that exceed that limit will result in a runtime error.
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

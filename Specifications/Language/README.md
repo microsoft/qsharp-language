@@ -20,16 +20,19 @@ programs are implemented in terms of statements and expressions, much like in cl
     1. [Specialization Declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations)
     1. [Attributes](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/5_Attributes.md#attributes)
     1. [Access Modifiers](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/6_AccessModifiers.md#access-modifiers)
+    1. [Comments & Documentation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/7_Comments.md#comments)
 
 1. [Statements](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/2_Statements#statements)
+    1. [Quantum Memory Management](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management)
+    1. [Conditional Branching](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalBranching.md#conditional-branching)
+    1. [Conditional Loops](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalLoops.md#conditional-loops)
+    1. [Iterations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Iterations.md#iterations)
+    1. [Conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations)
     1. [Call Statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements)
     1. [Returns and Termination](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ReturnsAndTermination.md#returns-and-termination)
     1. [Variable Declaration \& Reassignment](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#variable-declarations-and-reassignments)
-    1. [Iterations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Iterations.md#iterations)
-    1. [Conditional Loops](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalLoops.md#conditional-loops)
-    1. [Conditional Branching](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalBranching.md#conditional-branching)
-    1. [Conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations)
-    1. [Quantum Memory Management](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management)
+    1. [Visibility of Local Variables](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/BindingScopes.md#visibility-of-local-variables)
+
 
 1. [Expressions](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/3_Expressions#expressions)
     1. [Precedence \& Associativity](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#precedence-and-associativity)
@@ -59,3 +62,4 @@ programs are implemented in terms of statements and expressions, much like in cl
     1. [Type Parameterizations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations)
     1. [Type Inference](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeInference.md#type-inference)
 
+1. [Grammar](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/5_Grammar#grammar)
