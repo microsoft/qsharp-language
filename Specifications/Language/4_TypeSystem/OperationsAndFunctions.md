@@ -4,7 +4,7 @@ As elaborated in more detail in the description of the [qubits](https://github.c
 
 Q# allows to explicitly split out such purely deterministic computations into *functions*. Since the set of natively supported instructions is not fixed and built into the language itself, but rather fully configurable and expressed as a Q# library, determinism is guaranteed by requiring that functions can only call other functions, but cannot call any operations. Additionally, native instructions that are not deterministic, e.g., because they impact the quantum state are represented as operations. With these two restrictions, function can be evaluated as soon as their input value is known, and in principle never need to be evaluated more than once for the same input. 
 
-Q# therefore distinguishes between two types of callables: operations and functions. All callables take a single (potentially tuple-valued) argument as input and produce a single value (tuple) as output. 
+Q# therefore distinguishes between two types of callables: operations and functions. All callables take a single (potentially tuple-valued) argument as input and produce a single value (tuple) as output. Syntactically, the operation type is expressed as `(<TIn> => <TOut> is <Char>)`, where `<TIn>` is to be replaced by the argument type, `<TOut>` is to be replaced by the return type, and `<Char>` is to be replaced by the [operation characteristics](#operation-characteristics). If no characteristics need to be specified, the syntax simplifies to `(<TIn> => <TOut>)`. Similarly, function types are expressed as `(<TIn> -> <TOut>)`. 
 
 There is little difference between operations and functions beside this determinism guarantee. Both are first-class values that can be passed around freely; they can be used as return values or arguments to other callables, as illustrated by the example below.
 ```qsharp
@@ -21,7 +21,13 @@ They can be instantiated based on a type parametrized definition such as, e.g., 
 In addition to the information about in- and output type, the operation type contains information about the characteristics of an operation. This information for example describes what functors are supported by the operation. Additionally, the internal representation also contains optimization relevant information that is inferred by the compiler. 
 
 The characteristics of an operation are a set of predefined and built-in labels. 
-They are expressed in the form of a special expression that is part of the type signature. The expression consists either of one of the predefined sets of labels, or of a combination of characteristics expressions via a supported binary operator. There are two predefined sets, `Adj` and `Ctl`. `Adj` is the set that contains a single label indicating that an operation is adjointable, and `Ctl` is the set that contains a single label indicating that an operation is controllable. 
+They are expressed in the form of a special expression that is part of the type signature. The expression consists either of one of the predefined sets of labels, or of a combination of characteristics expressions via a supported binary operator. 
+
+There are two predefined sets, `Adj` and `Ctl`. 
+- `Adj` is the set that contains a single label indicating that an operation is adjointable - meaning it supports the [`Adjoint` functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application) and the applied quantum transformation can be "undone" (i.e. it can be inverted).   
+- `Ctl` is the set that contains a single label indicating that an operation is controllable - meaning it supports the [`Controlled` functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application) and
+its execution can be conditioned on the state of other qubits. 
+
 The two operators that are supported as part of characteristics expressions are the set union `+` and the set intersection `*`. 
 In EBNF, 
 ```

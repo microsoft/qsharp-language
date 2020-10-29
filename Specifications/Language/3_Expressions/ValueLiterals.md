@@ -20,10 +20,12 @@ Value literals for the [`Int` type](https://github.com/microsoft/qsharp-language
 
 ## BigInt Literals
 
-Value literals for the [`BigInt` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are always postfixed with `L` and can be expressed in decimal or hexadecimal representation. Literals expressed in hexadecimal are prefixed with `0x`. There is no prefix for the commonly used decimal representation.
+Value literals for the [`BigInt` type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) are always postfixed with `L` and can be expressed in binary, octal, decimal, or hexadecimal representation. Literals expressed in binary are prefixed with `0b`, with `0o` for octal, and with `0x` for hexadecimal. There is no prefix for the commonly used decimal representation.
 
 | Representation | Value Literal |
 | --- | --- | 
+| Binary | `0b101010L` | 
+| Octal | `0o52L` |
 | Decimal | `42L` |
 | Hexadecimal | `0x2aL` |
 
@@ -111,11 +113,11 @@ Arrays or arbitrary length, and in particular empty arrays, may be created using
 Such an expression is of the form `new <ItemType>[expr]`, where `expr` can be any expression of type `Int` and `<ItemType>` is to be replace by the type of the array items.   
 
 For instance, `new Int[10]` creates an array of integers with containing ten items. 
-The length of an array can be queries with the function `Length`. It is defined in the automatically opened namespace Microsoft.Quantum.Core and returns an `Int` value.
+The length of an array can be queries with the function `Length`. It is defined in the automatically opened namespace `Microsoft.Quantum.Core` and returns an `Int` value.
 
 All items in the create array are set to the [default value](#default-values) of the item type. 
 Arrays containing qubits or callables must be properly initialized with non-default values before their elements may be safely used. 
-Suitable initialization routines can be found in the Microsoft.Quantum.Arrays namespace.
+Suitable initialization routines can be found in the `Microsoft.Quantum.Arrays` namespace.
 
 ## Tuple Literals
 
