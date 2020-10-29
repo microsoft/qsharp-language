@@ -128,8 +128,8 @@ The new `use` and `borrow` statements behave like the existing `using` and `borr
 
 1. The block is optional.
    If no block is provided, the scope of the qubit is implicitly defined to be from the `use` or `borrow` statement until the end of the current block.
-2. Parentheses around the header are not required.
-   For consistency, parentheses are no longer required around any block statement header.
+2. Parentheses around the header are not required and will be no longer supported after the next major version.
+   For consistency, the same holds for parentheses around any block statement header.
 
 Each example below is equivalent to the corresponding example in the [Current Status](#current-status) section with the same number.
 
@@ -196,7 +196,7 @@ operation DifferentLifetime() : Result {
 # Implementation
 
 The `use` and `borrow` keywords can be added, and the `using` and `borrowing` keywords can be deprecated.
-Until `using` and `borrowing` are removed, they can be used in place of `use` and `borrow` for both the block and non-block statements.
+Until `using` and `borrowing` are removed, they can be used in place of `use` and `borrow` for both the block and non-block statements, but their use will generate a warning.
 
 When a `use` or `borrow` statement is not followed by a block, it is converted into the block form by moving all remaining statements in the current scope into a new generated block.
 This means that the proposal does not require adding, changing, or removing any syntax tree nodes.
