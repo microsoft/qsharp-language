@@ -1,8 +1,8 @@
 --- 
 title: Multidimensional arrays
-description: 
-author:
-date: 
+description: Proposal for multidimensional array types in Q#
+author: cgranade
+date: 29-10-2020
 ---
 
 # Proposal
@@ -23,10 +23,6 @@ Arrays of arrays as currently supported in Q# can be used to represent matrices 
   ```
 
 # Description
-
-TODO:    
-Describe the proposal and how it ties in with other aspects of the Q# language in more detail.    
-Provide general information about the relevant mechanisms and their role in Q#, and how the proposal relates to them. 
 
 ## Current Status
 
@@ -148,8 +144,11 @@ Each axis of a multidimensional arrays can be sliced by _either_ a value of type
 As shown in Example 5 below, for each `Int` in an index tuple, the dimensionality (aka rank) of the array is reduced by one.
 That is, indexing a `'T[,]` by `(Range, Range)` returns a rank-2 array (`'T[,]`), while indexing by `(Int, Range)` or `(Range, Int)` returns an ordinary rank-1 array (`'T[]`).
 Just as with indices like `(Int, Int)` and `(Int, Int, Int)`, subscripts that return slices can also be used in copy-and-replace expressions, as shown in Example 6.
+When using `Range` values to index one or more axes in a multidimensional array, `...` is shorthand the `Range` value `0..1..(n - 1)` where `n` is the length of the axes being indexed.
 
-To support multidimensional arrays, this proposal also suggests extending the `Microsoft.Quantum.Arrays` namespace with additional intrinsic library functions for creating, manipulating, and converting arrays of different dimensionality.
+When used in `for` loops, multidimensional arrays iterate "on the left," yielding loop variables of one rank lower than the array being looped over, as shown in Example 7, below.
+
+Finally, to support multidimensional arrays, this proposal also suggests extending the `Microsoft.Quantum.Arrays` namespace with additional intrinsic library functions for creating, manipulating, and converting arrays of different dimensionality.
 For example, for two- and three-dimensional arrays (higher dimensions should follow in a similar fashion):
 
 - `function Transposed2<'T>(data : 'T[,]) : 'T[,]`
@@ -351,12 +350,60 @@ let withFirstColumn = zeros w/ (0..2, 0) <- [1, 2, 3];
 // withFirstColumn: Int[,] = #[ [1, 0, 0], [2, 0, 0], [3, 0, 0] ]
 ```
 
+Example 7:
+Iterating over multidimensional arrays.
+
+```qsharp
+let data3 = ##[
+    [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8]
+    ],
+
+    [
+        [9, 10, 11],
+        [12, 13, 14],
+        [15, 16, 17]
+    ],
+
+    [
+        [18, 19, 20],
+        [21, 22, 23],
+        [24, 25, 26]
+    ]
+];
+// data3: Int[,,]
+
+for (plane in data) {
+    // plane: Int[,]
+    for (row in plane) {
+        // row: Int[]
+        Message($"{row}");
+    }
+
+    Message("");
+}
+// Output
+// ======
+// [0, 1, 2]
+// [3, 4, 5]
+// [6, 7, 8]
+//
+// [9, 10, 11]
+// [12, 13, 14]
+// [15, 16, 17]
+//
+// [18, 19, 20]
+// [21, 22, 23]
+// [24, 25, 26]
+```
+
 # Implementation
 
 **NB: Code samples in this section are intended as pseudocode only, and may not work directly as written.**
 
-This proposal can be implemented with minimal new data structures in the Q# runtime, using an approach similar to the NumPy library for Python, the NumSharp library for C#, or the ndarray library for Rust.
-<!-- TODO: add links -->
+This proposal can be implemented with minimal new data structures in the Q# runtime, using an approach similar to the [NumPy library for Python](http://numpy.scipy.org/), the [NumSharp library for C#](https://github.com/SciSharp/NumSharp), or the [ndarray library for Rust](https://github.com/rust-ndarray/ndarray/issues/597).
 
 In particular, each of these libraries represents multidimensional arrays by a data structure similar to the following:
 
@@ -413,7 +460,7 @@ Required implementation steps:
 
 - Adapt compiler to recognize new types, subscript expressions, copy-and-replace expressions, and new literal expressions.
 - Implement new data structures in QIR and simulation runtime to represent values of new type, and fundamental operations on new type (e.g.: `w/` expressions).
-- Design, review, and approve API design for extensions to Microsoft.Quantum.Arrays to support new feature.
+- Design, review, and approve API design for extensions to the `Microsoft.Quantum.Arrays namespace` to support the new feature.
 - Implement new library functions from previous step.
 - Document new multidimensional arrays in language specification and conceptual documentation.
 
@@ -421,9 +468,14 @@ Required implementation steps:
 
 ## Related Mechanisms
 
-TODO:    
-Provide detailed information about the mechanisms and concepts that are relevant for or related to your proposal,
-as well as their role, realization and purpose within Q#. 
+This proposal generalizes the existing array feature in Q#.
+As such, the new features introduced by this proposal are designed to keep to user expectations formed by existing features.
+In particular:
+
+- Like existing arrays, multidimensional arrays are immutable values.
+- Mutability can be handled using `set ... w/= ...;` statements in the same fashion as existing 1D arrays.
+- Multidimensional arrays can be used as collections in loops.
+- There are no subtyping relationships between array types. In particular, `'T[,]` is not a subtype of `'T[][]` but a distinct type in its own right; nor is `('T => Unit is Adj)[,]` a subtype of `('T => Unit)[,]`.
 
 ## Impact on Existing Mechanisms
 
@@ -436,7 +488,7 @@ If, in a future proposal, we were to unify multidimensional array with existing 
 ### Handling runtime failure modalities
 
 Some of the type conversions described above can fail at runtime, decreasing the safety of Q# programs.
-To assist, the discriminated union and type-parameterized UDT feature suggestions <!-- TODO: link --> could be used to represent the possibility of runtime failures in a typesafe fashion.
+To assist, the discriminated union and type-parameterized UDT feature suggestions (https://github.com/microsoft/qsharp-compiler/issues/406) could be used to represent the possibility of runtime failures in a typesafe fashion.
 
 For example, the `JaggedAsRectangular2` function above could fail if its input is not actually rectangular.
 Using `Maybe<'T>`, we could represent this directly:
@@ -464,7 +516,7 @@ function Forced<'T>(maybe : Maybe<'T>) : 'T {
 
 ### Removing type suffixes with bounded polymorphism
 
-Were the bounded polymorphism feature suggested at <!-- TODO: link --> to be adopted, the different "overloads" for the library functions suggested in this proposal could be consolidated into a smaller number of concepts that then get implemented by each of `'T[,]`, `'T[,,]`, and so forth.
+Were the bounded polymorphism feature suggested at https://github.com/microsoft/qsharp-compiler/issues/557 to be adopted, the different "overloads" for the library functions suggested in this proposal could be consolidated into a smaller number of concepts that then get implemented by each of `'T[,]`, `'T[,,]`, and so forth.
 
 For example:
 
@@ -587,9 +639,12 @@ let bellTableau = #[          // denote 2D array
 
 ## Comparison to Alternatives
 
-TODO:    
-Compare your proposal to the possible alternatives and compare the advantages and disadvantages of each approach. 
-Compare in particular their impact on the future development of Q#. 
+### Comparison to Syntactic Sugar for Jagged Arrays
+
+While providing syntactic sugar for copy-and-update operations on jagged arrays helps address some of the more severe pain points in using jagged arrays to represent multidimensional data, that alternative does not address a few critical points:
+
+- Multidimensional indices cannot efficiently be converted into linear indices, causing performance problems with common matrix and tensor operations.
+- Jagged arrays do not guarantee at compile time that data is rectangular, introducing the possibility of runtime logic errors with respect to the shape of multidimensional data.
 
 # Raised Concerns
 
