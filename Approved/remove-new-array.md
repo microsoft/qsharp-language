@@ -62,7 +62,8 @@ The library functions `EmptyArray` and `ConstantArray` are already present in th
 Since the only built-in way to create an empty array was `new Type[0]`, `EmptyArray` must be intrinsic; however, this is already the case, so no additional work is needed.
 
 While `ConstantArray` can be written in pure Q# using array concatenation, this is not the most efficient implementation.
-`ConstantArray` should be converted into an intrinsic function that allocates the whole array before initializing the items with the given value.
+A native implementation of `ConstantArray` should be added that allocates the whole array before initializing the items with the given value.
+The pure Q# implementation should remain as a fallback in case the native implementation is not available.
 
 ## Timeline
 
