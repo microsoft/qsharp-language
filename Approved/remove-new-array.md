@@ -56,8 +56,13 @@ let bools = ConstantArray(10, false);
 
 # Implementation
 
-The library functions `EmptyArray` and `ConstantArray` are already implemented.
 The `new Type[N]` syntax can be deprecated and removed with the next major version of Q#.
+
+The library functions `EmptyArray` and `ConstantArray` are already present in the `Microsoft.Quantum.Arrays` namespace of the standard library.
+Since the only built-in way to create an empty array was `new Type[0]`, `EmptyArray` must be intrinsic; however, this is already the case, so no additional work is needed.
+
+While `ConstantArray` can be written in pure Q# using array concatenation, this is not the most efficient implementation.
+`ConstantArray` should be converted into an intrinsic function that allocates the whole array before initializing the items with the given value.
 
 ## Timeline
 
