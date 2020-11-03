@@ -2,12 +2,14 @@
 title: Remove default-initialized new array expressions
 description: The `new Type[N]` array expression is deprecated and removed from Q#.
 author: Sarah Marshall
-date: October 28, 2020
+date: November 3, 2020
 ---
 
 # Proposal
 
-The `new Type[N]` expression, which creates an array of `N` values using the default value of `Type`, is deprecated and removed from Q#.
+The `new Type[N]` expression, which creates an array of `N` values using the default value of `Type`, will be deprecated and removed from Q#.
+With the exception of the empty array, creating an array requires that the value of each item is given explicitly by the user; arrays are no longer initialized implicitly using default values.
+With the removal of `new Type[N]`, the concept of each type having a default value will also be removed from Q#.
 
 # Justification
 
