@@ -1,5 +1,11 @@
 ## Quantum Instruction Set and Runtime
 
+### Runtime Failure
+
+There are several error conditions that are specified as causing a runtime failure.
+The `quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
+it is documented in the [Classical Runtime](Classical-Runtime.md) section.
+
 ### Standard Operations
 
 As recommended by the [LLVM documentation](https://llvm.org/docs/ExtendingLLVM.html),
@@ -37,6 +43,9 @@ accessed while they are borrowed.
 The code that borrows the qubits guarantees that the state of the qubits when
 returned is identical, including entanglement, to their state when borrowed.
 It is always acceptable to satisfy `borrow` by allocating new qubits.
+
+Passing a null `%Qubit*` or `%Array*` to any of these functions should
+cause a runtime failure.
 
 *__Discussion__*
 >It will likely be useful to provide usage hints to `alloc` and `borrow`.

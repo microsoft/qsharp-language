@@ -7,6 +7,12 @@ types.
 This allows each target to provide a structure definition appropriate for that
 target.
 
+### Runtime Failure
+
+There are several error conditions that are specified as causing a runtime failure.
+The `quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
+it is documented in the [Classical Runtime](Classical-Runtime.md) section.
+
 ### Reference Counting
 
 In QIR, all types represented as pointers, other than qubits, are reference-counted.
@@ -18,10 +24,12 @@ All types follow the same pattern:
   count of an instance and an `_unreference` routine that decrements the
   reference count.
 - The `_unreference` routine will release the instance if the reference count
-  is decremented to zero.
-- The `_unreference` routine should accept a null instance pointer and simply
-  ignore the call if the pointer is null. This allows us to avoid null checks
-  strewn through the QIR, with the attendant plethors of LLVM basic blocks.
+  is decremented to zero. It should ignore the call if the reference count is
+  already zero or less than zero.
+- Both the `_reference` and `_unreference` routines should accept a null instance
+  pointer and simply ignore the call if the pointer is null. This allows us to
+  avoid null checks strewn through the QIR, with the attendant plethora of LLVM
+  basic blocks.
 
 A target is free to provide some other mechanism for garbage collection and
 treat calls to these runtime functions as hints or as simple no-ops.
@@ -78,6 +86,8 @@ For example:
 0..-1..1 = {}
 ```
 
+An attempt to create a `%Range` with a zero step should cause a runtime failure.
+
 The following global constants are defined for use with the `%Result` and `%Pauli` types:
 
 ```LLVM
@@ -99,6 +109,8 @@ simple types:
 | __quantum__rt__result_reference   | `void(%Result*)`         | Increments the reference count of a Result pointer. |
 | __quantum__rt__result_unreference | `void(%Result*)`         | Decrements the reference count of a Result pointer and releases the result if appropriate. |
 
+For `equal`, if a `%Result*` parameter is null, a runtime failure should occur.
+
 ### Strings
 
 Strings are represented as pointers to an opaque type.
@@ -118,6 +130,9 @@ strings:
 | __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
 | __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
 
+For `concatenate` and `equal`, if a `%String*` parameter is null, a runtime
+failure should occur.
+
 The following utility functions support converting values of other types to strings.
 In every case, the returned string is allocated on the heap; the string can't be
 allocated by the caller because the length of the string depends on the actual value.
@@ -132,6 +147,8 @@ allocated by the caller because the length of the string depends on the actual v
 | __quantum__rt__qubit_to_string   | `%String*(%Qubit*)`  | Returns a string representation of the qubit. |
 | __quantum__rt__range_to_string   | `%String*(%Range)`   | Returns a string representation of the range. |
 | __quantum__rt__bigint_to_string  | `%String*(%BigInt*)` | Returns a string representation of the big integer. |
+
+In all cases, if a pointer parameter is null, a runtime failure should occur.
 
 ### Big Integers
 
@@ -167,6 +184,9 @@ big integers.
 | __quantum__rt__bigint_equal       | `i1(%BigInt*, %BigInt*)`       | Returns true if the two big integers are equal, false otherwise. |
 | __quantum__rt__bigint_greater     | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than the second, false otherwise. |
 | __quantum__rt__bigint_greater_eq  | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than or equal to the second, false otherwise. |
+
+In all cases other than `reference` and `unreference`, if a `%BigInt*` 
+parameter is null, a runtime failure should occur.
 
 ### Tuples and User-Defined Types
 
@@ -213,6 +233,9 @@ tuples and user-defined types:
 | __quantum__rt__tuple_create      | `%TupleHeader*(i64)`  | Allocates space for a tuple requiring the given number of bytes and sets the reference count to 1. |
 | __quantum__rt__tuple_reference   | `void(%TupleHeader*)` | Indicates that a new reference has been added. |
 | __quantum__rt__tuple_unreference | `void(%TupleHeader*)` | Indicates that an existing reference has been removed and potentially releases the tuple. |
+
+Note that, as described [above](#reference-counting), passing a null pointer to the
+reference or unreference functions should be ignored.
 
 ### Arrays
 
@@ -264,6 +287,8 @@ an array should cause an immediate runtime failure.
 This applies to slicing and projection operations as well as to element access.
 When validating indices for slicing, only indices that are actually part of the
 resolved range should be considered.
+When projecting, an attempt to project a one-dimensional array on its only dimension
+should cause a failure.
 
 The following utility functions are provided by the classical runtime to support
 arrays:
@@ -272,7 +297,7 @@ arrays:
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
 | __quantum__rt__array_copy        | `%Array*(%Array*)`                   | Returns a new array which is a copy of the passed-in `%Array*`. |
-| __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
+| __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in one-dimensional arrays. If either array is not one-dimensional, then a runtime failure should occur. |
 | __quantum__rt__array_get_length  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be 0 for a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
 | __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be 0 for a 1-dimensional array. The `%Range` specifies the slice. |
@@ -293,6 +318,9 @@ The following utility functions are provided if multidimensional array support i
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
 See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
+
+For all of these functions other than `reference` or `unreference`, if an
+`%Array*` pointer is null, a runtime failure should result.
 
 ---
 _[Back to index](README.md)_

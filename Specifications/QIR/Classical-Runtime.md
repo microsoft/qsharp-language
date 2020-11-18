@@ -18,6 +18,8 @@ They should provide the same behavior as the standard C library functions malloc
 | __quantum__rt__heap_alloc | `i8*(i32)`  | Allocate a block of memory on the heap. |
 | __quantum__rt__heap_free  | `void(i8*)` | Release a block of allocated heap memory. |
 
+Passing a null pointer to `free` should cause the call to be ignored.
+
 ### Logging and Termination
 
 | Function                  | Signature         | Description |

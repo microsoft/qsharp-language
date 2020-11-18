@@ -3,6 +3,12 @@
 We use to term _callable_ to mean a subroutine in the source language.
 Different source languages use different names for this concept.
 
+### Runtime Failure
+
+There are several error conditions that are specified as causing a runtime failure.
+The `quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
+it is documented in the [Classical Runtime](Classical-Runtime.md) section.
+
 ### Basics
 
 Callables are represented by up to four different LLVM functions to handle different
@@ -358,6 +364,11 @@ callable values:
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
 | __quantum__rt__callable_reference | `void(%Callable*)`                      | Indicates that a new reference has been added. |
 | __quantum__rt__callable_unreference | `void(%Callable*)`                      | Indicates that an existing reference has been removed and potentially releases the callable value. |
+
+For all of these other than `reference` and `unreference`, if a null
+`%Callable*` is passed in, a runtime failure should result.
+It is expected that the `%TupleHeader*` parameters to `invoke` may be null
+if the callable either takes no arguments or returns `Unit`.
 
 ---
 _[Back to index](README.md)_
