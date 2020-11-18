@@ -1,6 +1,6 @@
 # Quantum Memory Management
 
-A program always starts with no qubits, meaning passing values of type `Qubit` cannot be passed as entry point arguments. This restriction is intentional, since a purpose of Q# is to express and reason about a program in its entirety.
+A program always starts with no qubits, meaning values of type `Qubit` cannot be passed as entry point arguments. This restriction is intentional, since a purpose of Q# is to express and reason about a program in its entirety.
 Instead, a program allocates and releases quantum memory as it goes.
 In this regard, Q# models the quantum computer as a qubit heap.
 
@@ -14,7 +14,7 @@ Q# supports quantum memory allocation in the form of block statements, where the
 Q# has two statements to instantiate qubit values, arrays of qubits, or any combination thereof. Both of these statements can only be used within operations. They gather the instantiated qubit values, bind them to the variable(s) specified in the statement, and then execute a block of statements.
 At the end of the block, the bound variables go out of scope and are no longer defined.
 
-Q# distinguishes between the allocation of "clean" qubits, meaning qubits that are unentangled and are not used by another part of the computation, and what is often refered to as "dirty" qubits, meaning qubits whose state is unknown and can even be entangled with other parts of the quantum processor's memory.
+Q# distinguishes between the allocation of "clean" qubits, meaning qubits that are unentangled and are not used by another part of the computation, and what is often referred to as "dirty" qubits, meaning qubits whose state is unknown and can even be entangled with other parts of the quantum processor's memory.
 
 ## Using-Statement
 
@@ -41,8 +41,8 @@ The `using`-statement allocates the qubits from the quantum processor's free qub
 
 ## Borrowing-Statement
 
-The `borrowing`-statement is used to make qubits available for temporary use, which do not need be in a specific state:
-Some quantum algorithms are capable of using qubits without relying on their exact state - or even that they are unentangled with the rest of the system. That is, they require extra qubits temporarily, but they can ensure that those qubits are returned exactly to their original state independent on which state that was. 
+The `borrowing`-statement is used to make qubits available for temporary use, which do not need to be in a specific state:
+Some quantum algorithms are capable of using qubits without relying on their exact state - or even that they are unentangled with the rest of the system. That is, they require extra qubits temporarily, but they can ensure that those qubits are returned exactly to their original state independent of which state that was. 
 
 If there are qubits that are in use but not touched during the execution of a subroutine, those qubits can be borrowed for use by such an algorithm instead of having to allocate additional quantum memory. 
 Borrowing instead of allocating can significantly reduce the overall quantum memory requirements of an algorithm, and is a quantum example of a typical space-time tradeoff. 
@@ -65,7 +65,7 @@ If there aren't enough qubits available to borrow, then qubits will be allocated
 
 ### *Discussion*
 >Among the known use cases of dirty qubits are implementations of multi-controlled CNOT gates that require only very few qubits and implementations of incrementers.
->This [paper](https://arxiv.org/abs/1611.07995) gives an example for an algorithm which utilizes borrowed qubits.
+>This [paper](https://arxiv.org/abs/1611.07995) gives an example of an algorithm that utilizes borrowed qubits.
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

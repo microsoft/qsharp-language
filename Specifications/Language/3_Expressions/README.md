@@ -8,7 +8,7 @@ Operators, combinators, and modifiers can be used to combine these into a wider 
 
 - *Modifiers* can only be applied to certain expressions. One or more modifiers can be applied to expressions that are either identifiers, array item access expressions, named item access expressions, or an expression within parenthesis which is the same as a single item tuple (see [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence)). 
 They can either precede (prefix) the expression or follow (postfix) the expression. They are thus special unary operators that bind tighter than function or operation calls, but less tight than any kind of item access. 
-Concretely, [functors](https://github.com/microsoft/qsharp-language/blob/beheim/repo/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application) are prefix modifiers, whereas the [unwrap operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) is a postfix modifier. 
+Concretely, [functors](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application) are prefix modifiers, whereas the [unwrap operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) is a postfix modifier. 
 
 - Like modifiers, function and operation calls as well as item access can be seen as a special kind of operator subject to the same restrictions regarding where they can be applied; we refer to them as *combinators*. 
 
