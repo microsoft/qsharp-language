@@ -8,10 +8,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-        fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+    - uses: actions/checkout@v2 
     - name: Commit changes
       run: |
         git config --local user.email "action@github.com"
@@ -24,12 +21,7 @@ jobs:
         replace_links https://raw.githubusercontent.com/geduardo/quantum-docs-pr/adding-file-script/articles/user-guide/language/uid-map.csv ./Specifications/Language/
         git add .
         git commit -m "Automatic switch of links to xrefs" -a
-        git push
+        git push origin ⭐Docs --force
       shell: pwsh
       
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        force: true
-        branch: ⭐Docs
+      
