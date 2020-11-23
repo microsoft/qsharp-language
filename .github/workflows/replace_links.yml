@@ -19,6 +19,7 @@ jobs:
         $ThisCommit = "${{ github.sha }}"
         git checkout ⭐Docs
         git reset --hard $ThisCommit
+        git merge main
         pip install ./sync-script
         replace_links https://raw.githubusercontent.com/geduardo/quantum-docs-pr/adding-file-script/articles/user-guide/language/uid-map.csv ./Specifications/Language/
         git add .
