@@ -24,6 +24,7 @@ jobs:
         replace_links https://raw.githubusercontent.com/geduardo/quantum-docs-pr/adding-file-script/articles/user-guide/language/uid-map.csv ./Specifications/Language/
         git add .
         git commit -m "Automatic switch of links to xrefs" -a
+        git push
       shell: pwsh
       
     - name: Push changes
