@@ -8,7 +8,7 @@ date:
 # Proposal
 
 TODO:    
-Insert a short outline for what the proposal is.
+Insert a short outline for what the proposal is. 
 
 # Justification
 
