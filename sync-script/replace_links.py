@@ -22,6 +22,7 @@ from urllib.request import urlopen
 def main(url_map : str, source_dir: str):
     map_link_to_uid = extract_csv(url_map)
     links_to_xrefs(source_dir, map_link_to_uid)
+    remove_index(source_dir)
 
 def extract_csv(url_map) -> dict:
     f = urlopen(url_map)
@@ -51,5 +52,6 @@ def remove_index(source_dir):
     with open(source_dir + "README.md") as f:
         lines = f1.readlines()
         f.writelines(lines[:-52])
+        
 if __name__ == "__main__":
     main()
