@@ -49,9 +49,16 @@ def links_to_xrefs(source_dir, map_link_to_uid):
                 f.write(line)
 
 def remove_index(source_dir):
-    with open(source_dir + "README.md") as f:
-        lines = f1.readlines()
-        f.writelines(lines[:-52])
+    lines = open(source_dir + 'README.md').readlines()
+    f = open(source_dir + 'README.md', 'w')
+    for line in lines:
+        if "## Index" in line:
+            break
+        else:
+            f.writelines(line)
+    f.close()
+    
+
         
 if __name__ == "__main__":
     main()
