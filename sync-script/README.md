@@ -6,7 +6,7 @@
 
 There are 4 relevant files:
 
-- `uid-map.csv`: this is a `*.csv` file containing the map between paths and uids that Brad created. This file can be hosted anywhere as long the link is accessible. I recommend to store this file in the same folder as the stub files, so any modification or addition can be easily reflected in the map.
+- `uid-map.csv`: this is a `*.csv` file containing the map between paths and uids that Brad created. This file can be hosted anywhere as long the link is accessible. I recommend storing this file in the same folder as the stub files, so any modification or addition can be easily reflected in the map.
 
 - `replace_links.yml`: a `*.yml` file containing the workflow for the GitHub action that is described below. This file is in `.github/workflows`.
 
