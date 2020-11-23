@@ -21,6 +21,6 @@ There are 4 relevant files:
 First, there are at least two different branches, `main` and a copy of main where we are going to host the uid version of the docs (`⭐Docs`). The GitHub Actions workflow does the following:
 
 1. Opens a Windows console and checkouts to the repository.
-1. Resets `⭐Docs` branch to match `main`.
+1. Resets the `⭐Docs` branch to match `main`.
 1. Installs the script and runs it through a click command.
 1. Commits and pushes the changes to `⭐Docs`.
