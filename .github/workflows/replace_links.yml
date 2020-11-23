@@ -17,7 +17,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         $ThisCommit = "${{ github.sha }}"
-        git checkout ⭐Docs
+        git checkout origin/⭐Docs
         git reset --hard $ThisCommit
         pip install ./sync-script
         replace_links https://raw.githubusercontent.com/geduardo/quantum-docs-pr/adding-file-script/articles/user-guide/language/uid-map.csv ./Specifications/Language/
@@ -30,4 +30,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         force: true
-        branch: ⭐Docs
+        branch: origin/⭐Docs
