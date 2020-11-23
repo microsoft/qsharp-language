@@ -43,7 +43,7 @@ def links_to_xrefs(source_dir, map_link_to_uid):
                     line = line.replace(full_url, full_uid)
                     line = line.replace('← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)','')
                 new_text.append(line)
-        with open("./Language/"+path, "wt", encoding='utf-8') as f:
+        with open(source_dir + path, "wt", encoding='utf-8') as f:
             for line in new_text:
                 f.write(line)
                 
