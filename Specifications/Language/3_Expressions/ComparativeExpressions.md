@@ -1,4 +1,6 @@
-# Equality Comparison
+# Comparative Expressions
+
+## Equality Comparison
 
 Equality comparison (`==`) and inequality comparison (`!=`) is currently limited to the following data types: `Int`, `BigInt`, `Double`, `String`, `Bool`, `Result`, `Pauli`, and `Qubit`. The comparison for equality of arrays, tuples, ranges, user defined types, or callables is currently not supported. 
 
