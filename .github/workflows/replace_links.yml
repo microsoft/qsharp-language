@@ -20,7 +20,7 @@ jobs:
         git checkout ⭐Docs
         git reset --hard $ThisCommit
         pip install ./Specifications/sync-script
-        replace_links https://raw.githubusercontent.com/geduardo/quantum-docs-pr/adding-file-script/articles/user-guide/language/uid-map.csv ./Specifications/Language/
+        replace_links https://raw.githubusercontent.com/MicrosoftDocs/quantum-docs-pr/main/articles/user-guide/language/uid-map.csv ./Specifications/Language/
         git add .
         git commit -m "Automatic switch of links to xrefs" -a
       shell: pwsh
