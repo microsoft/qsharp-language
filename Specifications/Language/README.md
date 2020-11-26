@@ -1,6 +1,6 @@
 # Q# Language
 
-Q# is part of Microsoft's [Quantum Development Kit](http://www.microsoft.com/quantum), and comes with rich IDE support and tools for program visualization and analysis.
+Q# is part of Microsoft's [Quantum Development Kit](https://www.microsoft.com/quantum), and comes with rich IDE support and tools for program visualization and analysis.
 Our goal is to support the development of future large-scale applications while also allowing to execute first efforts in that direction on current quantum hardware. 
 
 The type system permits to safely interleave and naturally represent the composition of classical and quantum computations. A Q# program may express arbitrary classical computations based on quantum measurements that are to be executed while qubits remain live, meaning they are not released and maintain their state. Even though the full complexity of such computations requires further hardware development, Q# programs can be targeted to execute on various quantum hardware backends in [Azure Quantum](https://azure.microsoft.com/services/quantum/).
