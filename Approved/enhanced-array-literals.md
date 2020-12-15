@@ -2,7 +2,7 @@
 title: Enhanced array literals and removal of default-initialized array constructors
 description: Array literals are enhanced to support empty and repeated constant arrays, and the default-initialized array constructor `new Type[n]` is removed.
 author: Sarah Marshall
-date: December 14, 2020
+date: December 15, 2020
 ---
 
 # Proposal
@@ -152,7 +152,36 @@ The [`Default`](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.qua
 
 ## Anticipated Interactions with Future Modifications
 
-TODO
+### Named arguments
+
+The syntax for repeated constant arrays is designed to be similar to the syntax for named arguments, a feature that Q# does not currently support (and for which there is currently no suggestion or proposal).
+This proposal makes the assumption that the syntax for named arguments, if Q# supports them, will be:
+
+```qsharp
+Foo(firstArgument, secondArgument, namedArgument = "foo");
+```
+
+### Type inference
+
+In the future, the type inference used for empty array literals may be extended to all expressions, allowing calls to polymorphic functions where not all type variables are determined by their arguments.
+
+### Partial application
+
+We may want to consider supporting partial application for array literals in the future:
+
+```qsharp
+let f = ["foo", size = _];
+// f : Int -> String[]
+// f(3) == ["foo", "foo", "foo"]
+
+let g = [_, size = 3];
+// g : 'a -> 'a[]
+// g("foo") == ["foo", "foo", "foo"]
+
+let h = [_, "middle", _];
+// h : (String, String) -> String[]
+// h("first", "last") == ["first", "middle", "last"]
+```
 
 ## Alternatives
 
@@ -160,4 +189,4 @@ TODO
 
 # Raised Concerns
 
-TODO
+N/A
