@@ -185,7 +185,22 @@ let h = [_, "middle", _];
 
 ## Alternatives
 
-TODO
+Both empty arrays and repeated constant arrays can be created using functions in the Q# standard library, using the `EmptyArray` and `ConstantArray` functions.
+After deprecating the existing default-initialized array constructor syntax, this proposal could have made these functions the primary way to create these kinds of arrays instead of introducing new syntax.
+
+For empty arrays, the syntax `[]` comes naturally as the zero-length case of general array literals, and is very common in other languages.
+It is much more convenient to use than `EmptyArray<Int>()`.
+
+For repeated constant arrays, the syntax `[x, size = n]` is not as obvious.
+Many languages use a function to provide this functionality instead of built-in syntax.
+However, we were not able to come to a consensus on how the `ConstantArray` function should be made available.
+There are unresolved questions, such as:
+
+1. Should `ConstantArray` be added to `Microsoft.Quantum.Core` so that it can be used without an open directive?
+2. Should `ConstantArray` be part of a more general `Array` module that is in `Microsoft.Quantum.Core`, so that it can be used like `Array.Constant`?
+3. Should modules be a language feature in Q# or are open-as directives enough to emulate them?
+
+We defer answering these questions for now, instead adding new syntax for this case.
 
 # Raised Concerns
 
