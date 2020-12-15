@@ -10,7 +10,7 @@ date: December 14, 2020
 * The empty array literal, `[]`, is supported.
 * The repeated constant array literal, `[x, size = n]`, is added.
 * The default-initialized `new Type[n]` array constructor is deprecated and will be removed in the next major version of Q#.
-  With it, the concept that every type has a default value is also deprecated and removed.
+  With it, the concept that every type has a default value is also deprecated and will be removed.
 
 # Justification
 
@@ -129,17 +129,26 @@ Since all specialization signatures must have explicit parameter and return type
 
 ## Timeline
 
-TODO
+The bulk of the work is expected to be in implementing type inference for the empty array literal.
+However, since it is limited to only the empty array literal, and bounded by the scope of a specialization, the complexity should be managable within a month or two of work.
+The remaining work of adding repeated constant array literals and deprecating the old array literals should not take much time.
 
 # Further Considerations
 
 ## Related Mechanisms
 
-TODO
+The syntax for allocating arrays of qubits is similar to the existing default-initialized array constructor syntax:
+
+```qsharp
+use qs = Qubit[n];
+```
+
+For consistency, it may make sense to change this syntax as well.
+The [proposal for allocatable types and generalization of initializers](https://github.com/microsoft/qsharp-language/pull/41) is addressing this.
 
 ## Impact on Existing Mechanisms
 
-TODO
+The [`Default`](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.core.default) function depends on default-initialized array constructors, and it will also be deprecated.
 
 ## Anticipated Interactions with Future Modifications
 
