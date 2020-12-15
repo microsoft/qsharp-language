@@ -109,6 +109,11 @@ The semantics of `[x, size = n]` are identical to `new T[n]`, except that the in
 ```qsharp
 // Create an array of length 10 of type Bool[] where every value is false.
 let bools = [false, size = 10];
+
+// The following examples are syntax errors:
+let wrong1 = [size = 10, false];
+let wrong2 = [false, true, size = 10];
+let wrong3 = [false, size = 10, true];
 ```
 
 # Implementation
