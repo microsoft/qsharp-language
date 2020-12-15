@@ -283,9 +283,11 @@ The following utility functions are provided if multidimensional array support i
 
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
-| __quantum__rt__array_create      | `%Array* void(i32, i32, ...)`        | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The variable arguments should be a sequence of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. If any length is zero, the result should be an empty array with the given number of dimensions. |
+| __quantum__rt__array_create_2d   | `%Array* void(i32, i64, i64)`        | Creates a new 2-dimensional array. The `i32` is the size of each element in bytes. The first`i64` is the length of the first dimension of the array, and the second `i64` the length of the second dimension. The bytes of the new array should be set to zero. If either length is zero, the result should be an empty 2-dimensional array. |
+| __quantum__rt__array_create      | `%Array* void(i32, i32, i64*)`       | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The `i64*` should point to an array of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. If any length is zero, the result should be an empty array with the given number of dimensions. |
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
-| __quantum__rt__array_get_element_ptr | `i8*(%Array*, ...)`              | Returns a pointer to the indicated element of the array. The variable arguments should be a sequence of `i64`s that are the indices for each dimension. |
+| __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
+| __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
 | __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. |
 
 There are special runtime functions defined for allocating or releasing an
