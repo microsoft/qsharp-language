@@ -32,6 +32,8 @@ This assumption is also invalid for uninhabited types such as `Void`.
 If Q# requires that every type has a default value, then uninhabited types are not possible to express properly.
 This can even cause subtle bugs in the soundness of a type system, as demonstrated by [this bug in Java's generics](https://hackernoon.com/java-is-unsound-28c84cb2b3f) that happened because of the existence of a value (specifically `null`) for a type that should have been uninhabited.
 
+Removing default-initialized array constructors, and the requirement that every type has a default value, resolves these problems.
+
 ## Enhancing array literals
 
 With the removal of default-initialized array constructors, alternatives are needed to create empty arrays and arrays with a repeated initial value.
@@ -189,7 +191,7 @@ Both empty arrays and repeated constant arrays can be created using functions in
 After deprecating the existing default-initialized array constructor syntax, this proposal could have made these functions the primary way to create these kinds of arrays instead of introducing new syntax.
 
 For empty arrays, the syntax `[]` comes naturally as the zero-length case of general array literals, and is very common in other languages.
-It is much more convenient to use than `EmptyArray<Int>()`.
+It is much more convenient to use than `EmptyArray<T>()`.
 
 For repeated constant arrays, the syntax `[x, size = n]` is not as obvious.
 Many languages use a function to provide this functionality instead of built-in syntax.
