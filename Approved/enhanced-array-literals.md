@@ -2,7 +2,7 @@
 title: Enhanced array literals and removal of default-initialized array constructors
 description: Array literals are enhanced to support empty and repeated constant arrays, and the default-initialized array constructor `new Type[n]` is removed.
 author: Sarah Marshall
-date: December 15, 2020
+date: December 16, 2020
 ---
 
 # Proposal
@@ -37,8 +37,8 @@ Removing default-initialized array constructors, and the requirement that every 
 ## Enhancing array literals
 
 With the removal of default-initialized array constructors, alternatives are needed to create empty arrays and arrays with a repeated initial value.
-The alternative for `new T[0]` is `[]`.
-The alternative for `new T[n]` where `n > 0` is `[x, size = n]`, where `x` is the initial value of each item.
+The alternative for `new T[n]` is `[x, size = n]`, where `x` is the initial value of each item.
+In the case where `n` = 0, the alternative for `new T[0]` is `[]`.
 
 # Description
 
@@ -82,7 +82,8 @@ function Example() : Unit {
     let empty1 = [];
     let y = SumI(empty1);
 
-    // The following line contains a compilation error, because empty1 is of type Int[], not Double[].
+    // The following line contains a compilation error, because empty1 is of type Int[], not
+    // Double[].
     let z = SumD(empty1);
 
     // Since empty2 is not used, its type cannot be inferred.
@@ -94,10 +95,12 @@ function Example() : Unit {
     let empty3 = [];
     Message($"Empty array: {empty3}");
 
-    // In cases where the type of [] cannot be inferred, Microsoft.Quantum.Arrays.EmptyArray can be used instead.
+    // In cases where the type of [] cannot be inferred, either [x, size = 0] or
+    // Microsoft.Quantum.Arrays.EmptyArray can be used instead.
     // The following code is valid.
-    let empty4 = EmptyArray<Int>();
-    Message($"Empty array: {empty4}");
+    let empty4 = [0, size = 0];
+    let empty5 = EmptyArray<Int>();
+    Message($"Empty Int arrays: {empty4}, {empty5}");
 }
 ```
 
