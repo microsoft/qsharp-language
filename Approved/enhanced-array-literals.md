@@ -28,7 +28,7 @@ It is not possible to define reasonable default values of types like `Qubit` and
 Their current default values are invalid and will trigger an error if they are used.
 But the syntax is the same both for types with valid default values, and those without: while `new Int[3]` is a well-defined value whose items can be used safely, `new Qubit[3]` creates a trap that will crash the program if any item in the array is used before being set to a valid value first.
 
-This assumption is also invalid for uninhabited types such as `Void`.
+This assumption is also invalid for uninhabited types such as `Void` in other languages.
 If Q# requires that every type has a default value, then uninhabited types are not possible to express properly.
 This can even cause subtle bugs in the soundness of a type system, as demonstrated by [this bug in Java's generics](https://hackernoon.com/java-is-unsound-28c84cb2b3f) that happened because of the existence of a value (specifically `null`) for a type that should have been uninhabited.
 
@@ -57,7 +57,7 @@ let bools = new Bool[10];
 ## Proposed Modification
 
 The syntax above will be deprecated and removed.
-The replacement for each case is different.
+It is replaced by the constructs described below.
 
 ### Empty arrays
 
