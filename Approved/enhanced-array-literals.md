@@ -105,7 +105,7 @@ function Example() : Unit {
 
 The semantics of `[x, size = n]` are identical to `new T[n]`, except that the initial value is now given by `x`:
 
-1. `n` may be an integer literal or a variable of integer type.
+1. `n` is an expression of type `Int`.
 2. If `n` is negative, a runtime error occurs.
 
 ```qsharp
