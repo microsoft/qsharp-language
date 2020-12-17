@@ -188,6 +188,35 @@ let h = [_, "middle", _];
 // h("first", "last") == ["first", "middle", "last"]
 ```
 
+### Multidimensional arrays
+
+The array literals in this proposal can be extended to support multidimensional arrays.
+See the [𝑛-d array proposal](https://github.com/microsoft/qsharp-language/pull/49).
+
+Empty multidimensional arrays can be created with `#[]` for 2D, `##[]` for 3D, etc.
+(Note: this syntax is still subject to change.)
+
+Both multidimensional and nested (jagged) arrays could be created with the repeated constant array literal syntax.
+For example, `#[0, size = (2, 2)]` could create a 2x2 multidensional array, while `[0, size = (2, 2)]` could create a 2x2 nested array.
+This is why the more general term `size` is used here instead of `length`.
+
+### Array comprehensions
+
+Another possible enhancement to array literals is support for array comprehensions.
+This would complement repeated constant array literals, and could be used in conjunction with them.
+For example:
+
+```qsharp
+// An array containing the first 10 squares.
+[x * x for x in 1 .. 10]
+
+// An array containing arrays of the first 10 squares.
+[[x * x for x in 1 .. 10], size = 3]
+
+// A 3x10 multidensional array with the first 10 squares along one dimension.
+#[[x * x for x in 1 .. 10], size = 3]
+```
+
 ## Alternatives
 
 Both empty arrays and repeated constant arrays can be created using functions in the Q# standard library, using the `EmptyArray` and `ConstantArray` functions.
