@@ -225,4 +225,27 @@ However, the new syntax is more concise.
 
 # Raised Concerns
 
-N/A
+The new syntax for repeated constant arrays adds additional complexity to the language, but with only a relatively small benefit to conciseness compared to the standard function syntax `ConstantArray(n, x)`.
+
+The anticipated extensions to this syntax to support multidimensional arrays and partial application will likely pose additional challenges for Q#'s type system that could be avoided if a traditional function was used instead.
+For example, the planned re-use of `size = n` for arrays of any dimensionality is a kind of quasi-overloading that can't be expresed in the type system.
+`[0, size = 2]` is an expression of type `Int[]`, but `[0, size = (2, 2)]` is an expression of type `Int[][]`.
+With this overloading, partial application of the `size` parameter is problematic:
+
+```qsharp
+let f = [0, size = _];
+```
+
+`f` cannot be typed without additional information, such as:
+
+```qsharp
+let g = [0, size = _];
+let xs = g(2, 3);
+```
+
+`g` can be inferred to be of type `(Int, Int) -> Int[][]`.
+But the implementation of this kind of type inference will likely be complicated.
+The compiler needs to encode the fact that `g` is of any type that fits `Int n-tuple -> n-nested Int array`, where the arity of the argument tuple equals the nesting of the returned array.
+Since this type is impossible to express in Q#'s type system, special handling will need to be added to the type inference algorithm.
+
+These problems would be avoided, however, if traditional function calls were used instead, such as nested calls to `ConstantArray` for nested arrays, or defining separate `ConstantArray2`, `ConstantArray3`, etc. functions for multidimensional arrays.
