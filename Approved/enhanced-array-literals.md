@@ -212,9 +212,6 @@ For example:
 
 // An array containing arrays of the first 10 squares.
 [[x * x for x in 1 .. 10], size = 3]
-
-// A 3x10 multidensional array with the first 10 squares along one dimension.
-#[[x * x for x in 1 .. 10], size = 3]
 ```
 
 ## Alternatives
