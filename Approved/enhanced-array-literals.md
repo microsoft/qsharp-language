@@ -2,7 +2,7 @@
 title: Enhanced array literals and removal of default-initialized array constructors
 description: Array literals are enhanced to support empty and repeated constant arrays, and the default-initialized array constructor `new Type[n]` is removed.
 author: Sarah Marshall
-date: December 21, 2020
+date: December 22, 2020
 ---
 
 # Proposal
@@ -142,6 +142,19 @@ The remaining work of adding repeated constant array literals and deprecating th
 
 ## Related Mechanisms
 
+### Array size
+
+The repeated constant array literal uses `size` instead of `length` in anticipation of multidimensional arrays (see the [𝑛-d array proposal](https://github.com/microsoft/qsharp-language/pull/49)).
+For consistency, the standard library should consider adding a `Size` function for 1D arrays that is equivalent to `Length`.
+This would allow both cases:
+
+```qsharp
+EqualityFactI(Size([0, size = 5]), 5, "Array should have size 5");
+EqualityFactI(Length([0, size = 5]), 5, "Array should have length 5");
+```
+
+### Qubit initializers
+
 The syntax for allocating arrays of qubits is similar to the existing default-initialized array constructor syntax:
 
 ```qsharp
@@ -198,7 +211,6 @@ Empty multidimensional arrays can be created with `#[]` for 2D, `##[]` for 3D, e
 
 Both multidimensional and nested (jagged) arrays could be created with the repeated constant array literal syntax.
 For example, `#[0, size = (2, 2)]` could create a 2x2 multidensional array, while `[[0, size = 2], size = 2]` could create a 2x2 nested array.
-This is why the more general term `size` is used here instead of `length`.
 
 ### Array comprehensions
 
