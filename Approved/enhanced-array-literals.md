@@ -2,7 +2,7 @@
 title: Enhanced array literals and removal of default-initialized array constructors
 description: Array literals are enhanced to support empty and repeated constant arrays, and the default-initialized array constructor `new Type[n]` is removed.
 author: Sarah Marshall
-date: December 16, 2020
+date: December 21, 2020
 ---
 
 # Proposal
