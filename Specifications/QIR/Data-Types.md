@@ -2,15 +2,11 @@
 
 We define LLVM representations for a variety of classical and quantum data types.
 
-In most cases, we represent complex types as pointers to opaque LLVM structure
-types.
-This allows each target to provide a structure definition appropriate for that
-target.
+Representing the types used for qubits and measurement results as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
 
-### Reference Counting
+### Reference and Access Counting
 
-In QIR, all types represented as pointers, other than qubits, are reference-counted.
-All types follow the same pattern:
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language specific compiler to expose them as immutable types in the language. 
 
 - Runtime routines that create a new instance always initialize the instance
   with a reference count of 1.
@@ -170,49 +166,36 @@ big integers.
 
 ### Tuples and User-Defined Types
 
-Tuple data, including values of user-defined types, is represented as an
-LLVM structure type.
-The structure type will contain a reference count as a standard header,
-followed by the tuple fields.
+Tuple data, including values of user-defined types, is represented as the corresponding LLVM structure type.
+For instance, a tuple containing two integers, `(Int, Int)`, would be represented in LLVM as `type {i64, i64}`.
 
-Because the `%TupleHeader` type actually appears as part of the structure, LLVM will
-not allow it to be an opaque type.
-Thus, QIR defines an LLVM type for the tuple header:
-
-```LLVM
-%TupleHeader = type { i32 }
-```
-
-For instance, a tuple containing two integers, `(Int, Int)`, would be represented in
-LLVM as `type {%TupleHeader, i64, i64}`.
-
-Tuple handles are simple pointers to the underlying data structure.
-When passed to a callable function, tuples should always be passed by reference,
-even if the source language treats them as immutable.
-
-In some situations, a pointer to a tuple of unknown or variable type may be required.
-To satisfy LLVM's strong typing in such a situation, tuple pointers are passed as
-pointers to the initial tuple header field; that is, as a `%TupleHeader*`.
-These pointers should be cast to pointers to the correct data structures by the
+When passed to a callable function, tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
 receiving code.
+This permits to define runtime functions that are common for all tuples.
 For instance, this convention is used for callable wrapper functions; see
 [below](#callable-values-and-wrapper-functions).
 
-Many languages provide immutable tuples, along with operators that allow a modified
-copy of an existing tuple to be created.
-In QIR, this is represented by creating a new copy of the existing tuple and then
-modifying the newly-created tuple in place.
-If the compiler knows that the existing tuple is not used after the modification,
-it is possible to avoid the copy and modify the existing tuple in place.
+Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
+QIR permits to efficiently support this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
+- The size of the tuple in number of bytes
+- The user count indicating how many handles to the tuple exist in the source code
 
-The following utility functions are provided by the classical runtime to support
-tuples and user-defined types:
+The language specific compiler is responsible for injecting calls to increase and decrease the user count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
+See the section [above](#reference-and-access-counting) regarding the distinction between access and reference counting. 
+
+In the case where the source language exposes tuples as value types rather than reference types, the language specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
+This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the user count is 0 and it is hence save to modify the tuple in place.
+
+The following utility functions are provided by the classical runtime to support tuples and user-defined types:
 
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
-| __quantum__rt__tuple_create      | `%TupleHeader*(i64)`  | Allocates space for a tuple requiring the given number of bytes and sets the reference count to 1. |
-| __quantum__rt__tuple_reference   | `void(%TupleHeader*)` | Indicates that a new reference has been added. |
-| __quantum__rt__tuple_unreference | `void(%TupleHeader*)` | Indicates that an existing reference has been removed and potentially releases the tuple. |
+| __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the user count to 0. |
+| __quantum__rt__tuple_add_user   | `void(%Tuple*)` | Increases the current user count by one. |
+| __quantum__rt__tuple_remove_user | `void(%Tuple*)` | Decreases the current user count by one, fails if the user count becomes negative. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the user count is larger than 0 or the second argument is `true`. |
+| __quantum__rt__tuple_reference   | `void(%Tuple*)` | Indicates that a new reference has been added. |
+| __quantum__rt__tuple_unreference | `void(%Tuple*)` | Indicates that an existing reference has been removed and potentially releases the tuple. |
 
 ### Arrays
 
