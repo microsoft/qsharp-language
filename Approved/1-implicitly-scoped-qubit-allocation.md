@@ -4,7 +4,7 @@ author: Sarah Marshall
 date: 2020-10-29
 ---
 
-# QEP 1: Implicitly-scoped Qubit Allocation
+# QEP 1: Implicitly-Scoped Qubit Allocation
 
 ## Proposal
 
