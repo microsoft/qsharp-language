@@ -179,7 +179,7 @@ For instance, this convention is used for callable wrapper functions; see
 
 Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
 QIR supports this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
-- The size of the tuple in number of bytes
+- The size of the tuple in bytes
 - The user count indicating how many handles to the tuple exist in the source code
 
 The language specific compiler is responsible for injecting calls to increase and decrease the user count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
