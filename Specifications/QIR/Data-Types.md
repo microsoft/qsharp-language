@@ -185,7 +185,7 @@ QIR supports this by requiring the runtime to track and be able to access the fo
 The language specific compiler is responsible for injecting calls to increase and decrease the user count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
 See the section [above](#reference-and-access-counting) regarding the distinction between access and reference counting. 
 
-In the case where the source language exposes tuples as value types rather than reference types, the language specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
+In the case where the source language treats tuples as immutable values, the language-specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
 This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the user count is 0 and it is hence save to modify the tuple in place.
 
 The following utility functions are provided by the classical runtime to support tuples and user-defined types:
