@@ -8,7 +8,7 @@ appropriate for that target.
 
 ### Reference and Access Counting
 
-QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language specific compiler to expose them as immutable types in the language. 
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. 
 
 - Runtime routines that create a new instance always initialize the instance
   with a reference count of 1.
