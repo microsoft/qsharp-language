@@ -2,7 +2,9 @@
 
 We define LLVM representations for a variety of classical and quantum data types.
 
-Representing the types used for qubits and measurement results as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
+Representing the types used for qubits and measurement results as pointers to
+opaque LLVM structure types allows each target to provide a structure definition
+appropriate for that target.
 
 ### Reference and Access Counting
 
