@@ -178,7 +178,7 @@ For instance, this convention is used for callable wrapper functions; see
 [below](#callable-values-and-wrapper-functions).
 
 Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
-QIR permits to efficiently support this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
+QIR supports this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
 - The size of the tuple in number of bytes
 - The user count indicating how many handles to the tuple exist in the source code
 
