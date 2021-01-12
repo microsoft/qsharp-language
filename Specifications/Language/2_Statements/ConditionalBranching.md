@@ -2,9 +2,9 @@
 
 Conditional branching is expressed in the form of `if`-statements. 
 An `if`-statement consists of an `if`-clause, followed by zero or more `elif`-clauses and optionally an else-block.
-Each clause follows the patter
+Each clause follows the pattern:
 ```
-keyword (condition) {
+keyword condition {
     <statements>
 }
 ```
@@ -16,11 +16,11 @@ The block is executed in its own scope, meaning any bindings made as part of the
 For example, suppose `qubits` is value of type `Qubit[]` and `r1` and `r2` are of type `Result`,
 
 ```qsharp
-if (r1 == One) {
+if r1 == One {
     let q = qubits[0];
     H(q);
 } 
-elif (r2 == One) {
+elif r2 == One {
     let q = qubits[1];
     H(q);
 } 

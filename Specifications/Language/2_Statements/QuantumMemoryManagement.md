@@ -16,52 +16,67 @@ At the end of the block, the bound variables go out of scope and are no longer d
 
 Q# distinguishes between the allocation of "clean" qubits, meaning qubits that are unentangled and are not used by another part of the computation, and what is often referred to as "dirty" qubits, meaning qubits whose state is unknown and can even be entangled with other parts of the quantum processor's memory.
 
-## Using-Statement
+## Use-Statement
 
-Clean qubits are allocated by the `using`-statement.
-The statement consists of the keyword `using`, followed by an open parenthesis `(`, a binding, a close parenthesis `)`, and the statement block within which the qubits will be available.
+Clean qubits are allocated by the `use`-statement.
+The statement consists of the keyword `use` followed by a binding and an optional statement block.
+If a statement block is present, the qubits are only available within that block.
+Otherwise, the qubits are available until the end of the current scope.
 The binding follows the same pattern as `let` statements: either a single symbol or a tuple of symbols, followed by an equals sign `=`, and either a single tuple or a matching tuple of *initializers*.
 
 Initializers are available either for a single qubit, indicated as `Qubit()`, or an array of qubits, `Qubit[n]`, where `n` is an `Int` expression.
 For example,
 
 ```qsharp
-using (qubit = Qubit()) {
+use qubit = Qubit();
+// ...
+
+use (aux, register) = (Qubit(), Qubit[5]);
+// ...
+
+use qubit = Qubit() {
     // ...
 }
 
-using ((aux, register) = (Qubit(), Qubit[5])) {
+use (aux, register) = (Qubit(), Qubit[5]) {
     // ...
 }
 ```
 
 The qubits are guaranteed to be in a |0⟩ state upon allocation. They are released at the end of the scope and are required to either be in a |0⟩ state upon release, or to have been measured right beforehand. This requirement is not compiler-enforced, since this would require a symbolic evaluation that quickly gets prohibitively expensive. When executing on simulators, the requirement can be runtime enforced. On quantum processors, the requirement cannot be runtime enforced; an unmeasured qubit may be reset to |0⟩ via unitary transformation. Failing to do so will result in incorrect behavior. 
 
-The `using`-statement allocates the qubits from the quantum processor's free qubit heap, and returns them to the heap after the statement terminates.
+The `use`-statement allocates the qubits from the quantum processor's free qubit heap, and returns them to the heap no latter than the end of the scope in which the qubits are bound.
 
-## Borrowing-Statement
+## Borrow-Statement
 
-The `borrowing`-statement is used to make qubits available for temporary use, which do not need to be in a specific state:
+The `borrow`-statement is used to make qubits available for temporary use, which do not need to be in a specific state:
 Some quantum algorithms are capable of using qubits without relying on their exact state - or even that they are unentangled with the rest of the system. That is, they require extra qubits temporarily, but they can ensure that those qubits are returned exactly to their original state independent of which state that was. 
 
 If there are qubits that are in use but not touched during the execution of a subroutine, those qubits can be borrowed for use by such an algorithm instead of having to allocate additional quantum memory. 
 Borrowing instead of allocating can significantly reduce the overall quantum memory requirements of an algorithm, and is a quantum example of a typical space-time tradeoff. 
 
-A `borrowing`-statement follows the same pattern as described [above](#using-statement) for a `using`-statement, with the same initializers being available.
+A `borrow`-statement follows the same pattern as described [above](#using-statement) for a `use`-statement, with the same initializers being available.
 For example,
 ```qsharp
-borrowing (qubit = Qubit()) {
+borrow qubit = Qubit();
+// ...
+
+borrow (aux, register) = (Qubit(), Qubit[5]);
+// ...
+
+borrow qubit = Qubit() {
     // ...
 }
-borrowing ((aux, register) = (Qubit(), Qubit[5])) {
+
+borrow (aux, register) = (Qubit(), Qubit[5]) {
     // ...
 }
 ```
 The borrowed qubits are in an unknown state and go out of scope at the end of the statement block.
 The borrower commits to leaving the qubits in the same state they were in when they were borrowed,  i.e. their state at the beginning and at the end of the statement block is expected to be the same.
 
-The `borrowing`-statement retrieves in-use qubits that are guaranteed not to be used during the body of the statement at runtime.
-If there aren't enough qubits available to borrow, then qubits will be allocated from and returned to the heap.
+The `borrow`-statement retrieves in-use qubits that are guaranteed not to be used from the time the qubit is bound until the last usage of that qubit.
+If there aren't enough qubits available to borrow, then qubits will be allocated from and returned to the heap like a `use` statement.
 
 ### *Discussion*
 >Among the known use cases of dirty qubits are implementations of multi-controlled CNOT gates that require only very few qubits and implementations of incrementers.
