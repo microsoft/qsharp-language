@@ -111,7 +111,10 @@ specializationParameter
 
 type
     : '_'
+    | '(' (type (',' type)* ','?)? ')'
     | TypeParameter
+    | type '[' ']'
+    | type ('->' | '=>') type characteristics?
     | 'BigInt'
     | 'Bool'
     | 'Double'
@@ -123,14 +126,6 @@ type
     | 'String'
     | 'Unit'
     | qualifiedName
-    | '(' (type (',' type)* ','?)? ')'
-    | '(' arrowType characteristics? ')'
-    | type '[' ']'
-    ;
-
-arrowType
-    : '(' type ('->' | '=>') type ')'
-    | type ('->' | '=>') type
     ;
 
 // Statement
