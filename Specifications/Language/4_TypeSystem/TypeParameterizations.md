@@ -12,7 +12,7 @@ A type parametrized callable needs to be concretized — i.e. provided with the 
 
 ```qsharp
     function Mapped<'T1, 'T2> (
-        mapper : ('T1 -> 'T2), 
+        mapper : 'T1 -> 'T2,
         array : 'T1[]
     ) : 'T2[] {
 
@@ -31,11 +31,11 @@ A type parametrized callable needs to be concretized — i.e. provided with the 
     }
 ```
 
-The function `CControlled` is defined in the `Microsoft.Quantum.Canon` namespace. It takes an operation `op` of type `('TIn => Unit)` as argument and returns a new operation of type `((Bool, 'TIn) => Unit)` that applies the original operation provided a classical bit (of type `Bool`) is set to true; this is often referred to as the classically controlled version of `op`. 
+The function `CControlled` is defined in the `Microsoft.Quantum.Canon` namespace. It takes an operation `op` of type `'TIn => Unit` as argument and returns a new operation of type `(Bool, 'TIn) => Unit` that applies the original operation provided a classical bit (of type `Bool`) is set to true; this is often referred to as the classically controlled version of `op`. 
 
 The function `Mapped` takes an array of an arbitrary item type `'T1` as argument, applies the given `mapper` function to each item and returns a new array of type `'T2[]` containing the mapped items. It is defined in the `Microsoft.Quantum.Array` namespace. For the purpose of the example, the type parameters are numbered to avoid making the discussion more confusing by giving the type parameters in both functions the same name. This is not necessary; type parameters for different callables may have the same name, and the chosen name is only visible and relevant within the definition of that callable. 
 
-The function `AllCControlled` takes an array of operations and returns a new array containing the classically controlled versions of these operations. The call of `Mapped` resolves its type parameter `'T1` to `('T3 => Unit)`, and its type parameter `'T2` to `((Bool,'T3) => Unit)`. The resolving type arguments are inferred by the compiler based on the type of the given argument. We say that they are *implicitly* defined by the argument of the call expression. Type arguments can also be specified explicitly as it is done for `CControlled` in the same line. The explicit concretization `CControlled<'T3>` is necessary when the type arguments cannot be inferred. 
+The function `AllCControlled` takes an array of operations and returns a new array containing the classically controlled versions of these operations. The call of `Mapped` resolves its type parameter `'T1` to `'T3 => Unit`, and its type parameter `'T2` to `(Bool,'T3) => Unit`. The resolving type arguments are inferred by the compiler based on the type of the given argument. We say that they are *implicitly* defined by the argument of the call expression. Type arguments can also be specified explicitly as it is done for `CControlled` in the same line. The explicit concretization `CControlled<'T3>` is necessary when the type arguments cannot be inferred. 
 
 The type `'T3` is concrete within the context of `AllCControlled`, since it is known for each *invocation* of `AllCControlled`. That means that as soon as the entry point of the program - which cannot be type parametrized - is know, so is the concrete type `'T3` for each call to `AllCControlled`, such that a suitable implementation for that particular type resolution can be generated; once the entry point to a program is known, all usages of type parameters can be eliminated at compile-time. We refer to this process as *monomorphization*. 
 
@@ -46,7 +46,7 @@ A couple of restrictions are needed to ensure that this can indeed be done at co
 >
 >```qsharp
 >    operation Foo<'TArg> (
->        op : ('TArg => Unit), 
+>        op : 'TArg => Unit,
 >        arg : 'TArg
 >    ) : Unit {
 >
