@@ -144,17 +144,17 @@ statement
     | 'set' symbolBinding '=' expression ';'
     | 'set' Identifier updateOperator expression ';'
     | 'set' Identifier 'w/=' expression '<-' expression ';'
-    | 'if' '(' expression ')' scope
-    | 'elif' '(' expression ')' scope
+    | 'if' expression scope
+    | 'elif' expression scope
     | 'else' scope
-    | 'for' '(' symbolBinding 'in' expression ')' scope
-    | 'while' '(' expression ')' scope
+    | 'for' (forBinding | '(' forBinding ')') scope
+    | 'while' expression scope
     | 'repeat' scope
-    | 'until' '(' expression ')' (';' | 'fixup' scope)
+    | 'until' expression (';' | 'fixup' scope)
     | 'within' scope
     | 'apply' scope
-    | 'using' '(' symbolBinding '=' qubitInitializer ')' scope
-    | 'borrowing' '(' symbolBinding '=' qubitInitializer ')' scope
+    | ('use' | 'using') (qubitBinding | '(' qubitBinding ')') (';' | scope)
+    | ('borrow' | 'borrowing') (qubitBinding | '(' qubitBinding ')') (';' | scope)
     ;
 
 scope : BraceLeft statement* BraceRight;
@@ -180,6 +180,10 @@ updateOperator
     | 'and='
     | 'or='
     ;
+
+forBinding : symbolBinding 'in' expression;
+
+qubitBinding : symbolBinding '=' qubitInitializer;
 
 qubitInitializer
     : 'Qubit' '(' ')'
