@@ -66,7 +66,7 @@ There is no need to create wrappers for callables that are never pointed to.
 That is, **a callable that is never turned into a callable value doesn't need wrapper functions**.
 
 Each wrapper is an LLVM function that takes three tuple header pointers as input and
-returns no output; that is, `void(%TupleHeader*, %TupleHeader*, %TupleHeader*)`.
+returns no output; that is, `void(%Tuple*, %Tuple*, %Tuple*)`.
 The first input is the capture tuple, which used for closures.
 The second input is the argument tuple.
 The third input points to the result tuple, which will be allocated by the caller.
@@ -75,9 +75,6 @@ If the callable has `Unit` result, then the result tuple pointer will be null.
 Each wrapper function should start with a prologue that decomposes the argument and
 capture tuples.
 Depending on the result type, it should end with an epilogue that fills in the result tuple.
-If the result tuple contains another container such as an array, it may be simpler and more
-efficient to fill in the sub-container in-line in the implementation, rather than creating
-a separate array and then copying it to the result tuple.
 
 We use a caller-allocates strategy for the result tuple because this allows us to
 avoid a heap allocation in many cases.
@@ -90,8 +87,8 @@ For instance, for a callable named `Some.Namespace.Symbol` with all four
 specializations, the compiler should generate the following in LLVM:
 
 ```LLVM
-define void Some__Namespace__Symbol__body__wrapper (%TupleHeader* capture,
-    %TupleHeader* args, %TupleHeader* result)
+define void Some__Namespace__Symbol__body__wrapper (%Tuple* capture,
+    %Tuple* args, %Tuple* result)
 {
   ; code to get arguments out of the args and capture tuples goes here
   ; call to Some__Namespace__Symbol__body() goes here
@@ -99,8 +96,8 @@ define void Some__Namespace__Symbol__body__wrapper (%TupleHeader* capture,
   ret void;
 }
 
-define void Some__Namespace__Symbol__adj__wrapper (%TupleHeader* capture,
-    %TupleHeader* args, %TupleHeader* result)
+define void Some__Namespace__Symbol__adj__wrapper (%Tuple* capture,
+    %Tuple* args, %Tuple* result)
 {
   ; code to get arguments out of the args and capture tuples goes here
   ; call to Some__Namespace__Symbol__adj() goes here
@@ -108,8 +105,8 @@ define void Some__Namespace__Symbol__adj__wrapper (%TupleHeader* capture,
   ret void;
 }
 
-define void Some__Namespace__Symbol__ctl__wrapper (%TupleHeader* capture,
-    %TupleHeader* args, %TupleHeader* result)
+define void Some__Namespace__Symbol__ctl__wrapper (%Tuple* capture,
+    %Tuple* args, %Tuple* result)
 {
   ; code to get arguments out of the args and capture tuples goes here
   ; call to Some__Namespace__Symbol__ctl() goes here
@@ -117,8 +114,8 @@ define void Some__Namespace__Symbol__ctl__wrapper (%TupleHeader* capture,
   ret void;
 }
 
-define void Some__Namespace__Symbol__ctladj__wrapper (%TupleHeader* capture,
-    %TupleHeader* args, %TupleHeader* result)
+define void Some__Namespace__Symbol__ctladj__wrapper (%Tuple* capture,
+    %Tuple* args, %Tuple* result)
 {
   ; code to get arguments out of the args and capture tuples goes here
   ; call to Some__Namespace__Symbol__ctladj() goes here
@@ -143,15 +140,15 @@ For the example above, the following would be generated:
 
 ```LLVM
 @Some__Namespace__Symbol = constant 
-  [void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*]
+  [void (%Tuple*, %Tuple*, %Tuple*)*]
   [
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*
+    void (%Tuple*, %Tuple*, %Tuple*)*
         @Some__Namespace__Symbol__body,
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*
+    void (%Tuple*, %Tuple*, %Tuple*)*
         @Some__Namespace__Symbol__adj,
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)* 
+    void (%Tuple*, %Tuple*, %Tuple*)* 
         @Some__Namespace__Symbol__ctl,
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)* 
+    void (%Tuple*, %Tuple*, %Tuple*)* 
         @Some__Namespace__Symbol__ctladj
   ]
 ```
@@ -163,8 +160,7 @@ LLVM structure , `%Callable`.
 These values are created using the `__quantum__rt__callable_create` or
 `__quantum__rt__callable_copy` runtime functions.
 
-The `__quantum__rt__callable_create` function takes an implementation table
-and a capture tuple and returns a pointer to a new `%Callable`.
+The `__quantum__rt__callable_create` function takes an implementation table, a [memory management table](#memory-management-table), and a capture tuple and returns a pointer to a new `%Callable`.
 The capture tuple in the `%Callable` is passed as the first argument to the
 wrapper function when the callable value is invoked.
 It is intended to hold values captured by a lambda or provided values
@@ -214,8 +210,8 @@ The following snippet of LLVM code could be generated:
 
 ```LLVM
 %f = call %__quantum__rt__callable_create(
-  [4 x void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*]* @someOp,
-  %TupleHeader* null)
+  [4 x void (%Tuple*, %Tuple*, %Tuple*)*]* @someOp,
+  %Tuple* null)
 %g = call %__quantum__rt__callable_copy(%f)
 call %__quantum__rt__callable_make_adjoint(%g)
 ```
@@ -256,12 +252,12 @@ containing the array of control qubits as the first element and a tuple of
 the remaining arguments as the second tuple.
 
 For instance, if the base callable expects an argument tuple
-`{ %TupleHeader, i64, %Qubit* }`, then the `Controlled` version expects
-`{ %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }`, and the twice-`Controlled`
+`{ %Tuple, i64, %Qubit* }`, then the `Controlled` version expects
+`{ %Tuple, %Array*, { %Tuple, i64, %Qubit* }* }`, and the twice-`Controlled`
 version expects
-`{ %TupleHeader, %Array*, { %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }* }`.
+`{ %Tuple, %Array*, { %Tuple, %Array*, { %Tuple, i64, %Qubit* }* }* }`.
 The "ctl" implementation function always expects
-`{ %TupleHeader, %Array*, { %TupleHeader, i64, %Qubit* }* }`.
+`{ %Tuple, %Array*, { %Tuple, i64, %Qubit* }* }`.
 Thus, if the controlled count is greater than 1,
 `__quantum__rt__callable_invoke` needs to disassemble the argument tuple,
 concatenate the control qubit arrays, and form the expected argument tuple.
@@ -270,16 +266,16 @@ One additional complexity is that the above is modified slightly if the base
 callable expects an argument tuple with exactly one element.
 In this case, the `Controlled` version expects a two-element tuples as
 above, but with the actual base argument as the second element.
-For instance, if the base callable expects `{ %TupleHeader, %Qubit* }`,
-the singly-`Controlled` version expects `{ %TupleHeader, %Array*, %Qubit* }`
-rather than `{ %TupleHeader, %Array*, { %TupleHeader, %Qubit* }* }`.
+For instance, if the base callable expects `{ %Tuple, %Qubit* }`,
+the singly-`Controlled` version expects `{ %Tuple, %Array*, %Qubit* }`
+rather than `{ %Tuple, %Array*, { %Tuple, %Qubit* }* }`.
 This means that the second element of the singly-`Controlled` argument tuple
 is not always a pointer to a struct, and in particular may have variable length
 up to the size of a `%Range`.
 
 To resolve this, `__quantum__rt__callable_invoke` needs to have access to the
 length of the inner argument tuple once it has unwrapped down to that point.
-This could be stored in the `%TupleHeader` by `__quantum__rt__tuple_create`,
+This could be stored in the `%Tuple` by `__quantum__rt__tuple_create`,
 or it could be provided by the classical runtime from the length originally
 provided for the heap allocation.
 
@@ -291,7 +287,7 @@ have access to the controlled count, and so can't unambiguously determine the
 expected argument tuple; specifically, it can't tell if an inner tuple is the
 result of an application of `Controlled` or just part of the base signature.
 
-#### Implementing Lambdas
+### Implementing Lambdas, Partial Application and Currying
 
 The language-specific compiler should generate a new top-level callable of the
 appropriate type with implementation provided by the anonymous body of the lambda;
@@ -308,8 +304,6 @@ lambda should be added to the lambda's capture tuple.
 The language-specific compiler is responsible for having references within the lambda
 to the captured values refer to the capture tuple.
 
-#### Implementing Partial Application and Currying
-
 Partial application and currying are alternative forms of closures; that is, both create a
 lambda values, although the source syntax is different from a lambda expression.
 
@@ -317,6 +311,12 @@ Partial applications and curried functions should be rewritten into lambdas by t
 language-specific compiler.
 The lambda body may need to include additional code that performs argument tuple
 construction before calling the underlying callable.
+
+#### Memory Management Table
+
+Any captured values need to remain alive as long as the callable value exists, and correspondingly may also need to be unreferenced when the type information for the captured values cannot be statically determined. Upon creation, a table with two function pointers is hence associated with a callable value. 
+
+Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i64)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the access counts. They can be invoked using the runtime function `__quantum__rt__callable_memory_management`. If there are no captured values, a null pointer should be passed upon callable creation.
 
 ### External Callables
 
@@ -351,13 +351,14 @@ callable values:
 
 | Function                        | Signature                                  | Description |
 |---------------------------------|--------------------------------------------|-------------|
-| __quantum__rt__callable_create  | `%Callable*([4 x void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*]*, %TupleHeader*)` | Initializes the callable with the provided function table and capture tuple. The capture tuple pointer should be null if there is no capture. |
-| __quantum__rt__callable_copy    | `%Callable*(%Callable*)`             | Initializes the first callable to be the same as the second callable. |
-| __quantum__rt__callable_invoke  | `void(%Callable*, %TupleHeader*, %TupleHeader*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
+| __quantum__rt__callable_create  | `%Callable*([4 x void (%Tuple*, %Tuple*, %Tuple*)*]*, [2 x void(%Tuple*, i64)]*, %Tuple*)` | Initializes the callable with the provided function table, memory management table, and capture tuple. The memory management table pointer and the capture tuple pointer should be null if there is no capture. |
+| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer otherwise, after increasing its reference count by 1. |
+| __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
 | __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
-| __quantum__rt__callable_reference | `void(%Callable*)`                      | Indicates that a new reference has been added. |
-| __quantum__rt__callable_unreference | `void(%Callable*)`                      | Indicates that an existing reference has been removed and potentially releases the callable value. |
+| __quantum__rt__callable_update_reference_count | `void(%Callable*, i64)`                      | Adds the given integer value to the reference count for the given callable. Deallocates the callable if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__callable_update_alias_count | `void(%Callable*, i64)`                      | Adds the given integer value to the alias count *and* to the reference count for the given callable. Deallocates the callable if the reference count becomes 0. Fails if either count becomes negative. |
+| __quantum__rt__callable_memory_management | `void(i32, %Callable*, i64)`                      | Invokes the function at the given index in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
 
 ---
 _[Back to index](README.md)_

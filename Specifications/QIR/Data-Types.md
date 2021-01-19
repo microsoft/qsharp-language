@@ -4,7 +4,7 @@ We define LLVM representations for a variety of classical and quantum data types
 
 Representing the types used for qubits and measurement results as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
 
-### Reference and Access Counting
+### Reference and Alias Counting
 
 QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language specific compiler to expose them as immutable types in the language. 
 
@@ -178,28 +178,33 @@ For instance, this convention is used for callable wrapper functions; see
 Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
 QIR permits to efficiently support this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
 - The size of the tuple in number of bytes
-- The user count indicating how many handles to the tuple exist in the source code
+- The alias count indicating how many handles to the tuple exist in the source code
 
-The language specific compiler is responsible for injecting calls to increase and decrease the user count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
-See the section [above](#reference-and-access-counting) regarding the distinction between access and reference counting. 
+The language specific compiler is responsible for injecting calls to increase and decrease the alias count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
+See the section [above](#reference-and-alias-counting) regarding the distinction between alias and reference counting. 
 
 In the case where the source language exposes tuples as value types rather than reference types, the language specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
-This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the user count is 0 and it is hence save to modify the tuple in place.
+This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is hence save to modify the tuple in place.
 
 The following utility functions are provided by the classical runtime to support tuples and user-defined types:
 
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
-| __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the user count to 0. |
-| __quantum__rt__tuple_add_user   | `void(%Tuple*)` | Increases the current user count by one. |
-| __quantum__rt__tuple_remove_user | `void(%Tuple*)` | Decreases the current user count by one, fails if the user count becomes negative. |
-| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the user count is larger than 0 or the second argument is `true`. |
-| __quantum__rt__tuple_reference   | `void(%Tuple*)` | Indicates that a new reference has been added. |
-| __quantum__rt__tuple_unreference | `void(%Tuple*)` | Indicates that an existing reference has been removed and potentially releases the tuple. |
+| __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. |
+| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the given tuple. Deallocates the tuple if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count *and* to the reference count for the given tuple. Deallocates the tuple if the reference count becomes 0. Fails if either count becomes negative. |
 
 ### Arrays
 
-Array data is represented as a pointer to an opaque LLVM structure, `%Array`.
+Array data is represented as the corresponding LLVM array type.
+For instance, an array of integers, `Int[]`, would be represented in LLVM as `type {i64, i64}`.
+
+When passed to a callable function, arrays are passed as a pointer to an opaque LLVM structure, `%Array`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
+receiving code.
+This permits to define runtime functions that are common for all arrays.
+For instance, this convention is used for common array functions such as `array_get_length` and `array_slice`; see
+[below](#callable-values-and-wrapper-functions).
 
 Because LLVM does not provide any mechanism for type-parameterized functions,
 runtime library routines that provide access to array elements return byte
