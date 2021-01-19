@@ -2,11 +2,13 @@
 
 We define LLVM representations for a variety of classical and quantum data types.
 
-Representing the types used for qubits and measurement results as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
+Representing the types used for qubits and measurement results as pointers to
+opaque LLVM structure types allows each target to provide a structure definition
+appropriate for that target.
 
 ### Reference and Alias Counting
 
-QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language specific compiler to expose them as immutable types in the language. 
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. 
 
 - Runtime routines that create a new instance always initialize the instance
   with a reference count of 1.
@@ -176,14 +178,14 @@ For instance, this convention is used for callable wrapper functions; see
 [below](#callable-values-and-wrapper-functions).
 
 Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
-QIR permits to efficiently support this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
-- The size of the tuple in number of bytes
+QIR supports this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
+- The size of the tuple in bytes
 - The alias count indicating how many handles to the tuple exist in the source code
 
 The language specific compiler is responsible for injecting calls to increase and decrease the alias count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
 See the section [above](#reference-and-alias-counting) regarding the distinction between alias and reference counting. 
 
-In the case where the source language exposes tuples as value types rather than reference types, the language specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
+In the case where the source language treats tuples as immutable values, the language-specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
 This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is hence save to modify the tuple in place.
 
 The following utility functions are provided by the classical runtime to support tuples and user-defined types:
