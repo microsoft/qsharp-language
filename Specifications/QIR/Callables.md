@@ -356,8 +356,8 @@ callable values:
 | __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
 | __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
-| __quantum__rt__callable_update_reference_count | `void(%Callable*, i64)`                      | Adds the given integer value to the reference count for the given callable. Deallocates the callable if the reference count becomes 0. Fails if the reference count becomes negative. |
-| __quantum__rt__callable_update_alias_count | `void(%Callable*, i64)`                      | Adds the given integer value to the alias count *and* to the reference count for the given callable. Deallocates the callable if the reference count becomes 0. Fails if either count becomes negative. |
+| __quantum__rt__callable_update_reference_count | `void(%Callable*, i64)`                      | Adds the given integer value to the reference count for the callable. Deallocates the callable if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__callable_update_alias_count | `void(%Callable*, i64)`                      | Adds the given integer value to the alias count *and* to the reference count for the callable. Deallocates the callable if the reference count becomes 0. Fails if either count becomes negative. |
 | __quantum__rt__callable_memory_management | `void(i32, %Callable*, i64)`                      | Invokes the function at the given index in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
 
 ---

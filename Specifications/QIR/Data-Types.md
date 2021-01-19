@@ -194,8 +194,8 @@ The following utility functions are provided by the classical runtime to support
 |----------------------------------|-----------------------|-------------|
 | __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
 | __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. |
-| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the given tuple. Deallocates the tuple if the reference count becomes 0. Fails if the reference count becomes negative. |
-| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count *and* to the reference count for the given tuple. Deallocates the tuple if the reference count becomes 0. Fails if either count becomes negative. |
+| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count *and* to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. Fails if either count becomes negative. |
 
 ### Arrays
 
@@ -261,13 +261,13 @@ arrays:
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
-| __quantum__rt__array_copy        | `%Array*(%Array*)`                   | Returns a new array which is a copy of the passed-in `%Array*`. |
+| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. |
 | __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
-| __quantum__rt__array_get_length  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be 0 for a 1-dimensional array. |
+| __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The `%Range` specifies the slice. |
+| __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
-| __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be 0 for a 1-dimensional array. The `%Range` specifies the slice. |
-| __quantum__rt__array_reference   | `void(%Array*)`                      | Indicates that a new reference has been added. |
-| __quantum__rt__array_unreference | `void(%Array*)`                      | Indicates that an existing reference has been removed and potentially releases the array. |
+| __quantum__rt__array_update_reference_count   | `void(%Array*, i64)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__array_update_alias_count | `void(%Array*, i64)` | Adds the given integer value to the alias count *and* to the reference count for the array. Deallocates the array if the reference count becomes 0. Fails if either count becomes negative. |
 
 The following utility functions are provided if multidimensional array support is enabled:
 
@@ -276,8 +276,10 @@ The following utility functions are provided if multidimensional array support i
 | __quantum__rt__array_create_2d   | `%Array* void(i32, i64, i64)`        | Creates a new 2-dimensional array. The `i32` is the size of each element in bytes. The first`i64` is the length of the first dimension of the array, and the second `i64` the length of the second dimension. The bytes of the new array should be set to zero. If either length is zero, the result should be an empty 2-dimensional array. |
 | __quantum__rt__array_create      | `%Array* void(i32, i32, i64*)`       | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The `i64*` should point to an array of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. If any length is zero, the result should be an empty array with the given number of dimensions. |
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
+| __quantum__rt__array_get_size  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be smaller than the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
+| __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be smaller than the number of dimensions in the array. The `%Range` specifies the slice. |
 | __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. |
 
 There are special runtime functions defined for allocating or releasing an
