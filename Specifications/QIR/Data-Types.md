@@ -94,8 +94,7 @@ simple types:
 | Function                          | Signature                | Description |
 |-----------------------------------|--------------------------|-------------|
 | __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
-| __quantum__rt__result_reference   | `void(%Result*)`         | Increments the reference count of a Result pointer. |
-| __quantum__rt__result_unreference | `void(%Result*)`         | Decrements the reference count of a Result pointer and releases the result if appropriate. |
+| __quantum__rt__result_update_reference_count   | `void(%Result*, i64)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. Fails if the reference count becomes negative. |
 
 ### Strings
 
@@ -111,8 +110,7 @@ strings:
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__string_create      | `%String*(i32, [0 x i8])`      | Creates a string from an array of UTF-8 bytes. |
-| __quantum__rt__string_reference   | `void(%String*)`               | Indicates that a new reference has been added. |
-| __quantum__rt__string_unreference | `void(%String*)`               | Indicates that an existing reference has been removed and potentially releases the string. |
+| __quantum__rt__string_update_reference_count   | `void(%String*, i64)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. Fails if the reference count becomes negative. |
 | __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
 | __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
 
@@ -147,8 +145,7 @@ big integers.
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__bigint_create_i64  | `%BigInt*(i64)`                | Creates a big integer with the specified initial value. |
 | __quantum__rt__bigint_create_array | `%BigInt*(i32, [0 x i8])`    | Creates a big integer with the initial value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
-| __quantum__rt__bigint_reference   | `void(%BigInt*)`               | Indicates that a new reference has been added. |
-| __quantum__rt__bigint_unreference | `void(%BigInt*)`               | Indicates that an existing reference has been removed and potentially releases the big integer. |
+| __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i64)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. Fails if the reference count becomes negative. |
 | __quantum__rt__bigint_negate      | `%BigInt*(%BigInt*)`           | Returns the negative of the big integer. |
 | __quantum__rt__bigint_add         | `%BigInt*(%BigInt*, %BigInt*)` | Adds two big integers and returns their sum. |
 | __quantum__rt__bigint_subtract    | `%BigInt*(%BigInt*, %BigInt*)` | Subtracts the second big integer from the first and returns their difference. |
