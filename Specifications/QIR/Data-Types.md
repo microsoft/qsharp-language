@@ -94,7 +94,7 @@ simple types:
 | Function                          | Signature                | Description |
 |-----------------------------------|--------------------------|-------------|
 | __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
-| __quantum__rt__result_update_reference_count   | `void(%Result*, i64)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__result_update_reference_count   | `void(%Result*, i64)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 
 ### Strings
 
@@ -110,7 +110,7 @@ strings:
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__string_create      | `%String*(i32, i8*)`      | Creates a string from an array of UTF-8 bytes. |
-| __quantum__rt__string_update_reference_count   | `void(%String*, i64)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__string_update_reference_count   | `void(%String*, i64)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
 | __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
 
@@ -145,7 +145,7 @@ big integers.
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__bigint_create_i64  | `%BigInt*(i64)`                | Creates a big integer with the specified initial value. |
 | __quantum__rt__bigint_create_array | `%BigInt*(i32, i8*)`    | Creates a big integer with the initial value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
-| __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i64)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. Fails if the reference count becomes negative. |
+| __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i64)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__bigint_negate      | `%BigInt*(%BigInt*)`           | Returns the negative of the big integer. |
 | __quantum__rt__bigint_add         | `%BigInt*(%BigInt*, %BigInt*)` | Adds two big integers and returns their sum. |
 | __quantum__rt__bigint_subtract    | `%BigInt*(%BigInt*, %BigInt*)` | Subtracts the second big integer from the first and returns their difference. |
@@ -191,8 +191,8 @@ The following utility functions are provided by the classical runtime to support
 |----------------------------------|-----------------------|-------------|
 | __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
 | __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. |
-| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. Fails if the reference count becomes negative. |
-| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count *and* to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. Fails if either count becomes negative. |
+| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
 
 ### Arrays
 
@@ -263,8 +263,8 @@ arrays:
 | __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The `%Range` specifies the slice. |
 | __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
-| __quantum__rt__array_update_reference_count   | `void(%Array*, i64)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. Fails if the reference count becomes negative. |
-| __quantum__rt__array_update_alias_count | `void(%Array*, i64)` | Adds the given integer value to the alias count *and* to the reference count for the array. Deallocates the array if the reference count becomes 0. Fails if either count becomes negative. |
+| __quantum__rt__array_update_reference_count   | `void(%Array*, i64)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__array_update_alias_count | `void(%Array*, i64)` | Adds the given integer value to the alias count for the array. Fails if either count becomes negative. |
 
 The following utility functions are provided if multidimensional array support is enabled:
 
