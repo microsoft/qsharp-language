@@ -4,13 +4,13 @@ As elaborated in more detail in the description of the [qubits](https://github.c
 
 Q# allows to explicitly split out such purely deterministic computations into *functions*. Since the set of natively supported instructions is not fixed and built into the language itself, but rather fully configurable and expressed as a Q# library, determinism is guaranteed by requiring that functions can only call other functions, but cannot call any operations. Additionally, native instructions that are not deterministic, e.g., because they impact the quantum state are represented as operations. With these two restrictions, function can be evaluated as soon as their input value is known, and in principle never need to be evaluated more than once for the same input. 
 
-Q# therefore distinguishes between two types of callables: operations and functions. All callables take a single (potentially tuple-valued) argument as input and produce a single value (tuple) as output. Syntactically, the operation type is expressed as `(<TIn> => <TOut> is <Char>)`, where `<TIn>` is to be replaced by the argument type, `<TOut>` is to be replaced by the return type, and `<Char>` is to be replaced by the [operation characteristics](#operation-characteristics). If no characteristics need to be specified, the syntax simplifies to `(<TIn> => <TOut>)`. Similarly, function types are expressed as `(<TIn> -> <TOut>)`. 
+Q# therefore distinguishes between two types of callables: operations and functions. All callables take a single (potentially tuple-valued) argument as input and produce a single value (tuple) as output. Syntactically, the operation type is expressed as `<TIn> => <TOut> is <Char>`, where `<TIn>` is to be replaced by the argument type, `<TOut>` is to be replaced by the return type, and `<Char>` is to be replaced by the [operation characteristics](#operation-characteristics). If no characteristics need to be specified, the syntax simplifies to `<TIn> => <TOut>`. Similarly, function types are expressed as `<TIn> -> <TOut>`. 
 
 There is little difference between operations and functions beside this determinism guarantee. Both are first-class values that can be passed around freely; they can be used as return values or arguments to other callables, as illustrated by the example below.
 ```qsharp
-    function Pow<`T>(op:(`T => Unit, pow : Int) : (`T => Unit){
-        return PowImpl(op, pow, _); 
-    }
+function Pow<'T>(op : 'T => Unit, pow : Int) : 'T => Unit {
+    return PowImpl(op, pow, _);
+}
 ```
 
 They can be instantiated based on a type parametrized definition such as, e.g., the [type parametrized](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations) function `Pow` above, and they can be [partially applied](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application) as done in Line 2 in the example. 
@@ -36,7 +36,7 @@ In EBNF,
         | "(", characteristics, ")" 
         | characteristics ("+"|"*") characteristics;
 ```
-As one would expect, `*` has higher precedence than `+` and both are left-associative. The type of a unitary operation for example is expressed as `(<TIn> => <TOut> is Adj + Ctl)` where `<TIn>` should be replace with the type of the operation argument, and `<TOut>` with the type of the returned value. 
+As one would expect, `*` has higher precedence than `+` and both are left-associative. The type of a unitary operation for example is expressed as `<TIn> => <TOut> is Adj + Ctl` where `<TIn>` should be replaced with the type of the operation argument, and `<TOut>` with the type of the returned value. 
 
 ### *Discussion*
 >Indicating the characteristics of an operation in this form has two major advantages; for one, new labels can be introduced without having exponentially many language keywords for all combinations of labels. Perhaps more importantly, using expressions to indicate the characteristics of an operation also permits to support parameterizations over operation characteristics in the future. 
