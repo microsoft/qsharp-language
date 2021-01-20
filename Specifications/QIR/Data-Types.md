@@ -109,7 +109,7 @@ strings:
 
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
-| __quantum__rt__string_create      | `%String*(i32, i8*)`      | Creates a string from an array of UTF-8 bytes. |
+| __quantum__rt__string_create      | `%String*(i8*)`      | Creates a string from an array of UTF-8 bytes. The byte array is expected to be zero-terminated. |
 | __quantum__rt__string_update_reference_count   | `void(%String*, i64)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
 | __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
