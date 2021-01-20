@@ -45,7 +45,7 @@ use (aux, register) = (Qubit(), Qubit[5]) {
 
 The qubits are guaranteed to be in a |0⟩ state upon allocation. They are released at the end of the scope and are required to either be in a |0⟩ state upon release, or to have been measured right beforehand. This requirement is not compiler-enforced, since this would require a symbolic evaluation that quickly gets prohibitively expensive. When executing on simulators, the requirement can be runtime enforced. On quantum processors, the requirement cannot be runtime enforced; an unmeasured qubit may be reset to |0⟩ via unitary transformation. Failing to do so will result in incorrect behavior. 
 
-The `use`-statement allocates the qubits from the quantum processor's free qubit heap, and returns them to the heap no latter than the end of the scope in which the qubits are bound.
+The `use`-statement allocates the qubits from the quantum processor's free qubit heap, and returns them to the heap no later than the end of the scope in which the qubits are bound.
 
 ## Borrow-Statement
 
