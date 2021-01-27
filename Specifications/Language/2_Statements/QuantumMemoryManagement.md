@@ -55,7 +55,7 @@ Some quantum algorithms are capable of using qubits without relying on their exa
 If there are qubits that are in use but not touched during the execution of a subroutine, those qubits can be borrowed for use by such an algorithm instead of having to allocate additional quantum memory. 
 Borrowing instead of allocating can significantly reduce the overall quantum memory requirements of an algorithm, and is a quantum example of a typical space-time tradeoff. 
 
-A `borrow`-statement follows the same pattern as described [above](#using-statement) for a `use`-statement, with the same initializers being available.
+A `borrow`-statement follows the same pattern as described [above](#use-statement) for a `use`-statement, with the same initializers being available.
 For example,
 ```qsharp
 borrow qubit = Qubit();
