@@ -11,15 +11,15 @@ For instance, in an expression `a == b ? C(qs) | D(qs)`, if `a` equals `b` then 
 The types of the `ifTrue` and the `ifFalse` expression have to have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance). Independent of which one of the two ultimately yields the value to which the expression evaluates, its type will always match the determined base type. 
 
 For example, if 
-- `Op1` is of type `(Qubit[] => Unit is Adj)`
-- `Op2` is of type `(Qubit[] => Unit is Ctl)`
-- `Op3` is of type `(Qubit[] => Unit is Adj + Ctl)`
+- `Op1` is of type `Qubit[] => Unit is Adj`
+- `Op2` is of type `Qubit[] => Unit is Ctl`
+- `Op3` is of type `Qubit[] => Unit is Adj + Ctl`
 
 then
 
-- `cond ? Op1 | Op2` is of type `(Qubit[] => Unit)`
-- `cond ? Op1 | Op3` is of type `(Qubit[] => Unit is Adj)`
-- `cond ? Op2 | Op3` is of type `(Qubit[] => Unit is Ctl)`
+- `cond ? Op1 | Op2` is of type `Qubit[] => Unit`
+- `cond ? Op1 | Op3` is of type `Qubit[] => Unit is Adj`
+- `cond ? Op2 | Op3` is of type `Qubit[] => Unit is Ctl`
 
 See the section on [subtyping](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance) for more detail.
 

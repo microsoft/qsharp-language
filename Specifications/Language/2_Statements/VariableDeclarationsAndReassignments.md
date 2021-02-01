@@ -48,7 +48,7 @@ Such statements provide a convenient way of concatenation if the right hand side
 For example,
 ```qsharp
 mutable counter = 0;
-for (i in 1 .. 2 .. 10) {
+for i in 1 .. 2 .. 10 {
     set counter += 1;
     // ...
 }
@@ -56,7 +56,7 @@ for (i in 1 .. 2 .. 10) {
 increments the value of the counter `counter` in each iteration of the `for` loop. The code above is equivalent to 
 ```qsharp
 mutable counter = 0;
-for (i in 1 .. 2 .. 10) {
+for i in 1 .. 2 .. 10 {
     set counter = counter + 1;
     // ...
 }
@@ -71,9 +71,9 @@ The following function for example computes the sum of an array of [`Complex`](h
 ```qsharp
 function ComplexSum(values : Complex[]) : Complex {
     mutable res = Complex(0., 0.);
-    for (complex in values) {
-        set res w/= Re <- res::Re + complex::Re; 
-        set res w/= Im <- res::Im + complex::Im; 
+    for complex in values {
+        set res w/= Re <- res::Re + complex::Re;
+        set res w/= Im <- res::Im + complex::Im;
     }
     return res;
 }
@@ -83,9 +83,8 @@ Similarly, the following function multiplies each item in an array with the give
 
 ```qsharp
 function Multiplied(factor : Double, array : Double[]) : Double[] {
-
     mutable res = new Double[Length(array)];
-    for (i in IndexRange(res)) {
+    for i in IndexRange(res) {
         set res w/= i <- factor * array[i];
     }
     return res;
