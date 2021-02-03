@@ -148,47 +148,21 @@ When using `Range` values to index one or more axes in a multidimensional array,
 
 When used in `for` loops, multidimensional arrays iterate "on the left," yielding loop variables of one rank lower than the array being looped over, as shown in Example 7, below.
 
-Finally, to support multidimensional arrays, this proposal also suggests extending the `Microsoft.Quantum.Arrays` namespace with additional intrinsic library functions for creating, manipulating, and converting arrays of different dimensionality.
-For example, for two- and three-dimensional arrays (higher dimensions should follow in a similar fashion):
+Finally, to support multidimensional arrays, this proposal also suggests extending the `Microsoft.Quantum.Arrays` namespace with the following functions that can be used to implement libraries for working with multidimensional arrays:
 
-- `function Transposed2<'T>(data : 'T[,]) : 'T[,]`
-- `function Transposed3<'T>(axes : (Int, Int, Int), data : 'T[,,]) : 'T[,,]`
-- `function Transposed4<'T>(axes : (Int, Int, Int, Int), data : 'T[,,,]) : 'T[,,,]`
-- `function Concatenated<'T>(left : 'T[], right : 'T[]) : 'T[]`
-- `function Concatenated2<'T>(axis : Int, left : 'T[,], right : 'T[,]) : 'T[,]`
-- `function Concatenated3<'T>(axis : Int, left : 'T[,,], right : 'T[,,]) : 'T[,,]`
-- `function JaggedAsRectangular2<'T>(jagged : 'T[][]) : 'T[,]`
-- `function JaggedAsRectangular3<'T>(jagged : 'T[][][]) : 'T[,,]`
-- `function Shape2<'T>(array : 'T[,]) : (Int, Int)`
-- `function Shape3<'T>(array : 'T[,,]) : (Int, Int, Int)`
-- `function ElementAt2<'T>(index : (Int, Int), array : 'T[,]) : 'T`
-- `function ElementAt3<'T>(index : (Int, Int, Int), array : 'T[,,]) : 'T`
-- `function Subarray2<'T>(indices : (Int, Int)[], array : 'T[,]) : 'T[]`
-- `function Subarray3<'T>(indices : (Int, Int, Int)[], array : 'T[,,]) : 'T[]`
-- `function ConstantArray2<'T>(shape : (Int, Int), value : 'T) : 'T[,]`
-- `function ConstantArray3<'T>(shape : (Int, Int, Int), value : 'T) : 'T[,,]`
-- `function EmptyArray2<'T>() : 'T[,]`
-- `function EmptyArray3<'T>() : 'T[,,]`
-- `function ReducedAlongAxis2<'TInput, 'TOutput>(reduction : ('TInput[] -> 'TOutput), axis : Int, array : 'TInput[,]) : 'TOutput[]`
-- `function ReducedAlongAxis3<'TInput, 'TOutput>(reduction : ('TInput[] -> 'TOutput), axis : Int, array : 'TInput[,,]) : 'TOutput[,]`
-- `function TimesD2(left : Double[,], right : Double[,]) : Double[,]`
-- `function TimesC2(left : Complex[,], right : Complex[,]) : Complex[,]`
-- `function Dot2With2<'T>(plus : (('T, 'T) -> 'T), times : (('T, 'T) -> 'T), (idxLeft : Int, idxRight : Int), left : 'T[,], right : 'T[,]) : 'T[,]`
-- `function Dot3With2<'T>(plus : (('T, 'T) -> 'T), times : (('T, 'T) -> 'T), (idxLeft : Int, idxRight : Int), left : 'T[,,], right : 'T[,]) : 'T[,,]`
-- `function Dot2With3<'T>(plus : (('T, 'T) -> 'T), times : (('T, 'T) -> 'T), (idxLeft : Int, idxRight : Int), left : 'T[,], right : 'T[,,]) : 'T[,,]`
-- `function Dot3With3<'T>(plus : (('T, 'T) -> 'T), times : (('T, 'T) -> 'T), (idxLeft : Int, idxRight : Int), left : 'T[,,], right : 'T[,,]) : 'T[,,,]`
-- `function Reshaped1To2<'T>(array : 'T[], newShape : (Int, Int)) : 'T[,]`
-- `function Reshaped1To3<'T>(array : 'T[], newShape : (Int, Int, Int)) : 'T[,,]`
-- `function Reshaped2To3<'T>(array : 'T[,], newShape : (Int, Int, Int)) : 'T[,,]`
-- `function Reshaped3To3<'T>(array : 'T[,,], newShape : (Int, Int, Int)) : 'T[,,]`
-- `function Reshaped3To2<'T>(array : 'T[,,], newShape : (Int, Int)) : 'T[,]`
-- `function Broadcasted2<'TLeft, 'TRight, 'TOutput>(fn : (('TLeft, 'TRight) -> 'TOutput), left : 'TLeft[,], right : 'TRight[,]) : 'TOutput[,]`
-- `function Broadcasted3<'T0, 'T1, 'T2, 'TOutput>(fn : (('T0, 'T1, 'T2) -> 'TOutput), in0 : 'T0[,], in1 : 'T1[,], in2 : 'T2[,]) : 'TOutput[,]`
-- `function DiagonalMatrix<'T>(diag : 'T[]) : 'T[,]`
-- `function Diagonal<'T>(array : 'T[,]) : 'T[]`
+- `internal function AsNDArray2<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,]`
+- `internal function AsNDArray3<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,,]`
+- `internal function AsNDArray4<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,,,]`
+- `internal function AsNDArray5<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,,,,]`
+- `internal function AsNDArray6<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,,,,,]`
+- `internal function AsNDArray7<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,,,,,,]`
+- `internal function AsNDArray8<'TElement>(data : 'TElement[], strides : Int[], offset : Int, shape : Int[]) : 'TElement[,,,,,,,]`
+- `internal function NDArrayData<'TElement, 'TArray>(data : 'TArray) : 'TElement[]`
+- `internal function NDArrayStrides<'TArray>(data : 'TArray) : Int[]`
+- `internal function NDArrayShape<'TArray>(data : 'TArray) : Int[]`
+- `internal function NDArrayOffset<'TArray>(data : 'TArray) : Int`
 
-Many of these array functions can be written in Q# itself, while others would require implementation as intrinsics.
-Note that above, we have used suffixes like `2` and `3` to denote ranks of inputs and outputs (or even `2With3` when inputs have different ranks), but these could be eliminated using additional language features, as discussed in "Anticipated Interactions with Future Modifications."
+Each of these five functions would be `body intrinsic;`, and together form the contract between the runtime and the core Q# libraries needed to support this proposed feature (see Example 7, below). By necessity, these functions are "unsafe," in that direct access to these functions would allow violating invariants of multidimensional arrays or bypass the type system to expose runtime failures, necessitating the `internal` modifier.
 
 ### Examples
 
@@ -397,6 +371,59 @@ for (plane in data) {
 // [18, 19, 20]
 // [21, 22, 23]
 // [24, 25, 26]
+```
+
+Example 7:
+Implementing array library functions using internal functions.
+
+```qsharp
+namespace Microsoft.Quantum.Arrays {
+    open Microsoft.Quantum.Diagnostics;
+
+    function Transposed2<'T>(array : 'T[,]) : 'T[,] {
+        // Start by deconstructing the input using the internal intrinsic
+        // functions from this proposal; see Implementation below.
+        let data = NDArrayData<'T, 'T[,]>(array);
+        let strides = NDArrayStrides(array);
+        let offset = NDArrayOffset(array);
+        let shape = NDArrayShape(array);
+
+        // Now use AsNDArray2 to reconstruct, but with shape and strides
+        // reversed.
+        return AsNDArray2(data, strides, offset, shape);
+    }
+
+    function ConstantArray2<'T>(shape : (Int, Int), element : 'T) : 'T[,] {
+        Fact(Fst(shape) >= 0, "First axis had negative length.");
+        Fact(Snd(shape) >= 0, "Second axis had negative length.");
+
+        // Here, we set a stride of zero to store everything as a single
+        // element. Using the copy-and-update operator will require actually
+        // allocating the whole array, but we can start off by "cheating."
+        return AsNDArray2([element], [0, 0], 0, shape);
+    }
+
+    function Shape2<'T>(array : 'T[,]) : (Int, Int) {
+        let shape = NDArrayShape(array);
+        return (shape[0], shape[1]);
+    }
+
+    function TimesD2(left : Double[,], right : Double[,]) : Double[,] {
+        // For simplicity, we presume that left and right already match each
+        // other's shape exactly. In an actual library implementation, we would
+        // want to generalize this to allow arbitrary binary operators, and to
+        // handle broadcasting between the two inputs.
+
+        mutable data = [];
+        let (nRows, nCols) = Shape2(left);
+        for idxCol in 0..nCols - 1 {
+            for idxRow in 0..nRows - 1 {
+                set data += [left[(idxRow, idxCol)] * right[(idxRow, idxCol)]];
+            }
+        }
+        return AsNDArray2(data, [1, nRows], 0, shape);
+    }
+}
 ```
 
 # Implementation
