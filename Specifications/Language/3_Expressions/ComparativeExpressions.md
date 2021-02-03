@@ -1,4 +1,6 @@
-# Equality Comparison
+# Comparative Expressions
+
+## Equality Comparison
 
 Equality comparison (`==`) and inequality comparison (`!=`) is currently limited to the following data types: `Int`, `BigInt`, `Double`, `String`, `Bool`, `Result`, `Pauli`, and `Qubit`. The comparison for equality of arrays, tuples, ranges, user defined types, or callables is currently not supported. 
 
@@ -22,7 +24,7 @@ For instance, the following comparison evaluates to `false` due to rounding erro
 >```
 >for some globally declared function `Bar`. The first line defines a new anonymous function that takes an argument `x` and invokes a function `Bar` with it and assigns it to the variable `f1`. The second line assigns the function `Bar` to `f2`. Since invoking `f1` and invoking `f2` will do the same thing, it should be possible to replace those with each other without changing the behavior of the program. This wouldn't be the case if the equality comparison for functions was supported and `f1 == f2` evaluates to `false`. If conversely `f1 == f2` were to evaluate to `true`, then this leads to the question of determining whether two callable will have the same side effects and evaluate to the same value for all inputs, which is not possible to reliably determine. Therefore, if we would like to be able to replace `f1` with `f2`, we can't allow equality comparisons for callables.  
 
-# Quantitative Comparison
+## Quantitative Comparison
 
 The operators less-than (`<`), less-than-or-equal (`<=`), greater-than (`>`), and greater-than-or-equal (`>=`) define quantitative comparisons. They can only be applied to data types that support such comparisons; these are the same data types that can also support [arithmetic expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions). 
 

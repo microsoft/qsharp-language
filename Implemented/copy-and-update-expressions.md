@@ -1,11 +1,12 @@
-<!-- 
-title: Copy-And-Update Expression for Arrays
+---
 description: Proposal to introduce and require explicit copy-and-update expressions when constructing array modifications
 author: Bettina Heim
-date: 04/02/19
--->
+date: 2019-04-02
+---
 
-# Proposal
+# Copy-and-Update Expression for Arrays
+
+## Proposal
 
 The proposal is to introduce a dedicated copy-and-update expression in the form of a ternary operator 
 that reduces the need for mutable bindings.
@@ -14,7 +15,7 @@ by explicitly re-assigning a copy-and-update expression to the same symbol when 
 Introducing a suitable update-and-reassign operator allows to reduce the verbosity of expressing modifications to array items for (immutable) arrays, 
 and would be aligned with similar operators for other modifications (e.g. `+=`). 
 
-# Justification
+## Justification
 
 In Q#, all values are immutable and follow value semantics - 
 with `Qubit`s taking on a somewhat special role, depending on interpretation.
@@ -48,7 +49,7 @@ and the proposed copy-and-update expression can be extended to include tuple ite
 The additional functionality provided by copy-and-update expressions reduces the need for declaring mutable bindings, 
 and thus reduce the need for manual declaration of certain specializations. 
 
-# Description
+## Description
 
 Q# provides the means to define mutable symbols, i.e. variables that can be reassigned. 
 Mutability within Q# is a concept that applies to a *symbol* rather than a type or value. 
@@ -57,7 +58,7 @@ for which the behavior is predefined and cannot be specified.
 Put more broadly, the concept of mutability applies to the handle that allows one to access a value rather than to the value itself. 
 Specifically, mutability is *not* represented in the type system, implicitly or explicitly. 
 
-## Current Status
+### Current Status
 
 Currently, array items may occur on the left hand side of a set-statement if and only if the corresponding array is accessed via a mutable symbol. 
 The behavior of the involved value(s) follows value semantics. 
@@ -67,7 +68,7 @@ Under the hood the copy mechanism is optimized and the actual execution of the c
 Since arguments passed to callables are considered to be immutable bindings within the callable, it is not possible to modify the content of an array as a side effect of a call expression. 
 This is in contrast to other languages, where arrays are reference types and array items can correspondingly always be modified even if the binding of the reference itself is immutable.
 
-### Examples
+#### Examples
 
 Example 1:    
 Mutable and Immutable Symbols
@@ -129,7 +130,7 @@ for (i in 0 .. Length(arr) - 1) {
 }                                           // `arr` contains a square array with each entry set to one
 ```
 
-## Proposed Modification
+### Proposed Modification
 
 A new copy-and-update expression for arrays is introduced in the form of a ternary operator. 
 It is of the form <nobr>`expression w/ expression <- expression`</nobr>, with suitable restrictions regarding the type of the inner expressions. 
@@ -161,7 +162,7 @@ It may be worth considering introducing a dedicated type for two-dimensional squ
 Such a type should also be a value type such that all possible side effects remain limited to quantum transformations on qubits. 
 Introducing such a data type constitutes a non-trivial extension of Q# such that the details need to be worked out in a separate proposal. 
 
-### Examples
+#### Examples
 
 Example 1:     
 Supported Set-Statements
@@ -235,7 +236,7 @@ for (i in 0 .. Length(arr) - 1) {           // whether `Length` should be applic
 } 
 ```
 
-# Implementation
+## Implementation
 
 Mutability is clearly attributed to an identifier rather than to an expression. 
 Since there is no behavior change associated with the proposal, the required adaptions are minimal. 
@@ -247,13 +248,13 @@ An efficient processing of copy-and-update expressions for arrays in the backend
 To mitigate the impact on user code, support for processing no longer supported set-statement in the formatting tool is desirable. 
 However, due to avoid further confusion, the suggestion is to make it a clear breaking change giving a compilation error for no longer supported syntax rather than merely a deprecated warning. 
 
-## Timeline
+### Timeline
 
 The change is proposed as part of the December 2018 review cycle, with an expected implementation for Summer 2019. 
 Since this proposal modifies the core functionality of the language, an adaption needs to happen within the preview phase and as early as possible. 
 Any potential implementation of copy-and-update expressions for tuple items or items in user-defined types would overlap partially with the infrastructure required for this change. 
 
-# Further Considerations
+## Further Considerations
 
 There is currently no concept of a reference or of reference type semantics in Q# - without prejudice regarding how and where values are stored. 
 Arrays provide the only means to store an amount of data that is only determined at runtime and, like tuples, follow value semantics in Q#. 
@@ -262,7 +263,7 @@ The restriction to value types - combined with the imposed limitations on qubit 
 Extending the type system while maintaining these guarantees may be possible at a later point in time but requires careful evaluation and consideration. 
 In any case, providing immutable arrays as data structures in Q# remains desirable. 
 
-## Related Mechanisms
+### Related Mechanisms
 
 The behavior of a value is fully determined by its type. 
 In particular, the behavior related to item access and manipulations should be the same for all types that follow value semantic and provide item access.
@@ -277,11 +278,11 @@ It seems intuitive that the same kinds of constructs are supported both within c
 Extending the current mechanism for array slicing to support indexing into the array with an array of indices may be an extension of the current functionality worth considering. 
 It is worth mentioning that the functionality of the current implementation needs to be extended to avoid certain performance penalties for slicing by index array compared to slicing by range. 
 
-## Impact on Existing Mechanisms
+### Impact on Existing Mechanisms
 
 The proposed modification is purely a syntactic change and has no impact on the behavior of the language besides the introduced additional functionalities. 
 
-## Anticipated Interactions with Future Modifications
+### Anticipated Interactions with Future Modifications
 
 Particular care needs to be taken to achieve a consistent treatment of types that follow value semantics, 
 and to syntactically distinguish different behavior e.g. if reference types were to be introduced in the future. 
@@ -292,7 +293,7 @@ Purely regarding the exact choice of syntax, care should be taken to avoid using
 There should be no particular parsing challenges for introducing this change, as long as the copy-and-update operator remains the operator with lowest precedence. 
 If this were no longer the case, appropriate workarounds may be needed to achieve a consistent behavior between the operator and the corresponding apply-and-reassign construct.  
 
-## Alternatives
+### Alternatives
 
 1. Leveraging existing language constructs:    
 Introducing a dedicated syntax for copy-and-update expressions for arrays is not strictly necessary. 
@@ -307,7 +308,7 @@ In order to preserve the guarantees regarding the behavior of a quantum program 
 any potential extension of the type system needs to be considered carefully. 
 We are hence aiming to keep the value type semantics for arrays. 
 
-## Comparison to Alternatives
+### Comparison to Alternatives
 
 1. Having a dedicated syntax for copy-and-update expressions aligns well with future features for user-defined types and tuples. 
 In contrast to arrays, providing a copy-and-update mechanism for tuple items or items in user-defined types requires additional infrastructure. 
@@ -323,14 +324,6 @@ The somewhat more verbose syntax `with <-` would result in the corresponding app
 The proposed approach has the additional benefit of tying in nicely with other features 
 as well as reducing data mutation which can simplify optimizations of quantum programs. 
 
-# Raised Concerns and Further Remarks
+## Raised Concerns and Further Remarks
 
 In the spirit of building a common understanding of different mechanisms within Q#, it is worth pointing out that the functionality provided by the `mutable` keyword is fundamentally inconsistent with an interpretation that the current functionality somehow implies the existence of reference types in Q#. Such an interpretation is based on an implicit assumption that the `let` and `mutable` keywords used to introduce a binding have implications on the type of the assigned value via an implicit conversion upon assignment. It furthermore requires assumptions regarding relations and conversions between different types that do not align with the spirit of Q#, and would have a range of have severe and under the current circumstances undesirable implications for the Q# type system. 
-
-
-
-
-
-
-
-

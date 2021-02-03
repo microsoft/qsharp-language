@@ -18,7 +18,7 @@ The `repeat`-statement takes the following form:
 repeat {
     // ...
 }
-until (condition)
+until condition
 fixup {
     // ...
 }
@@ -28,7 +28,7 @@ or alternatively
 repeat {
     // ...
 }
-until (condition);
+until condition;
 ```
 where `condition` is an arbitrary expression of type `Bool`.
 
@@ -46,12 +46,11 @@ Despite their common presence in particular classes of quantum algorithms, curre
 
 A more familiar looking statement for classical computations is the `while`-loop. It is supported only within functions. 
 
-A `while` statement consists of the keyword `while`, an open parenthesis `(`,
-an expression of type `Bool`, a close parenthesis `)`, and a statement block. 
+A `while` statement consists of the keyword `while`, an expression of type `Bool`, and a statement block. 
 For example, if `arr` is an array of positive integers,
 ```qsharp
 mutable (item, index) = (-1, 0);
-while (index < Length(arr) && item < 0) { 
+while index < Length(arr) && item < 0 {
     set item = arr[index];
     set index += 1;
 }

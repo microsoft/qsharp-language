@@ -8,8 +8,8 @@ call statements in a sense are the generic way of supporting patterns that aren'
 
 ```qsharp
     operation ApplyWithInputTransformation<'TArg, 'TIn>(
-        fn : ('TIn -> 'TArg), 
-        op : ('TArg => Unit), 
+        fn : 'TIn -> 'TArg,
+        op : 'TArg => Unit,
         input : 'TIn
     ) : Unit {
 

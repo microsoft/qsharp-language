@@ -147,7 +147,7 @@ No literals exist for values of [operation type](https://github.com/microsoft/qs
 No literals exist for values of [function type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types); functions have to be [declared](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations) on a global scope and new functions can be constructed locally using [partial application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application).
 
 
-# Default Values
+## Default Values
 
 Type | Default
 ---------|----------

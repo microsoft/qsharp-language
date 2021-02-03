@@ -39,10 +39,13 @@ def links_to_xrefs(source_dir, map_link_to_uid):
             for line in text:
                 for url in map_link_to_uid:
                     uid = map_link_to_uid[url]
-                    full_url = 'https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/'+url
+                    # Handle both /blob/ and /tree/ links
+                    full_blob_url = 'https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/'+url
+                    full_tree_url = 'https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/'+url
                     full_uid = 'xref:'+ uid
-                    line = line.replace(full_url, full_uid)
+                    line = line.replace(full_blob_url, full_uid)
                     line = line.replace('← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)','')
+                    line = line.replace(full_tree_url, full_uid)
                 new_text.append(line)
         with open(source_dir + path, "wt", encoding='utf-8') as f:
             for line in new_text:
