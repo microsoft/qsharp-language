@@ -21,7 +21,7 @@ The chosen left associativity allows easy chaining of copy-and-update expression
                     w/ Bias <- bias;
 ```
 
-Like for any operator that constructs an expression that is of the same type as the left-most expression involved, the corresponding [evaluate-and-reassign statement](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements) is available. 
+Like for any operator that constructs an expression that is of the same type as the left-most expression involved, the corresponding [evaluate-and-reassign statement](xref:microsoft.quantum.qsharp.variabledeclarationsandreassignments#evaluate-and-reassign-statements) is available. 
 The two statements below for example achieve the following: The first statement declares a mutable variable `arr` and binds it to the default value of an integer array. The second statement then builds a new array with the first item (with index 0) set to 3, and reassigns it to `arr`. 
 ```qsharp
     mutable arr = new Int[3]; // arr contains [0,0,0]
@@ -31,10 +31,10 @@ The second statement is nothing but a short-hand for the more verbose syntax `se
 
 ## Copy-and-Update of User Defined Types
 
-If the value `original` is of user defined type, then `itemAccess` denotes the name of the item that diverges from the original value. The reason that this is not simply another expression, like `original` and `modification`, is that the ability to simply use the item name without any further qualification is limited to this context; it is one of two [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) in Q#. 
+If the value `original` is of user defined type, then `itemAccess` denotes the name of the item that diverges from the original value. The reason that this is not simply another expression, like `original` and `modification`, is that the ability to simply use the item name without any further qualification is limited to this context; it is one of two [contextual expressions](xref:microsoft.quantum.qsharp.contextualexpressions#contextual-and-omitted-expressions) in Q#. 
 
 The type of the `modification` expression needs to match the type of the named item that diverges. 
-For instance, if `complex` contains the value `Complex(0., 0.)`, where the type `Complex` is defined [here](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations), then 
+For instance, if `complex` contains the value `Complex(0., 0.)`, where the type `Complex` is defined [here](xref:microsoft.quantum.qsharp.typedeclarations#type-declarations), then 
 ```qsharp
 complex w/ Re <- 1. 
 ```
@@ -64,4 +64,4 @@ the following expression, e.g., evaluates to an array with all items set to `Pau
 ConstantArray(n, PauliI) w/ i <- PauliZ
 ``` 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

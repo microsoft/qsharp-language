@@ -33,4 +33,3 @@ for (index, measured) in results {
 There are no `break`- or `continue`-primitives in Q#, such that the length of the loop is perfectly predictable as soon as the value to iterate over is known. Such `for`-loops can hence be executed on all quantum hardware.
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

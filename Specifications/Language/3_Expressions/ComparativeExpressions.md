@@ -26,7 +26,6 @@ For instance, the following comparison evaluates to `false` due to rounding erro
 
 ## Quantitative Comparison
 
-The operators less-than (`<`), less-than-or-equal (`<=`), greater-than (`>`), and greater-than-or-equal (`>=`) define quantitative comparisons. They can only be applied to data types that support such comparisons; these are the same data types that can also support [arithmetic expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions). 
+The operators less-than (`<`), less-than-or-equal (`<=`), greater-than (`>`), and greater-than-or-equal (`>=`) define quantitative comparisons. They can only be applied to data types that support such comparisons; these are the same data types that can also support [arithmetic expressions](xref:microsoft.quantum.qsharp.arithmeticexpressions#arithmetic-expressions). 
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

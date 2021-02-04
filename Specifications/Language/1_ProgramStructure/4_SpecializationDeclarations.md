@@ -1,13 +1,13 @@
 # Specialization Declarations
 
 ### *Discussion*
->As explained in the section about [callable declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations), there is currently no reason to explicitly declare specializations for functions. This may change in the future if we decide to introduce type classes and/or type-related specializations. For now, this section applies to operations and elaborates on how to declare the necessary specializations to support certain functors. 
+>As explained in the section about [callable declarations](xref:microsoft.quantum.qsharp.callabledeclarations#callable-declarations), there is currently no reason to explicitly declare specializations for functions. This may change in the future if we decide to introduce type classes and/or type-related specializations. For now, this section applies to operations and elaborates on how to declare the necessary specializations to support certain functors. 
 
 It is quite a common problem in quantum computing to require the adjoint of a given transformation. Many quantum algorithms require both an operation and its adjoint in order to perform a computation.
 Q# is able to employ symbolic computation to automatically generate the corresponding adjoint implementation for a particular body implementation. That generation is possible even for implementations that freely mix classical and quantum computations. There are, however, a couple of restrictions that apply in that case. For instance, auto-generation is not supported for performance reasons if the implementation makes use of mutable variables. Moreover, each operation called within the body for which to generate the corresponding adjoint needs to support the `Adjoint` functor itself. 
 
 Even though measurements cannot easily be undone in the multi-qubit case, it is possible to combine measurements in such a way that the applied transformation is unitary. In that case this means that even though the body implementation contains measurements which each one on its own doesn't support the `Adjoint` functor, the body in its entirety is adjointable. Nonetheless, auto-generating the adjoint implementation will fail in this case. For that reason, it is possible to manually specify that implementation. 
-The compiler automatically generates optimized implementations for common patterns such as, e.g., [conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations). 
+The compiler automatically generates optimized implementations for common patterns such as, e.g., [conjugations](xref:microsoft.quantum.qsharp.conjugations#conjugations). 
 Nonetheless, an explicit specialization may be desirable to define a more optimized implementation by hand. It is possible to specify any one implementation and any number of implementations explicitly.
 The correctness of such a manually specified implementation is not verified by the compiler. 
 
@@ -87,7 +87,7 @@ is equivalent to
     operation DoNothing() : Unit 
     is Adj + Ctl { }
 ```
-The annotation `is Adj + Ctl` here specifies the [*operation characteristics*](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operation-characteristics), which contain the information about what functors a certain operation supports. 
+The annotation `is Adj + Ctl` here specifies the [*operation characteristics*](xref:microsoft.quantum.qsharp.operationsandfunctions#operation-characteristics), which contain the information about what functors a certain operation supports. 
 
 While for readability's sake it is recommended that each operation is annotated with a complete description of its characteristics, the compiler will automatically insert or complete the annotation based on explicitly declared specializations. Conversely, the compiler also generates specializations that haven't been declared explicitly but need to exist based on the annotated characteristics. We say these specializations have been *implicitly declared* by the given annotation. The compiler automatically generates the necessary specializations if it is able to, picking a suitable directive.
 Q# thus supports inference of both operation characteristics and existing specializations based on (partial) annotations as well as explicitly defined specializations.
@@ -98,4 +98,3 @@ In a sense, specializations are similar to individual overloads for the same cal
 >It is conceivable to allow declaring specializations outside the original callable declaration in a future version of Q#. This, however, still requires significant design and engineering work.
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

@@ -33,13 +33,13 @@ The same deconstruction rules are obeyed by all assignments in Q#, including, e.
 
 For both kinds of binding, the types of the variables are inferred from the right-hand side of the binding. The type of a variable always remains the same and a `set`-statement cannot change it.
 Local variable can be declared as either being mutable or immutable, with some exceptions like loop-variables in `for`-loops for which the behavior is predefined and cannot be specified.
-Function and operation arguments are always immutably bound; in combination with the lack of reference types, as discussed in the section on [immutability](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md#immutability), that means that a called function or operation can never change any values on the caller side. 
-Since the states of `Qubit` values are not defined or observable from within Q#, this does not preclude the accumulation of quantum side effects, that are observable (only) via measurements (see also [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits)).
+Function and operation arguments are always immutably bound; in combination with the lack of reference types, as discussed in the section on [immutability](xref:microsoft.quantum.qsharp.immutability#immutability), that means that a called function or operation can never change any values on the caller side. 
+Since the states of `Qubit` values are not defined or observable from within Q#, this does not preclude the accumulation of quantum side effects, that are observable (only) via measurements (see also [this section](xref:microsoft.quantum.qsharp.quantumdatatypes#qubits)).
 
 Independent on how a value is bound, the values themselves are immutable. 
 This in particular also holds for arrays and array items. 
 In contrast to popular classical languages where arrays often are reference types, arrays - like all type - are value types in Q# and always immutable; they cannot be modified after initialization.
-Changing the values accessed by variables of array type thus requires explicitly constructing a new array and reassigning it to the same symbol, see also the section on [immutability](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md) and [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) for more details.
+Changing the values accessed by variables of array type thus requires explicitly constructing a new array and reassigning it to the same symbol, see also the section on [immutability](xref:microsoft.quantum.qsharp.immutability) and [copy-and-update expressions](xref:microsoft.quantum.qsharp.copyandupdateexpressions#copy-and-update-expressions) for more details.
 
 ## Evaluate-and-Reassign Statements
 
@@ -62,11 +62,11 @@ for i in 1 .. 2 .. 10 {
 }
 ```
 
-Similar statements exist for a wide range of [operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators). The `set` keyword in this case needs to be followed by a single mutable variable, which is inserted as the left-most sub-expression by the compiler.
+Similar statements exist for a wide range of [operators](xref:microsoft.quantum.qsharp.precedenceandassociativity#operators). The `set` keyword in this case needs to be followed by a single mutable variable, which is inserted as the left-most sub-expression by the compiler.
 Such evaluate-and-reassign statements exist for all operators where the type of the left-most sub-expression matches the expression type. 
-More precisely, they are available for binary logical and bitwise operators including right and left shift, for arithmetic expressions including exponentiation and modulus, for concatenations, as well as for [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions).
+More precisely, they are available for binary logical and bitwise operators including right and left shift, for arithmetic expressions including exponentiation and modulus, for concatenations, as well as for [copy-and-update expressions](xref:microsoft.quantum.qsharp.copyandupdateexpressions#copy-and-update-expressions).
 
-The following function for example computes the sum of an array of [`Complex`](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations) numbers:
+The following function for example computes the sum of an array of [`Complex`](xref:microsoft.quantum.qsharp.typedeclarations#type-declarations) numbers:
 
 ```qsharp
 function ComplexSum(values : Complex[]) : Complex {
@@ -92,7 +92,7 @@ function Multiplied(factor : Double, array : Double[]) : Double[] {
 ```
 
 
-The section on [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) contains other examples where expressions can be omitted in a certain context when a suitable expression can be inferred by the compiler.
+The section on [contextual expressions](xref:microsoft.quantum.qsharp.contextualexpressions#contextual-and-omitted-expressions) contains other examples where expressions can be omitted in a certain context when a suitable expression can be inferred by the compiler.
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

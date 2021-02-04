@@ -32,4 +32,3 @@ and thus is entirely agnostic about what a quantum state is or on how it is real
 Rather, a program can call operations such as `Measure` to learn information about the quantum state of the computation. 
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

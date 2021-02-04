@@ -1,15 +1,15 @@
 # Namespaces
 
-At the top-level, a Q# program consists of a set of namespaces; namespaces are the only top-level elements (aside from [comments](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/7_Comments.md#comments)), and anything else needs to be contained in a namespace. 
+At the top-level, a Q# program consists of a set of namespaces; namespaces are the only top-level elements (aside from [comments](xref:microsoft.quantum.qsharp.comments#comments)), and anything else needs to be contained in a namespace. 
 Q# does not support nested namespaces. Each file may contain zero or more namespaces, and each namespace may span multiple files. 
 
 A namespace block consists of the keyword `namespace`, followed by the name of the namespace, and the content of that block inside curly brackets `{` and `}`. 
-Namespace names consist of a sequence of one or more [legal symbols](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Identifiers.md#identifiers) separated by a dot (`.`).
+Namespace names consist of a sequence of one or more [legal symbols](xref:microsoft.quantum.qsharp.identifiers#identifiers) separated by a dot (`.`).
 Double underscores (`__`), double dots (`..`), or an underscore followed by a dot (`_.`) are not permitted, since these character sequences are reserved. More precisely, a fully qualified name may not contain such a sequence, and namespace names correspondingly cannot end with an underscore.   
 While namespace names may contain dots for better readability, Q# does not support relative references to namespaces; two namespaces `Foo` and `Foo.Bar` are entirely unrelated and there is no notion of a hierarchy. In particular, for a function `Baz` defined in `Foo.Bar`, it is *not* possible to open `Foo` and then access that function via `Bar.Baz`. 
 
 Within a namespace block, [open directives](#open-directives) precede any other namespace elements. 
-Aside from `open` directives, namespace blocks may contain [operation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations), [function](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations) and [type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations) declarations. These may occur in any order, and are recursive by default, meaning they can be declared and used in any order and can call themselves; there is no need for the declaration of a type or callable to precede its use.
+Aside from `open` directives, namespace blocks may contain [operation](xref:microsoft.quantum.qsharp.callabledeclarations#callable-declarations), [function](xref:microsoft.quantum.qsharp.callabledeclarations#callable-declarations) and [type](xref:microsoft.quantum.qsharp.typedeclarations#type-declarations) declarations. These may occur in any order, and are recursive by default, meaning they can be declared and used in any order and can call themselves; there is no need for the declaration of a type or callable to precede its use.
 
 ## Open Directives
 
@@ -35,4 +35,4 @@ Defining namespace aliases is particularly helpful in combination with the code 
 Whether a namespace is opened or an alias is defined, `open` directives need to precede any other namespace elements and are valid throughout the namespace piece in that file only. 
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

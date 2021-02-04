@@ -2,10 +2,10 @@
 
 In general, symbol bindings become inoperative at the end of the statement block they occur in. The exceptions to this rule are:
 
-- Bindings of the loop variables in a [`for` loop](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Iterations.md#iterations) are defined for the body of the loop, but not after the end of the loop.
-- Bindings of allocated qubits in [`use`](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management)- and [`borrow`-statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/QuantumMemoryManagement.md#quantum-memory-management) are defined for the body of the allocation, but not after the statement terminates.
+- Bindings of the loop variables in a [`for` loop](xref:microsoft.quantum.qsharp.iterations#iterations) are defined for the body of the loop, but not after the end of the loop.
+- Bindings of allocated qubits in [`use`](xref:microsoft.quantum.qsharp.quantummemorymanagement#quantum-memory-management)- and [`borrow`-statements](xref:microsoft.quantum.qsharp.quantummemorymanagement#quantum-memory-management) are defined for the body of the allocation, but not after the statement terminates.
   This only applies to `use` and `borrow`-statements that have an associated statement block.
-- For [`repeat`-statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ConditionalLoops.md#conditional-loops), both blocks as well as the condition are treated as a single scope; i.e. symbols that are bound in the body are accessible in the condition and in the `fixup`-block.
+- For [`repeat`-statements](xref:microsoft.quantum.qsharp.conditionalloops#conditional-loops), both blocks as well as the condition are treated as a single scope; i.e. symbols that are bound in the body are accessible in the condition and in the `fixup`-block.
 
 For loops, each iteration executes in its own scope, and all defined variables are bound anew for each iteration.
 
@@ -60,6 +60,5 @@ if (a == b) {
 ...
 ```
 
-[This section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#variable-declarations-and-reassignments) gives further details on variable declarations and reassignments. 
+[This section](xref:microsoft.quantum.qsharp.variabledeclarationsandreassignments#variable-declarations-and-reassignments) gives further details on variable declarations and reassignments. 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
