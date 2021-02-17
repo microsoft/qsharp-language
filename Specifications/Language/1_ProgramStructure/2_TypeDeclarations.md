@@ -16,7 +16,7 @@ newtype Nested = (Double, (ItemName : Int, String));
 contains two anonymous items of type `Double` and `String` respectively, and a named item `ItemName` of type `Int`.
 
 The contained items can be accessed via their name or by deconstruction, see the section on [item access expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) for more details. 
-A tuple of all items where the shape matches the one defined in the declaration can be obtained via the [unwrap operator]().
+A tuple of all items where the shape matches the one defined in the declaration can be obtained via the [unwrap operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types).
 
 User defined types are particularly useful for two reasons. For one, 
 as long as the libraries and programs that use the defined types access items via their name rather than by deconstruction, the type can be extended to contain additional items later on without breaking any of the library code. Accessing items via deconstruction is hence generally discouraged.
