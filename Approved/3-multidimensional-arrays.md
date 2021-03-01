@@ -133,7 +133,7 @@ New values of type `[|'T|]` can be written as literals using `[ [| ... |] ]` del
 The `[|` and `|]` delimeters can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
 
 Within multidimensional array literals, it is a _compile-time_ error to declare jagged subarrays, such as in Example 1, below.
-It is similarly a compile-time error to use a non-literal array expression for part of a mutlidimensional array literal, as is shown in Example 3, below.
+It is similarly a compile-time error to use a non-literal array expression for part of a multi-dimensional array literal, as is shown in Example 3, below.
 
 Multidimensional arrays can also be created using extensions of the functionality in QEP 2.
 For example, `[| element, size=(2, 3) |]` is equivalent to `[ [|element, element, element|], [|element, element, element|] ]`.
