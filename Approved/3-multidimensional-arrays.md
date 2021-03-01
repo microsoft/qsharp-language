@@ -26,7 +26,7 @@ Arrays of arrays as currently supported in Q# can be used to represent matrices 
 
 ## Current Status
 
-Arrays types in Q# can be constructed from any element type `'T` as `'T[]`, including arrays of arrays such as `[Int][]`.
+Arrays types in Q# can be constructed from any element type `'T` as `'T[]`, including arrays of arrays such as `Int[][]`.
 These *jagged arrays* can be used to represent multidimensional arrays of data (informally, _tensors_), such as matrices or vectors.
 
 While jagged arrays are extremely useful in many contexts, such as representing sparse arrays (e.g.: the "list-of-lists" representation), using jagged arrays to represent vectors, matrices, and tensors requires extensive checking of array bounds to prevent mistakes in the shapes of jagged arrays.
@@ -698,4 +698,3 @@ While providing syntactic sugar for copy-and-update operations on jagged arrays 
 Any concerns about the proposed modification will be listed here and can be addressed in the [Response](#response) section below. 
 
 ## Response 
-
