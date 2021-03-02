@@ -27,7 +27,7 @@ Arrays of arrays as currently supported in Q# can be used to represent matrices 
 
 ### Current Status
 
-Arrays types in Q# can be constructed from any element type `'T` as `'T[]`, including arrays of arrays such as `[Int][]`.
+Arrays types in Q# can be constructed from any element type `'T` as `'T[]`, including arrays of arrays such as `Int[][]`.
 These *jagged arrays* can be used to represent multidimensional arrays of data (informally, _tensors_), such as matrices or vectors.
 
 While jagged arrays are extremely useful in many contexts, such as representing sparse arrays (e.g.: the "list-of-lists" representation), using jagged arrays to represent vectors, matrices, and tensors requires extensive checking of array bounds to prevent mistakes in the shapes of jagged arrays.
@@ -134,7 +134,7 @@ New values of type `[|'T|]` can be written as literals using `[ [| ... |] ]` del
 The `[|` and `|]` delimeters can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
 
 Within multidimensional array literals, it is a _compile-time_ error to declare jagged subarrays, such as in Example 1, below.
-It is similarly a compile-time error to use a non-literal array expression for part of a mutlidimensional array literal, as is shown in Example 3, below.
+It is similarly a compile-time error to use a non-literal array expression for part of a multi-dimensional array literal, as is shown in Example 3, below.
 
 Multidimensional arrays can also be created using extensions of the functionality in QEP 2.
 For example, `[| element, size=(2, 3) |]` is equivalent to `[ [|element, element, element|], [|element, element, element|] ]`.
@@ -142,15 +142,15 @@ For example, `[| element, size=(2, 3) |]` is equivalent to `[ [|element, element
 Elements of a value of type `[|'T|]` can be retrieved using the subscript operator `[]` with a value of type `(Int, Int)` as the index, as in `data[(0, 1)]`.
 For brevity, the parentheses marking the tuple can be dropped in this case, such that `data[(0, 1)]` and `data[0, 1]` are completely equivalent.
 Similarly, elements of a value of type `[||'T||]` can be retrieved by subscripting with indices of type `(Int, Int, Int)`.
-Multidimensional indices can also be used with the copy-and-update operator (`w/`) to replace elements of multidimensional arrays, as shown in Example 4 below.
-Note that in the case of `w/` operators, the `()` around index tuples cannot be dropped.
+Multidimensional indices can also be used with the copy-and-update operator (`w/`) to create a new array that replaces one or more specific element(s) of a multidimensional array, as shown in Example 4 below.
+In the case of `w/` operators, the `()` around index tuples cannot be dropped.
 
 As with one-dimensional arrays, multidimensional arrays can also be subscripted by ranges.
 Each axis of a multidimensional arrays can be sliced by _either_ a value of type `Range` or a value of type `Int`; for example, `(Int, Int)`, `(Range, Int)`, `(Int, Range)`, and `(Range, Range)` are valid subscripts for a value of type `[|'T|]`.
 As shown in Example 5 below, for each `Int` in an index tuple, the dimensionality (aka rank) of the array is reduced by one.
-That is, indexing a `[|'T|]` by `(Range, Range)` returns a rank-2 array (`[|'T|]`), while indexing by `(Int, Range)` or `(Range, Int)` returns an ordinary rank-1 array (`[|'T|]`).
-Just as with indices like `(Int, Int)` and `(Int, Int, Int)`, subscripts that return slices can also be used in copy-and-replace expressions, as shown in Example 6.
-When using `Range` values to index one or more axes in a multidimensional array, `...` is shorthand the `Range` value `0..1..(n - 1)` where `n` is the length of the axes being indexed.
+That is, indexing a `[|'T|]` by `(Range, Range)` returns a rank-2 array (`[|'T|]`), while indexing by `(Int, Range)` or `(Range, Int)` returns an ordinary rank-1 array (`['T]`).
+Just as with indices like `(Int, Int)` and `(Int, Int, Int)`, subscripts that return slices can also be used in copy-and-update expressions, as shown in Example 6.
+When using values of type `Range` to index one or more axes in a multidimensional array, `...` is shorthand for the value `0..1..(n - 1)` where `n` is the length of the axis being indexed.
 
 When used in `for` loops, multidimensional arrays iterate "on the left," yielding loop variables of one rank lower than the array being looped over, as shown in Example 7, below.
 
@@ -696,6 +696,4 @@ While providing syntactic sugar for copy-and-update operations on jagged arrays 
 
 ## Raised Concerns
 
-Any concerns about the proposed modification will be listed here and can be addressed in the [Response](#response) section below.
-
-### Response
+## Response 
