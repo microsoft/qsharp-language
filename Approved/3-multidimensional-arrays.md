@@ -131,7 +131,8 @@ For any type `'T`, this proposal introduces a new two-dimensional array type `[|
 For consistency with these new types, this proposal also introduces `['T]` as alternative notation for `'T[]`; we will use new notation for `'T[]` in the remainder of the proposal.
 
 New values of type `[|'T|]` can be written as literals using `[| ... |]` delimiters instead of `[]`, while literals of type `[||'T||]` can be written using `[|| ... ||]` delimiters (see example 1 below).
-The `[|` and `|]` delimeters can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
+The `|` and `|` delimeters occuring within square brackets can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
+Similarly, new values of type `[|'T|]` can also be obtained by using the library functions in https://github.com/microsoft/QuantumLibraries/issues/408; e.g., `JaggedAsRectangular2([[2, 3], [4, 5]])` is equivalent to the literal `[|2, 3|, |4, 5|]`.
 
 Within multidimensional array literals, it is a _compile-time_ error to declare jagged subarrays, such as in Example 1, below.
 It is similarly a compile-time error to use a non-literal array expression for part of a multi-dimensional array literal, as is shown in Example 3, below.
@@ -318,14 +319,14 @@ Using multidimensional slices in copy-and-update expressions.
 ```qsharp
 let zeros = ConstantArray2((3, 3), 0);
 
-let withCorners = zeros w/ (0..2..2, 0..2..2) <- #[[1, 2], [3, 4]];
-// withCorners: [|Int|] = [ [|1, 0, 2|], [|0, 0, 0|], [|3, 0, 4|] ]
+let withCorners = zeros w/ (0..2..2, 0..2..2) <- [|1, 2|, |3, 4|];
+// withCorners = [|1, 0, 2|, |0, 0, 0|, |3, 0, 4|] and is of type [|Int|].
 
 let withFirstRow = zeros w/ (0, 0..2) <- [1, 2, 3];
-// withFirstRow: [|Int|] = [ [|1, 2, 3|], [|0, 0, 0|], [|0, 0, 0|] ]
+// withFirstRow = [|1, 2, 3|, |0, 0, 0|, |0, 0, 0|] and is of type [|Int|].
 
 let withFirstColumn = zeros w/ (0..2, 0) <- [1, 2, 3];
-// withFirstColumn: [|Int|] = [ [|1, 0, 0|], [|2, 0, 0|], [|3, 0, 0|] ]
+// withFirstColumn = [|1, 0, 0|, |2, 0, 0|, |3, 0, 0|] and is of type [|Int|]
 ```
 
 Example 7:
@@ -333,30 +334,30 @@ Iterating over multidimensional arrays.
 
 ```qsharp
 let data3 = [
-    [|
-        [|0, 1, 2|],
-        [|3, 4, 5|],
-        [|6, 7, 8|]
-    |],
+    |
+        |0, 1, 2|,
+        |3, 4, 5|,
+        |6, 7, 8|
+    |,
 
-    [|
-        [|9, 10, 11|],
-        [|12, 13, 14|],
-        [|15, 16, 17|]
-    |],
+    |
+        |9, 10, 11|,
+        |12, 13, 14|,
+        |15, 16, 17|
+    |,
 
-    [|
-        [|18, 19, 20|],
-        [|21, 22, 23|],
-        [|24, 25, 26|]
-    |]
+    |
+        |18, 19, 20|,
+        |21, 22, 23|,
+        |24, 25, 26|
+    |
 ];
-// data3: [||Int||]
+// data3 is of type [||Int||].
 
-for (plane in data) {
-    // plane: [|Int|]
-    for (row in plane) {
-        // row: [Int]
+for plane in data {
+    // plane is of type [|Int|]
+    for row in plane {
+        // row is of type [Int]
         Message($"{row}");
     }
 
@@ -392,9 +393,10 @@ namespace Microsoft.Quantum.Arrays {
         let offset = NDArrayOffset(array);
         let shape = NDArrayShape(array);
 
-        // Now use AsNDArray2 to reconstruct, but with shape and strides
+        // Now use the internal AsNDArrayUnsafe function
+        // to reconstruct, but with shape and strides
         // reversed.
-        return AsNDArray2(data, strides, offset, shape);
+        return AsNDArrayUnsafe<'T, [|'T|]>(data, strides, offset, shape);
     }
 
     function ConstantArray2<'T>(shape : (Int, Int), element : 'T) : [|'T|] {
@@ -404,7 +406,7 @@ namespace Microsoft.Quantum.Arrays {
         // Here, we set a stride of zero to store everything as a single
         // element. Using the copy-and-update operator will require actually
         // allocating the whole array, but we can start off by "cheating."
-        return AsNDArray2([element], [0, 0], 0, shape);
+        return AsNDArrayUnsafe<'T, [|'T|]>([element], [0, 0], 0, shape);
     }
 
     function Shape2<'T>(array : [|'T|]) : (Int, Int) {
@@ -425,7 +427,7 @@ namespace Microsoft.Quantum.Arrays {
                 set data += [left[(idxRow, idxCol)] * right[(idxRow, idxCol)]];
             }
         }
-        return AsNDArray2(data, [1, nRows], 0, shape);
+        return AsNDArrayUnsafe<Double, [|Double|]>(data, [1, nRows], 0, shape);
     }
 }
 ```
