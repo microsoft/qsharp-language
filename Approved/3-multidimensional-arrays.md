@@ -137,7 +137,7 @@ Within multidimensional array literals, it is a _compile-time_ error to declare 
 It is similarly a compile-time error to use a non-literal array expression for part of a multi-dimensional array literal, as is shown in Example 3, below.
 
 Multidimensional arrays can also be created using extensions of the functionality in QEP 2.
-For example, `[| element, size=(2, 3) |]` is equivalent to `[ [|element, element, element|], [|element, element, element|] ]`.
+For example, `[| element, size=(2, 3) |]` is equivalent to `[|element, element, element|, |element, element, element|]`.
 
 Elements of a value of type `[|'T|]` can be retrieved using the subscript operator `[]` with a value of type `(Int, Int)` as the index, as in `data[(0, 1)]`.
 For brevity, the parentheses marking the tuple can be dropped in this case, such that `data[(0, 1)]` and `data[0, 1]` are completely equivalent.
@@ -280,7 +280,7 @@ let corners = data[0..2..2, 0..2..2];
 // here, since our index has one Int, the dimensionality reduces from
 // [|Int|] to [Int].
 let firstRow = data[0, ...];
-// firstRow: [Int] = [0, 1, 2]
+// firstRow = [0, 1, 2]
 // The same pattern holds no matter which index we subscript with an Int.
 let firstColumn = data[..., 0];
 // firstColumn = [0, 3, 6]
@@ -305,11 +305,11 @@ let data3 = [
     |]
 ];
 let corners3 = data3[0..2..2, 0..2..2, 0..2..2];
-// corners3: [||Int||]
+// corners3 is of type [||Int||]
 let firstPlane = data3[0, ..., ...];
-// firstPlane: [|Int|]
+// firstPlane is of type [|Int|]
 let firstRowOfFirstPlane = data3[0, 0, ...];
-// firstRowOfFirstPlane: [Int] = [0, 1, 2]
+// firstRowOfFirstPlane = [0, 1, 2] and is of type [Int]
 ```
 
 Example 6:
