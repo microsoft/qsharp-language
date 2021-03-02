@@ -316,7 +316,7 @@ Example 6:
 Using multidimensional slices in copy-and-update expressions.
 
 ```qsharp
-let zeros = ConstantArray2((3, 3), 0);
+let zeros =[|0, size = (3, 3)|]);
 
 let withCorners = zeros w/ (0..2..2, 0..2..2) <- #[[1, 2], [3, 4]];
 // withCorners: [|Int|] = [ [|1, 0, 2|], [|0, 0, 0|], [|3, 0, 4|] ]
