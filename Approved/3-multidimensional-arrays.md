@@ -157,19 +157,17 @@ When used in `for` loops, multidimensional arrays iterate "on the left," yieldin
 
 Finally, to support multidimensional arrays, this proposal also suggests extending the `Microsoft.Quantum.Arrays` namespace with the following functions that can be used to implement libraries for working with multidimensional arrays:
 
-- `internal function AsNDArray2<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [|'TElement|]`
-- `internal function AsNDArray3<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [||'TElement||]`
-- `internal function AsNDArray4<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [|||'TElement|||]`
-- `internal function AsNDArray5<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [||||'TElement||||]`
-- `internal function AsNDArray6<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [|||||'TElement|||||]`
-- `internal function AsNDArray7<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [||||||'TElement||||||]`
-- `internal function AsNDArray8<'TElement>(data : ['TElement], strides : [Int], offset : Int, shape : [Int]) : [|||||||'TElement|||||||]`
-- `internal function NDArrayData<'TElement, 'TArray>(data : 'TArray) : ['TElement]`
-- `internal function NDArrayStrides<'TArray>(data : 'TArray) : [Int]`
-- `internal function NDArrayShape<'TArray>(data : 'TArray) : [Int]`
-- `internal function NDArrayOffset<'TArray>(data : 'TArray) : Int`
+- `internal function AsNDArrayUnsafe<'TElement, 'TArray>(data : ['TElement], strides : [Int], offset : Int, size : [Int]) : 'TArray`
+- `internal function NDArrayDataUnsafe<'TElement, 'TArray>(data : 'TArray) : ['TElement]`
+- `internal function NDArrayStridesUnsafe<'TArray>(data : 'TArray) : [Int]`
+- `internal function NDArraySizeUnsafe<'TArray>(data : 'TArray) : [Int]`
+- `internal function NDArrayOffsetUnsafe<'TArray>(data : 'TArray) : Int`
 
 Each of these five functions would be `body intrinsic;`, and together form the contract between the runtime and the core Q# libraries needed to support this proposed feature (see Example 7, below). By necessity, these functions are "unsafe," in that direct access to these functions would allow violating invariants of multidimensional arrays or bypass the type system to expose runtime failures, necessitating the `internal` modifier.
+
+In user code, multidimensional arrays can be created and manipulated using Q# standard library functions and operations built up using the above internal functions, as described in example 7 below.
+For instance, the "diagonal" elements of a 2-D array can be extracted into a 1-D array using `Diagonal2<'T>(array : [|'T|]) : ['T]`, as shown in example 8, below.
+Please see https://github.com/microsoft/QuantumLibraries/issues for more details about library functions for working with multidimensional arrays.
 
 #### Examples
 
@@ -178,30 +176,30 @@ Declaring and indexing into variables of type `[|Double|]` and `[||Int||]` using
 
 ```qsharp
 let z = [
-    // Inside [] delimiters, [| |] delimiters refer not to array expressions, but
+    // Inside [] delimiters, | | delimiters refer not to array expressions, but
     // to "rows" of the two-dimensional array literal.
-    [| 1.0, 0.0 |],
-    [| 0.0, -1.0 |]
+    | 1.0, 0.0 |,
+    | 0.0, -1.0 |
 ];
 Message($"{z[0, 1]}"); // ← 0.0
 
-// It is a compile-time error for the "rows" denoted by [| ... |] to be uneven:
+// It is a compile-time error for the "rows" denoted by | ... | to be uneven:
 let incorrect = [
-    [| 1.0, 2.0 |],
-    [| 10.0, 20.0, 30.0 |] // ← error, since this would declare a "ragged" array
+    | 1.0, 2.0 |,
+    | 10.0, 20.0, 30.0 | // ← error, since this would declare a "ragged" array
 ];
 
 let data = [
-    // We can nest two levels of [| ... |] to get three-dimensional arrays.
-    [|
-        [|0, 1|],
-        [|2, 3|]
-    |],
+    // We can nest two levels of | ... | to get three-dimensional arrays.
+    |
+        |0, 1|,
+        |2, 3|
+    |,
 
-    [|
-        [|4, 5|],
-        [|6, 7|]
-    |]
+    |
+        |4, 5|,
+        |6, 7|
+    |
 ];
 Message($"{data[0, 1, 0]}"); // ← 6
 ```
@@ -213,16 +211,16 @@ Mixing 1D and multidimensional arrays.
 // Here, we declare the first two levels of indexing as being rectangular,
 // resulting in a three-dimensional array.
 let data = [
-    [|
+    |
         // After rows, [] denote arrays as elements again.
-        [| [0], [1, 2] |],
-        [| [3, 4, 5], [6, 7, 8, 9] |]
-    |],
+        | [0], [1, 2] |,
+        | [3, 4, 5], [6, 7, 8, 9] |
+    |,
 
-    [|
-        [| [10, 11, 12, 13, 14], [15, 16, 17, 18, 19, 20] |],
-        [| [21, 22, 23, 24, 25, 26, 27], [28, 29, 30, 31, 32, 33, 34, 35] |]
-    |]
+    |
+        | [10, 11, 12, 13, 14], [15, 16, 17, 18, 19, 20] |,
+        | [21, 22, 23, 24, 25, 26, 27], [28, 29, 30, 31, 32, 33, 34, 35] |
+    |
 ];
 // data: [||[Int]||] (that is, a three-dimensional array of arrays of integers)
 // Get the zero-th "plane," first "row", zeroth "column," and third element.
@@ -234,20 +232,20 @@ Using expressions as subarrays of multidimensional arrays results in a compile-t
 
 ```qsharp
 let a = [2, 3];
-// The following is a compile-time error, since `a` is not a 1D array literal
-// of length 2.
+// The following is a compile-time error, as `|0, 1|` is not an expression
+// independent of its surrounding `[]` brackets.
 let data = [
-    [| 0, 1 |],
+    | 0, 1 |,
     a
 ];
 // Using a new library function that can `fail` at runtime works, however.
-let data = Concatenated(0, // concatenate along the 0th (row) axis
-    [ [| 0, 1 |] ],
+let data = Concatenated2(0, // concatenate along the 0th (row) axis
+    [ | 0, 1 | ],
     a
 );
 // data: [|Int|] = [
-//     [|0, 1|],
-//     [|2, 3|]
+//     |0, 1|,
+//     |2, 3|
 // ];
 ```
 
@@ -267,15 +265,15 @@ Slicing multidimensional arrays by ranges.
 
 ```qsharp
 let data = [
-    [|0, 1, 2|],
-    [|3, 4, 5|],
-    [|6, 7, 8|]
+    |0, 1, 2|,
+    |3, 4, 5|,
+    |6, 7, 8|
 ];
 
 // Slicing an index by a Range does not reduce the dimensionality
 // of the resulting array.
 let corners = data[0..2..2, 0..2..2];
-// corners: [|Int|] = [[|0, 2|], [|6, 8|]]
+// corners = [|0, 2|, |6, 8|] and is of type [|Int|]
 
 // Subscripting by an Int reduces the dimensionality of the resulting array;
 // here, since our index has one Int, the dimensionality reduces from
@@ -287,23 +285,23 @@ let firstColumn = data[..., 0];
 // firstColumn = [0, 3, 6]
 
 let data3 = [
-    [|
+    |
         [|0, 1, 2|],
         [|3, 4, 5|],
         [|6, 7, 8|]
-    |],
+    |,
 
-    [|
-        [|9, 10, 11|],
-        [|12, 13, 14|],
-        [|15, 16, 17|]
-    |],
+    |
+        |9, 10, 11|,
+        |12, 13, 14|,
+        |15, 16, 17|
+    |,
 
-    [|
-        [|18, 19, 20|],
-        [|21, 22, 23|],
-        [|24, 25, 26|]
-    |]
+    |
+        |18, 19, 20|,
+        |21, 22, 23|,
+        |24, 25, 26|
+    |
 ];
 let corners3 = data3[0..2..2, 0..2..2, 0..2..2];
 // corners3 is of type [||Int||]
@@ -317,7 +315,7 @@ Example 6:
 Using multidimensional slices in copy-and-update expressions.
 
 ```qsharp
-let zeros =[|0, size = (3, 3)|]);
+let zeros =[|0, size = (3, 3)|];
 
 let withCorners = zeros w/ (0..2..2, 0..2..2) <- [|1, 2|, |3, 4|];
 // withCorners = [|1, 0, 2|, |0, 0, 0|, |3, 0, 4|] and is of type [|Int|].
@@ -389,47 +387,79 @@ namespace Microsoft.Quantum.Arrays {
         // Start by deconstructing the input using the internal intrinsic
         // functions from this proposal; see Implementation below.
         let data = NDArrayData<'T, [|'T|]>(array);
-        let strides = NDArrayStrides(array);
-        let offset = NDArrayOffset(array);
-        let shape = NDArrayShape(array);
+        let strides = NDArrayStridesUnsafe(array);
+        let offset = NDArrayOffsetUnsafe(array);
+        let size = NDArraySizeUnsafe(array);
 
         // Now use the internal AsNDArrayUnsafe function
-        // to reconstruct, but with shape and strides
+        // to reconstruct, but with size and strides
         // reversed.
-        return AsNDArrayUnsafe<'T, [|'T|]>(data, strides, offset, shape);
+        return AsNDArrayUnsafe<'T, [|'T|]>(data, strides[...-1...], offset, size[...-1...]);
     }
 
-    function ConstantArray2<'T>(shape : (Int, Int), element : 'T) : [|'T|] {
-        Fact(Fst(shape) >= 0, "First axis had negative length.");
-        Fact(Snd(shape) >= 0, "Second axis had negative length.");
+    function ConstantArray2<'T>(size : (Int, Int), element : 'T) : [|'T|] {
+        Fact(Fst(size) >= 0, "First axis had negative length.");
+        Fact(Snd(size) >= 0, "Second axis had negative length.");
 
         // Here, we set a stride of zero to store everything as a single
         // element. Using the copy-and-update operator will require actually
         // allocating the whole array, but we can start off by "cheating."
-        return AsNDArrayUnsafe<'T, [|'T|]>([element], [0, 0], 0, shape);
+        return AsNDArrayUnsafe<'T, [|'T|]>([element], [0, 0], 0, size);
     }
 
-    function Shape2<'T>(array : [|'T|]) : (Int, Int) {
-        let shape = NDArrayShape(array);
-        return (shape[0], shape[1]);
+    function Size2<'T>(array : [|'T|]) : (Int, Int) {
+        let size = NDArraySizeUnsafe(array);
+        return (size[0], size[1]);
     }
 
     function TimesD2(left : [|Double|], right : [|Double|]) : [|Double|] {
         // For simplicity, we presume that left and right already match each
-        // other's shape exactly. In an actual library implementation, we would
+        // other's size exactly. In an actual library implementation, we would
         // want to generalize this to allow arbitrary binary operators, and to
         // handle broadcasting between the two inputs.
 
         mutable data = [];
-        let (nRows, nCols) = Shape2(left);
+        let (nRows, nCols) = Size2(left);
         for idxCol in 0..nCols - 1 {
             for idxRow in 0..nRows - 1 {
                 set data += [left[(idxRow, idxCol)] * right[(idxRow, idxCol)]];
             }
         }
-        return AsNDArrayUnsafe<Double, [|Double|]>(data, [1, nRows], 0, shape);
+        return AsNDArrayUnsafe<Double, [|Double|]>(data, [1, nRows], 0, [nRows, nCols]);
     }
 }
+```
+
+Example 8:
+Using array library functions to work with 2D arrays.
+
+```qsharp
+let array = JaggedAsRectangular2([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [10, 11, 12]
+]);
+// array = [ |1, 2, 3|, |4, 5, 6|, |7, 8, 9|, |10, 11, 12| ] and has type [|Int|].
+let size = Size2(array);
+// size = (4, 3);
+let diag = Diagonal2(array); // diag = [1, 5, 9];
+let sum = Folded(PlusI, 0, _);
+let rowSums = FoldedAlongAxis2(sum, 0, array);
+// rowSums = [6, 15, 24, 33];
+let colSums = FoldedAlongAxis2(sum, 1, array);
+// colSums = [22, 26, 30];
+let corners = Subarray2([(0, 0), (0, 2), (3, 0), (3, 2)], array);
+// corners = [1, 3, 10, 12];
+let x = [
+    |Complex(0.0, 0.0), Complex(1.0, 0.0)|,
+    |Complex(1.0, 0.0), Complex(0.0, 0.0)|
+];
+let y = [
+    |Complex(0.0, 0.0), Complex(0.0, -1.0)|,
+    |Complex(0.0, 1.0), Complex(0.0, 0.0)|
+];
+let z = Dot22C(x, y);
 ```
 
 ## Implementation
@@ -444,7 +474,7 @@ In particular, each of these libraries represents multidimensional arrays by a d
 newtype MultidimensionalArray<'T> = (
     Data: ['T],
     Offset: Int,
-    Shape: [Int],
+    Size: [Int],
     Strides: [Int]
 );
 ```
@@ -458,13 +488,13 @@ array::Data[array::Offset + i * array::Strides[0] + j * array::Strides[1] + k * 
 ```
 
 This allows for many common array manipulations to be performed without copying.
-For example, a function implementing a matrix transpose need not modify `::Data`, but can reverse `::Strides` and `::Shape`:
+For example, a function implementing a matrix transpose need not modify `::Data`, but can reverse `::Strides` and `::Size`:
 
 ```qsharp
 function Transposed2<'T>(array : [|'T|]) : [|'T|] {
     return array
         w/ Strides <- array::Strides[...-1...]
-        w/ Shape <- array::Shape[...-1...];
+        w/ Size <- array::Size[...-1...];
 }
 ```
 
@@ -475,14 +505,14 @@ array[..., 0..2...]
 // implemented by:
 array
     w/ Strides <- [array::Strides[0], 2 * array::Strides[1]]
-    w/ Shape <- [array::Shape[0], array::Shape[1] / 2]
+    w/ Size <- [array::Size[0], array::Size[1] / 2]
 ```
 
 Reversing an axis can be implemented by using negative strides and modifications to `::Offset`.
 
 By implementing multidimensional arrays in this way, we can reuse the existing infrastructure for immutable single-dimensional arrays.
 Moreover, in many cases, multiple distinct multidimensional arrays can share the same `::Data` item without requiring a copy.
-For example, in the variable binding `let view = array[0..2..., 0..2...];`, `view::Data` and `array::Data` can be the same single-dimensional array, as the difference between `view` and `data` can be expressed by only modifying `::Strides` and `::Shape`.
+For example, in the variable binding `let view = array[0..2..., 0..2...];`, `view::Data` and `array::Data` can be the same single-dimensional array, as the difference between `view` and `data` can be expressed by only modifying `::Strides` and `::Size`.
 The cases where copies may still be required are when reshaping from more indices to less, when using `w/` to update slices, or if a particular intrinsic function or operation is implemented in simulation by interoperating with native libraries such as BLAS and LAPACK.
 
 ### Timeline
@@ -508,7 +538,7 @@ In particular:
 - Like existing arrays, multidimensional arrays are immutable values.
 - Mutability can be handled using `set ... w/= ...;` statements in the same fashion as existing 1D arrays.
 - Multidimensional arrays can be used as collections in loops.
-- There are no subtyping relationships between array types. In particular, `[|'T|]` is not a subtype of `'T[][]` but a distinct type in its own right; nor is `('T => Unit is Adj)[,]` a subtype of `('T => Unit)[,]`.
+- There are no subtyping relationships between array types. In particular, `[|'T|]` is not a subtype of `'T[][]` but a distinct type in its own right; nor is `[|('T => Unit is Adj)|]` a subtype of `[|('T => Unit)|]`. Similarly, `[|'T|]` is neither a subtype nor supertype of `[['T]]`.
 
 ### Impact on Existing Mechanisms
 
@@ -698,4 +728,4 @@ While providing syntactic sugar for copy-and-update operations on jagged arrays 
 
 ## Raised Concerns
 
-## Response 
+## Response
