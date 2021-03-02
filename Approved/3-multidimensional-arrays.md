@@ -130,7 +130,7 @@ Building on the utility of 1-D array notation, this suggestion proposes modifyin
 For any type `'T`, this proposal introduces a new two-dimensional array type `[|'T|]`, a three-dimensional array type `[||'T||]`, and so forth.
 For consistency with these new types, this proposal also introduces `['T]` as alternative notation for `'T[]`; we will use new notation for `'T[]` in the remainder of the proposal.
 
-New values of type `[|'T|]` can be written as literals using `[ [| ... |] ]` delimiters instead of `[]`, while literals of type `[||'T||]` can be written using `[ [| [| ... |] |] ]` delimiters (see example 1 below).
+New values of type `[|'T|]` can be written as literals using `[| ... |]` delimiters instead of `[]`, while literals of type `[||'T||]` can be written using `[|| ... ||]` delimiters (see example 1 below).
 The `[|` and `|]` delimeters can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
 
 Within multidimensional array literals, it is a _compile-time_ error to declare jagged subarrays, such as in Example 1, below.
