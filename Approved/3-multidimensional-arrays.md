@@ -1,15 +1,16 @@
---- 
-title: Multidimensional arrays
+---
 description: Proposal for multidimensional array types in Q#
-author: cgranade
-date: 29-10-2020
+author: Chris Granade
+date: 2021-03-01
 ---
 
-# Proposal
+# QEP 3: Multi-dimensional arrays
+
+## Proposal
 
 Currently, for any Q# type `'T`, the array type `'T[]` represents an immutable collection of values of type `'T` indexed by a single integer. It would be really helpful to add a new collection type that is indexed by tuples of integers instead, so as to allow for a more natural representation of concepts like matrices and tensors.
 
-# Justification
+## Justification
 
 Arrays of arrays as currently supported in Q# can be used to represent matrices and higher-rank tensors, but come with a number of disadvantages as compared with multidimensional arrays:
 
@@ -22,16 +23,16 @@ Arrays of arrays as currently supported in Q# can be used to represent matrices 
   // matrix is now [[1, 0, 0], [0, 1, 0], [0, 20, 1]]
   ```
 
-# Description
+## Description
 
-## Current Status
+### Current Status
 
 Arrays types in Q# can be constructed from any element type `'T` as `'T[]`, including arrays of arrays such as `[Int][]`.
 These *jagged arrays* can be used to represent multidimensional arrays of data (informally, _tensors_), such as matrices or vectors.
 
 While jagged arrays are extremely useful in many contexts, such as representing sparse arrays (e.g.: the "list-of-lists" representation), using jagged arrays to represent vectors, matrices, and tensors requires extensive checking of array bounds to prevent mistakes in the shapes of jagged arrays.
 
-### Examples
+#### Examples
 
 Example 1:
 Representing a complex-valued matrix with jagged arrays.
@@ -122,7 +123,7 @@ let e01 = ElementaryMatrix((2, 2), (0, 1), 0.0, 1.0);
 // e01: Double[][] = [[0.0, 1.0], [0.0, 0.0]]
 ```
 
-## Proposed Modification
+### Proposed Modification
 
 Building on the utility of 1-D array notation, this suggestion proposes modifying Q# to include new multidimensional array types `[|'T`|], `[||'T||]`, and so forth. Like values of type `'T[]`, these new multidimensional would also be immutable, and could be manipulated by using the subscript (`[]`) and copy-and-update (`w/`) operators.
 
@@ -169,7 +170,7 @@ Finally, to support multidimensional arrays, this proposal also suggests extendi
 
 Each of these five functions would be `body intrinsic;`, and together form the contract between the runtime and the core Q# libraries needed to support this proposed feature (see Example 7, below). By necessity, these functions are "unsafe," in that direct access to these functions would allow violating invariants of multidimensional arrays or bypass the type system to expose runtime failures, necessitating the `internal` modifier.
 
-### Examples
+#### Examples
 
 Example 1:
 Declaring and indexing into variables of type `[|Double|]` and `[||Int||]` using literals.
@@ -429,7 +430,7 @@ namespace Microsoft.Quantum.Arrays {
 }
 ```
 
-# Implementation
+## Implementation
 
 **NB: Code samples in this section are intended as pseudocode only, and may not work directly as written.**
 
@@ -482,7 +483,7 @@ Moreover, in many cases, multiple distinct multidimensional arrays can share the
 For example, in the variable binding `let view = array[0..2..., 0..2...];`, `view::Data` and `array::Data` can be the same single-dimensional array, as the difference between `view` and `data` can be expressed by only modifying `::Strides` and `::Shape`.
 The cases where copies may still be required are when reshaping from more indices to less, when using `w/` to update slices, or if a particular intrinsic function or operation is implemented in simulation by interoperating with native libraries such as BLAS and LAPACK.
 
-## Timeline
+### Timeline
 
 This proposal does not depend on any other proposals (though it can be made easier-to-use in combination with other proposals; see _Anticipated Interactions with Future Modifications_, below).
 
@@ -494,9 +495,9 @@ Required implementation steps:
 - Implement new library functions from previous step.
 - Document new multidimensional arrays in language specification and conceptual documentation.
 
-# Further Considerations
+## Further Considerations
 
-## Related Mechanisms
+### Related Mechanisms
 
 This proposal generalizes the existing array feature in Q#.
 As such, the new features introduced by this proposal are designed to keep to user expectations formed by existing features.
@@ -507,15 +508,15 @@ In particular:
 - Multidimensional arrays can be used as collections in loops.
 - There are no subtyping relationships between array types. In particular, `[|'T|]` is not a subtype of `'T[][]` but a distinct type in its own right; nor is `('T => Unit is Adj)[,]` a subtype of `('T => Unit)[,]`.
 
-## Impact on Existing Mechanisms
+### Impact on Existing Mechanisms
 
 This proposal would not modify or invalidate existing functionality (e.g.: `Int[][]` will continue to be a valid type in Q#), and thus is not a breaking change.
 
 If, in a future proposal, we were to unify multidimensional array with existing functionality using features outlined in _Anticipated Interactions with Future Modifications_, a breaking change would likely be required at that point in time.
 
-## Anticipated Interactions with Future Modifications
+### Anticipated Interactions with Future Modifications
 
-### Array comprehensions
+#### Array comprehensions
 
 This proposal is expected to be compatible with array comprehensions, as the comprehension expressions can be provided at each level of nesting.
 
@@ -532,7 +533,7 @@ Similarly, multiple levels of array comprehension would be compatible with the l
 let arr = [ | x + y for y in 0..2 | for x in 0..3 ];
 ```
 
-### Handling runtime failure modalities
+#### Handling runtime failure modalities
 
 Some of the type conversions described above can fail at runtime, decreasing the safety of Q# programs.
 To assist, the discriminated union and type-parameterized UDT feature suggestions (https://github.com/microsoft/qsharp-compiler/issues/406) could be used to represent the possibility of runtime failures in a typesafe fashion.
@@ -561,7 +562,7 @@ function Forced<'T>(maybe : Maybe<'T>) : 'T {
 }
 ```
 
-### Removing type suffixes with bounded polymorphism
+#### Removing type suffixes with bounded polymorphism
 
 Were the bounded polymorphism feature suggested at https://github.com/microsoft/qsharp-compiler/issues/557 to be adopted, the different "overloads" for the library functions suggested in this proposal could be consolidated into a smaller number of concepts that then get implemented by each of `'T[,]`, `'T[,,]`, and so forth.
 
@@ -631,9 +632,9 @@ example <'T> [||'T||]] is MaybeConvertableFrom<[[['T]]]> when {
 }
 ```
 
-## Alternatives
+### Alternatives
 
-### Syntactic Sugar for Jagged Arrays
+#### Syntactic Sugar for Jagged Arrays
 
 As an alternative, one could consider not adding any new types to Q#, but rather extending `w/` to act on values of type `'T[][]`, `'T[][][]` using tuple indices:
 
@@ -643,7 +644,7 @@ As an alternative, one could consider not adding any new types to Q#, but rather
 let e01 = ConstantArray(3, ConstantArray(3, 0.0)) w/ (0, 1) <- 1.0;
 ```
 
-### Alternative Syntax for Multidimensional Literals
+#### Alternative Syntax for Multidimensional Literals
 
 As an alternative, one could consider keeping the new types and index expressions suggested by this proposal, but modifying the definition of multidimensional literals.
 
@@ -684,18 +685,17 @@ let bellTableau = [
 ];
 ```
 
-## Comparison to Alternatives
+### Comparison to Alternatives
 
-### Comparison to Syntactic Sugar for Jagged Arrays
+#### Comparison to Syntactic Sugar for Jagged Arrays
 
 While providing syntactic sugar for copy-and-update operations on jagged arrays helps address some of the more severe pain points in using jagged arrays to represent multidimensional data, that alternative does not address a few critical points:
 
 - Multidimensional indices cannot efficiently be converted into linear indices, causing performance problems with common matrix and tensor operations.
 - Jagged arrays do not guarantee at compile time that data is rectangular, introducing the possibility of runtime logic errors with respect to the shape of multidimensional data.
 
-# Raised Concerns
+## Raised Concerns
 
-Any concerns about the proposed modification will be listed here and can be addressed in the [Response](#response) section below. 
+Any concerns about the proposed modification will be listed here and can be addressed in the [Response](#response) section below.
 
-## Response 
-
+### Response
