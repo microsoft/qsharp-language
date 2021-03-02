@@ -544,8 +544,6 @@ In particular:
 
 This proposal would not modify or invalidate existing functionality (e.g.: `Int[][]` will continue to be a valid type in Q#), and thus is not a breaking change.
 
-If, in a future proposal, we were to unify multidimensional array with existing functionality using features outlined in _Anticipated Interactions with Future Modifications_, a breaking change would likely be required at that point in time.
-
 ### Anticipated Interactions with Future Modifications
 
 #### Array comprehensions
