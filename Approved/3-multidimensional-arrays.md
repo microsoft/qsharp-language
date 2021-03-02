@@ -490,7 +490,7 @@ This proposal does not depend on any other proposals (though it can be made easi
 Required implementation steps:
 
 - Adapt compiler to recognize new types, subscript expressions, copy-and-replace expressions, and new literal expressions.
-- Implement new data structures in QIR and simulation runtime to represent values of new type, and fundamental operations on new type (e.g.: `w/` expressions).
+- Implement new data structures in QIR and runtime to represent values of new type, and fundamental operations on new type (e.g.: `w/` expressions).
 - Design, review, and approve API design for extensions to the `Microsoft.Quantum.Arrays namespace` to support the new feature.
 - Implement new library functions from previous step.
 - Document new multidimensional arrays in language specification and conceptual documentation.
