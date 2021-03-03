@@ -1,46 +1,11 @@
 ## Data Type Representation
 
 We define LLVM representations for a variety of classical and quantum data types.
+QIR does not expect the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](#reference-and-alias-counting) for more detail.
 
 Representing the types used for qubits and measurement results as pointers to
 opaque LLVM structure types allows each target to provide a structure definition
 appropriate for that target.
-
-### Reference and Alias Counting
-
-QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. 
-
-To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
-
-Reference counts track the number of handles that allow to access a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
-
-Alias counts, on the other hand, track how may handles exist *in the source language*. 
-They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are hence useful to optimize the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
-
-The compiler is responsible to track both counts as needed by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for inner item such as e.g. tuple or array items, or captured values for callables; the compiler is responsible for injecting calls to update counts for inner items as needed.
-A targeted runtime is free to provide other mechanism for garbage collection and treat calls to modify reference counts as hints or as simple no-ops.
-
-- Runtime routines that create a new instance always initialize the instance
-  with a reference count of 1, and an alias count of 0.
-- For each pointer type, with the exception of `%Qubit*`, 
-  a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
-- For all data types that support a runtime function to create a shallow copy, 
-  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime exception.
-- The function to modify reference and alias count accept a 
-  null instance pointer and should simply ignore the call if the pointer is null.
-
-
-### Unit
-
-For source languages that include a `Unit` type, the representation of this type
-in LLVM depends on its usage.
-If used as a return type for a callable, it should be translated into an LLVM
-`void` function.
-
-If it is used as a value, for instance as a user-defined type or as an element of
-a tuple, a tuple type with no contained elements should be used.
-In this case, the one possible value of `Unit`, `()`, should be represented as a
-null tuple pointer.
 
 ### Simple Types
 
@@ -201,6 +166,18 @@ The following utility functions are provided by the classical runtime to support
 | __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
 
+### Unit
+
+For source languages that include a `Unit` type, the representation of this type
+in LLVM depends on its usage.
+If used as a return type for a callable, it should be translated into an LLVM
+`void` function.
+
+If it is used as a value, for instance as a user-defined type or as an element of
+a tuple, a tuple type with no contained elements should be used.
+In this case, the one possible value of `Unit`, `()`, should be represented as a
+null tuple pointer.
+
 ### Arrays
 
 Array data is represented as the corresponding LLVM array type.
@@ -289,6 +266,29 @@ The following utility functions are provided if multidimensional array support i
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
 See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
+
+### Reference and Alias Counting
+
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. 
+
+To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
+
+Reference counts track the number of handles that allow to access a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
+
+Alias counts, on the other hand, track how may handles exist *in the source language*. 
+They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are hence useful to optimize the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
+
+The compiler is responsible to track both counts as needed by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for inner item such as e.g. tuple or array items, or captured values for callables; the compiler is responsible for injecting calls to update counts for inner items as needed.
+A targeted runtime is free to provide other mechanism for garbage collection and treat calls to modify reference counts as hints or as simple no-ops.
+
+- Runtime routines that create a new instance always initialize the instance
+  with a reference count of 1, and an alias count of 0.
+- For each pointer type, with the exception of `%Qubit*`, 
+  a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
+- For all data types that support a runtime function to create a shallow copy, 
+  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime exception.
+- The function to modify reference and alias count accept a 
+  null instance pointer and should simply ignore the call if the pointer is null.
 
 ---
 _[Back to index](README.md)_
