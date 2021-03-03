@@ -314,9 +314,12 @@ construction before calling the underlying callable.
 
 #### Memory Management Table
 
-Any captured values need to remain alive as long as the callable value exists, and correspondingly may also need to be unreferenced when the type information for the captured values cannot be statically determined. Upon creation, a table with two function pointers is hence associated with a callable value. 
+Since any captured values need to remain alive as long as the callable value exists, they also need to be unreferenced when the callable value is released. While sufficient type information for the captured values is known upon creation of the value, the information is no longer available at the time when it is released.
+Upon creation, a table with two function pointers for modifying reference and alias counts for captured values is hence associated with a callable value. 
 
-Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i64)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the alias counts. They can be invoked using the runtime function `__quantum__rt__callable_memory_management`. If there are no captured values, a null pointer should be passed upon callable creation.
+Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i64)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the alias counts. Either of those pointers may be null, and if no values were captured, a null pointer should be passed instead of a table upon callable creation.
+
+Like for tuple and array items, the responsibility of managing the reference and access count for captured values lays with the compiler. The two functions can be invoked using the runtime function `__quantum__rt__callable_memory_management`, see the description [below](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#runtime-functions). 
 
 ### External Callables
 
