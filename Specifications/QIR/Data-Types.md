@@ -274,7 +274,7 @@ A runtime implementation is free to provide another mechanism for garbage collec
 - For each pointer type, with the exception of `%Qubit*`, 
   a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
 - For all data types that support a runtime function to create a shallow copy, 
-  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime exception.
+  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime failure.
 - The functions that modify reference and alias count should accept a 
   null instance pointer and simply ignore the call if the pointer is null.
 
