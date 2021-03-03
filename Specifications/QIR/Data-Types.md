@@ -20,7 +20,7 @@ They are represented as follows:
 | `Result` | `%Result*`                 | `%Result` is an opaque type. |
 | `Pauli`  | `%Pauli = {i2}`            | 0 is PauliI, 1 is PauliX, 3 is PauliY, and 2 is PauliZ. |
 | `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
-| `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value to or from a compiled routine, ranges should be passed by value. |
+| `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value, ranges should be passed by value. |
 
 LLVM and QIR place some limits on integer values.
 Specifically, when raising an integer to a power, the exponent must fit
@@ -142,9 +142,7 @@ For instance, a tuple containing two integers, `(Int, Int)`, would be represente
 When [invoking callable values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#invoking-a-callable-value) using the `__quantum__rt__callable_invoke` runtime function, 
 tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
 receiving code.
-This permits to define runtime functions that are common for all tuples.
-For instance, this convention is used for callable wrapper functions; see
-[below](#callable-values-and-wrapper-functions).
+This permits to define runtime functions that are common for all tuples such as the ones listed below.
 
 Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
 QIR supports this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
@@ -152,7 +150,7 @@ QIR supports this by requiring the runtime to track and be able to access the fo
 - The alias count indicating how many handles to the tuple exist in the source code
 
 The language specific compiler is responsible for injecting calls to increase and decrease the alias count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
-See the section [above](#reference-and-alias-counting) regarding the distinction between alias and reference counting. 
+See [this section](#reference-and-alias-counting) for further details on the distinction between alias and reference counting. 
 
 In the case where the source language treats tuples as immutable values, the language-specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
 This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is therefore safe to modify the tuple in place.
@@ -168,26 +166,16 @@ The following utility functions are provided by the classical runtime to support
 
 ### Unit
 
-For source languages that include a `Unit` type, the representation of this type
+For source languages that include a unit type, the representation of this type
 in LLVM depends on its usage.
 If used as a return type for a callable, it should be translated into an LLVM
 `void` function.
-
-If it is used as a value, for instance as a user-defined type or as an element of
-a tuple, a tuple type with no contained elements should be used.
-In this case, the one possible value of `Unit`, `()`, should be represented as a
-null tuple pointer.
+If it is used as a value, for instance as an element of a tuple, it should be represented as a null tuple pointer.
 
 ### Arrays
 
-Array data is represented as the corresponding LLVM array type.
-For instance, an array of integers, `Int[]`, would be represented in LLVM as `type {i64, i64}`.
-
-When passed to a callable function, arrays are passed as a pointer to an opaque LLVM structure, `%Array`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
-receiving code.
-This permits to define runtime functions that are common for all arrays.
-For instance, this convention is used for common array functions such as `array_get_length` and `array_slice`; see
-[below](#callable-values-and-wrapper-functions).
+Within QIR, arrays are represented and passed around as a pointer to an opaque LLVM structure, `%Array`. 
+How to represent array data, i.e. what that pointer points to, is at the discretion of the runtime. All array manipulations, including item access, hence need to be performed by invoking the corresponding runtime function(s).
 
 Because LLVM does not provide any mechanism for type-parameterized functions,
 runtime library routines that provide access to array elements return byte
