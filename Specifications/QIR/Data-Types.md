@@ -1,7 +1,7 @@
 ## Data Type Representation
 
 We define LLVM representations for a variety of classical and quantum data types.
-QIR does not expect the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](#reference-and-alias-counting) for more detail.
+QIR does not require the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](#reference-and-alias-counting) for more detail.
 
 Representing the types used for qubits and measurement results as pointers to
 opaque LLVM structure types allows each target to provide a structure definition
@@ -257,7 +257,7 @@ See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
 
 ### Reference and Alias Counting
 
-QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. 
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. The exception is the `%Qubit*` type, for which no such functions exist since the management of quantum memory is distinct from classical memory management.
 
 To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
 
