@@ -68,7 +68,7 @@ For example:
 
 ```
 0..1..2 = {0, 1, 2}
-0..2..4 = {0. 2. 4}
+0..2..4 = {0, 2, 4}
 0..2..5 = {0, 2, 4}
 4..-1..2 = {4, 3, 2}
 5..-3..0 = {5, 2}
@@ -84,8 +84,8 @@ The following global constants are defined for use with the `%Result` and `%Paul
 
 @PauliI = constant i2 0
 @PauliX = constant i2 1
-@PauliY = constant i2 -1
-@PauliZ = constant i2 -2
+@PauliY = constant i2 -1 ; The value 3 (binary 11) is displayed as a 2-bit signed value of -1 (binary 11).
+@PauliZ = constant i2 -2 ; The value 2 (binary 10) is displayed as a 2-bit signed value of -2 (binary 10).
 ```
 
 The following utility functions are provided by the classical runtime to support
@@ -168,7 +168,8 @@ big integers.
 Tuple data, including values of user-defined types, is represented as the corresponding LLVM structure type.
 For instance, a tuple containing two integers, `(Int, Int)`, would be represented in LLVM as `type {i64, i64}`.
 
-When passed to a callable function, tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
+When [invoking callable values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#invoking-a-callable-value) using the `__quantum__rt__callable_invoke` runtime function, 
+tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
 receiving code.
 This permits to define runtime functions that are common for all tuples.
 For instance, this convention is used for callable wrapper functions; see
@@ -183,14 +184,14 @@ The language specific compiler is responsible for injecting calls to increase an
 See the section [above](#reference-and-alias-counting) regarding the distinction between alias and reference counting. 
 
 In the case where the source language treats tuples as immutable values, the language-specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
-This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is hence save to modify the tuple in place.
+This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is therefore safe to modify the tuple in place.
 
 The following utility functions are provided by the classical runtime to support tuples and user-defined types:
 
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
 | __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
-| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. The reference count of the tuple items remains unchanged. |
 | __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
 
@@ -258,7 +259,7 @@ arrays:
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
-| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. |
+| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. The reference count of the array items remains unchanged. |
 | __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
 | __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The `%Range` specifies the slice. |
 | __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |

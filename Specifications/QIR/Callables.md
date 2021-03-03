@@ -316,7 +316,7 @@ construction before calling the underlying callable.
 
 Any captured values need to remain alive as long as the callable value exists, and correspondingly may also need to be unreferenced when the type information for the captured values cannot be statically determined. Upon creation, a table with two function pointers is hence associated with a callable value. 
 
-Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i64)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the access counts. They can be invoked using the runtime function `__quantum__rt__callable_memory_management`. If there are no captured values, a null pointer should be passed upon callable creation.
+Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i64)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the alias counts. They can be invoked using the runtime function `__quantum__rt__callable_memory_management`. If there are no captured values, a null pointer should be passed upon callable creation.
 
 ### External Callables
 
@@ -352,7 +352,7 @@ callable values:
 | Function                        | Signature                                  | Description |
 |---------------------------------|--------------------------------------------|-------------|
 | __quantum__rt__callable_create  | `%Callable*([4 x void (%Tuple*, %Tuple*, %Tuple*)*]*, [2 x void(%Tuple*, i64)]*, %Tuple*)` | Initializes the callable with the provided function table, memory management table, and capture tuple. The memory management table pointer and the capture tuple pointer should be null if there is no capture. |
-| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer otherwise, after increasing its reference count by 1. |
+| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer otherwise, after increasing its reference count by 1. The reference count of the capture tuple remains unchanged. |
 | __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
 | __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
