@@ -48,7 +48,7 @@ This artificial precedence is listed in the table below, which also shows how th
 
 | Description | Syntax | Operator | Associativity | Precedence |
 | --- | --- | --- | --- | --- |
-| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `(` `)` | n/a | right | 900 | 
+| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `(` `)` | n/a | left | 900 | 
 | [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Adjoint` | prefix | right | 950 |
 | [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Controlled` | prefix | right | 950 |
 | [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 1000 |
@@ -64,15 +64,14 @@ To illustrate the implications of the assigned precedences, suppose we have a un
         Apply : Transformation
     );
 
-    newtype Transformation = (
-        LittleEndian => Unit is Adj + Ctl
-    );
+    newtype Transformation =
+        LittleEndian => Unit is Adj + Ctl;
 ```
 
 where `LittleEndian` is defined in [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/2_TypeDeclarations.md#type-declarations). 
 Then the following expressions are all valid: 
 ```qsharp
-    (GetStatePrep())(arg)
+    GetStatePrep()(arg)
     (Transformation(GetStatePrep()))!(arg)
     Adjoint DoNothing()
     Controlled Adjoint DoNothing(cs, ())
@@ -80,8 +79,8 @@ Then the following expressions are all valid:
     algorithms[0]::Register![i]
 ```
 Looking at the precedences defined in the table above, we see that the parentheses around `(Transformation(GetStatePrep()))` are necessary for the subsequent unwrap operator to be applied to the `Transformation` value rather than the returned operation. 
-Similarly, the syntax `GetStatePrep()(arg)` doesn't lead to a valid expression; parenthesis are required around the `GetStatePrep` call in order to invoke the returned callable. 
-Functor applications on the other hand don't require parentheses around them in order to invoke the corresponding specialization. Neither do array or named item access expressions, such that an expression `arr2D[i][j]` is perfectly valid, just like `algorithms[0]::Register![i]` is.
+However, parentheses are not required in `GetStatePrep()(arg)`; functions are applied left-to-right, so this expression is equivalent to `(GetStatePrep())(arg)`.
+Functor applications also don't require parentheses around them in order to invoke the corresponding specialization. Neither do array or named item access expressions, such that an expression `arr2D[i][j]` is perfectly valid, just like `algorithms[0]::Register![i]` is.
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

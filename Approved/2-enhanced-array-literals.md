@@ -1,20 +1,21 @@
 ---
-title: Enhanced array literals and removal of default-initialized array constructors
 description: Array literals are enhanced to support empty and repeated constant arrays, and the default-initialized array constructor `new Type[n]` is removed.
 author: Sarah Marshall
-date: December 22, 2020
+date: 2020-12-22
 ---
 
-# Proposal
+# QEP 2: Enhanced Array Literals
+
+## Proposal
 
 * The empty array literal, `[]`, is supported.
 * The repeated constant array literal, `[x, size = n]`, is added.
 * The default-initialized `new Type[n]` array constructor is deprecated and will be removed in the next major version of Q#.
   With it, the concept that every type has a default value is also deprecated and will be removed.
 
-# Justification
+## Justification
 
-## Removing default-initialized array constructors
+### Removing default-initialized array constructors
 
 The `new Type[n]` array constructor has two issues:
 
@@ -22,7 +23,7 @@ The `new Type[n]` array constructor has two issues:
    Its use with default-initialized arrays is inconsistent with other type constructors.
 2. It requires every type to have a default value with which to initialize each item in the array.
 
-### Default values
+#### Default values
 
 It is not possible to define reasonable default values of types like `Qubit` and `a -> b`.
 Their current default values are invalid and will trigger an error if they are used.
@@ -34,15 +35,15 @@ This can even cause subtle bugs in the soundness of a type system, as demonstrat
 
 Removing default-initialized array constructors, and the requirement that every type has a default value, resolves these problems.
 
-## Enhancing array literals
+### Enhancing array literals
 
 With the removal of default-initialized array constructors, alternatives are needed to create empty arrays and arrays with a repeated initial value.
 The alternative for `new T[n]` is `[x, size = n]`, where `x` is the initial value of each item.
 In the case where `n` = 0, the alternative for `new T[0]` is `[]`.
 
-# Description
+## Description
 
-## Current Status
+### Current Status
 
 Q# currently supports this syntax:
 
@@ -54,12 +55,12 @@ let empty = new Int[0];
 let bools = new Bool[10];
 ```
 
-## Proposed Modification
+### Proposed Modification
 
 The syntax above will be deprecated and removed.
 It is replaced by the constructs described below.
 
-### Empty arrays
+#### Empty arrays
 
 The empty array literal, `[]`, will be supported.
 Unlike `new T[0]`, this literal does not specify the type of the array to be created.
@@ -104,7 +105,7 @@ function Example() : Unit {
 }
 ```
 
-### Repeated constant arrays
+#### Repeated constant arrays
 
 The semantics of `[x, size = n]` are identical to `new T[n]`, except that the initial value is now given by `x`:
 
@@ -121,7 +122,7 @@ let wrong2 = [false, true, size = 10];
 let wrong3 = [false, size = 10, true];
 ```
 
-# Implementation
+## Implementation
 
 The implementation of `[x, size = n]` should be a relatively straightforward extension of the current implementation for `new T[n]`.
 It will require parser and syntax tree changes, as well as changes to code generation and potentially a small amount of runtime support.
@@ -132,17 +133,17 @@ When an expression with a placeholder type variable is used in a context that re
 Once all placeholders are refined, they can be replaced with their concrete types if one was determined.
 Since all specialization signatures must have explicit parameter and return types, the type inference for a placeholder variable cannot extend beyond its containing specialization.
 
-## Timeline
+### Timeline
 
 The bulk of the work is expected to be in implementing type inference for the empty array literal.
 However, since it is limited to only the empty array literal, and bounded by the scope of a specialization, the complexity should be managable within a month or two of work.
 The remaining work of adding repeated constant array literals and deprecating the old array literals should not take much time.
 
-# Further Considerations
+## Further Considerations
 
-## Related Mechanisms
+### Related Mechanisms
 
-### Array size
+#### Array size
 
 The repeated constant array literal uses `size` instead of `length` in anticipation of multidimensional arrays (see the [𝑛-d array proposal](https://github.com/microsoft/qsharp-language/pull/49)).
 For consistency, the standard library should consider adding a `Size` function for 1D arrays that is equivalent to `Length`.
@@ -153,7 +154,7 @@ EqualityFactI(Size([0, size = 5]), 5, "Array should have size 5");
 EqualityFactI(Length([0, size = 5]), 5, "Array should have length 5");
 ```
 
-### Qubit initializers
+#### Qubit initializers
 
 The syntax for allocating arrays of qubits is similar to the existing default-initialized array constructor syntax:
 
@@ -164,13 +165,13 @@ use qs = Qubit[n];
 For consistency, it may make sense to change this syntax as well.
 The [proposal for allocatable types and generalization of initializers](https://github.com/microsoft/qsharp-language/pull/41) is addressing this.
 
-## Impact on Existing Mechanisms
+### Impact on Existing Mechanisms
 
 The [`Default`](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.core.default) function depends on default-initialized array constructors, and it will also be deprecated.
 
-## Anticipated Interactions with Future Modifications
+### Anticipated Interactions with Future Modifications
 
-### Named arguments
+#### Named arguments
 
 The syntax for repeated constant arrays is designed to be similar to the syntax for named arguments, a feature that Q# does not currently support (and for which there is currently no suggestion or proposal).
 This proposal makes the assumption that the syntax for named arguments, if Q# supports them, will be:
@@ -179,11 +180,11 @@ This proposal makes the assumption that the syntax for named arguments, if Q# su
 Foo(firstArgument, secondArgument, namedArgument = "foo");
 ```
 
-### Type inference
+#### Type inference
 
 In the future, the type inference used for empty array literals may be extended to all expressions, allowing calls to polymorphic functions where not all type variables are determined by their arguments.
 
-### Partial application
+#### Partial application
 
 We may want to consider supporting partial application for array literals in the future:
 
@@ -201,7 +202,7 @@ let h = [_, "middle", _];
 // h("first", "last") == ["first", "middle", "last"]
 ```
 
-### Multidimensional arrays
+#### Multidimensional arrays
 
 The array literals in this proposal can be extended to support multidimensional arrays.
 See the [𝑛-d array proposal](https://github.com/microsoft/qsharp-language/pull/49).
@@ -212,7 +213,7 @@ Empty multidimensional arrays can be created with `#[]` for 2D, `##[]` for 3D, e
 Both multidimensional and nested (jagged) arrays could be created with the repeated constant array literal syntax.
 For example, `#[0, size = (2, 2)]` could create a 2x2 multidensional array, while `[[0, size = 2], size = 2]` could create a 2x2 nested array.
 
-### Array comprehensions
+#### Array comprehensions
 
 Another possible enhancement to array literals is support for array comprehensions.
 This would complement repeated constant array literals, and could be used in conjunction with them.
@@ -226,13 +227,13 @@ For example:
 [[x * x for x in 1 .. 10], size = 3]
 ```
 
-## Alternatives
+### Alternatives
 
 The new syntax for empty arrays and repeated constant arrays is not strictly necessary.
 The standard library functions `EmptyArray` and `ConstantArray` provide this functionality already.
 However, the new syntax is more concise.
 
-# Raised Concerns
+## Raised Concerns
 
 While the new syntax for repeated constant arrays is designed to be similar to a more general syntax for named arguments, its use in array literals is a special case that needs to specifically be added to the Q# grammar.
 This special case adds additional complexity to array literals, especially when potentially combined with array comprehensions in the future.
