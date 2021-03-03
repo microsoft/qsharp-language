@@ -142,7 +142,7 @@ For instance, a tuple containing two integers, `(Int, Int)`, would be represente
 When [invoking callable values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#invoking-a-callable-value) using the `__quantum__rt__callable_invoke` runtime function, 
 tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
 receiving code.
-This permits to define runtime functions that are common for all tuples such as the ones listed below.
+This permits the definition of runtime functions that are common for all tuples, such as the functions listed below.
 
 Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
 QIR supports this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
@@ -175,7 +175,7 @@ If it is used as a value, for instance as an element of a tuple, it should be re
 ### Arrays
 
 Within QIR, arrays are represented and passed around as a pointer to an opaque LLVM structure, `%Array`. 
-How to represent array data, i.e. what that pointer points to, is at the discretion of the runtime. All array manipulations, including item access, hence need to be performed by invoking the corresponding runtime function(s).
+How array data is represented, i.e., what that pointer points to, is at the discretion of the runtime. All array manipulations, including item access, hence need to be performed by invoking the corresponding runtime function(s).
 
 Because LLVM does not provide any mechanism for type-parameterized functions,
 runtime library routines that provide access to array elements return byte
@@ -261,13 +261,13 @@ QIR specifies a set of runtime functions for types that are represented as point
 
 To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
 
-Reference counts track the number of handles that allow to access a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
+Reference counts track the number of handles that allow access to a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
 
-Alias counts, on the other hand, track how may handles exist *in the source language*. 
-They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are hence useful to optimize the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
+Alias counts, on the other hand, track how many handles to a value exist *in the source language*. 
+They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are useful for optimizing the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
 
-The compiler is responsible to track both counts as needed by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for inner item such as e.g. tuple or array items, or captured values for callables; the compiler is responsible for injecting calls to update counts for inner items as needed.
-A targeted runtime is free to provide other mechanism for garbage collection and treat calls to modify reference counts as hints or as simple no-ops.
+The compiler is responsible for generating code that tracks both counts correctly by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for any inner items such as the elements of a tuple or an array, or a value captured by a callable; the compiler is responsible for injecting calls to update counts for inner items as needed.
+A runtime implementation is free to provide another mechanism for garbage collection and to treat calls to modify reference counts as hints or as simple no-ops.
 
 - Runtime routines that create a new instance always initialize the instance
   with a reference count of 1, and an alias count of 0.
@@ -275,8 +275,8 @@ A targeted runtime is free to provide other mechanism for garbage collection and
   a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
 - For all data types that support a runtime function to create a shallow copy, 
   a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime exception.
-- The function to modify reference and alias count accept a 
-  null instance pointer and should simply ignore the call if the pointer is null.
+- The functions that modify reference and alias count should accept a 
+  null instance pointer and simply ignore the call if the pointer is null.
 
 ---
 _[Back to index](README.md)_
