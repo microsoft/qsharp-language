@@ -24,15 +24,15 @@ and `Their.Attribute(2.1)`, applied to it would be represented in LLVM as follow
 
 ```LLVM
 @Your.Op = constant
-  [void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*]
+  [void (%Tuple*, %Tuple*, %Tuple*)*]
   [
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*
+    void (%Tuple*, %Tuple*, %Tuple*)*
         @Your.Op-body,
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)*
+    void (%Tuple*, %Tuple*, %Tuple*)*
         @Your.Op-adj,
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)* 
+    void (%Tuple*, %Tuple*, %Tuple*)* 
         @Your.Op-ctl,
-    void (%TupleHeader*, %TupleHeader*, %TupleHeader*)* 
+    void (%Tuple*, %Tuple*, %Tuple*)* 
         @Your.Op-ctladj
   ], !quantum.My.Attribute {i64 6, !"hello\00"},
      !quantum.Their.Attribute {double 2.1}

@@ -1,42 +1,11 @@
 ## Data Type Representation
 
 We define LLVM representations for a variety of classical and quantum data types.
+QIR does not require the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](#reference-and-alias-counting) for more detail.
 
-In most cases, we represent complex types as pointers to opaque LLVM structure
-types.
-This allows each target to provide a structure definition appropriate for that
-target.
-
-### Reference Counting
-
-In QIR, all types represented as pointers, other than qubits, are reference-counted.
-All types follow the same pattern:
-
-- Runtime routines that create a new instance always initialize the instance
-  with a reference count of 1.
-- Each type has a `_reference` runtime routine that increments the reference
-  count of an instance and an `_unreference` routine that decrements the
-  reference count.
-- The `_unreference` routine will release the instance if the reference count
-  is decremented to zero.
-- The `_unreference` routine should accept a null instance pointer and simply
-  ignore the call if the pointer is null. This allows us to avoid null checks
-  strewn through the QIR, with the attendant plethors of LLVM basic blocks.
-
-A target is free to provide some other mechanism for garbage collection and
-treat calls to these runtime functions as hints or as simple no-ops.
-
-### Unit
-
-For source languages that include a `Unit` type, the representation of this type
-in LLVM depends on its usage.
-If used as a return type for a callable, it should be translated into an LLVM
-`void` function.
-
-If it is used as a value, for instance as a user-defined type or as an element of
-a tuple, a tuple type with no contained elements should be used.
-In this case, the one possible value of `Unit`, `()`, should be represented as a
-null tuple pointer.
+Representing the types used for qubits and measurement results as pointers to
+opaque LLVM structure types allows each target to provide a structure definition
+appropriate for that target.
 
 ### Simple Types
 
@@ -51,7 +20,7 @@ They are represented as follows:
 | `Result` | `%Result*`                 | `%Result` is an opaque type. |
 | `Pauli`  | `%Pauli = {i2}`            | 0 is PauliI, 1 is PauliX, 3 is PauliY, and 2 is PauliZ. |
 | `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
-| `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value to or from a compiled routine, ranges should be passed by value. |
+| `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value, ranges should be passed by value. |
 
 LLVM and QIR place some limits on integer values.
 Specifically, when raising an integer to a power, the exponent must fit
@@ -70,7 +39,7 @@ For example:
 
 ```
 0..1..2 = {0, 1, 2}
-0..2..4 = {0. 2. 4}
+0..2..4 = {0, 2, 4}
 0..2..5 = {0, 2, 4}
 4..-1..2 = {4, 3, 2}
 5..-3..0 = {5, 2}
@@ -86,8 +55,8 @@ The following global constants are defined for use with the `%Result` and `%Paul
 
 @PauliI = constant i2 0
 @PauliX = constant i2 1
-@PauliY = constant i2 -1
-@PauliZ = constant i2 -2
+@PauliY = constant i2 -1 ; The value 3 (binary 11) is displayed as a 2-bit signed value of -1 (binary 11).
+@PauliZ = constant i2 -2 ; The value 2 (binary 10) is displayed as a 2-bit signed value of -2 (binary 10).
 ```
 
 The following utility functions are provided by the classical runtime to support
@@ -96,8 +65,7 @@ simple types:
 | Function                          | Signature                | Description |
 |-----------------------------------|--------------------------|-------------|
 | __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
-| __quantum__rt__result_reference   | `void(%Result*)`         | Increments the reference count of a Result pointer. |
-| __quantum__rt__result_unreference | `void(%Result*)`         | Decrements the reference count of a Result pointer and releases the result if appropriate. |
+| __quantum__rt__result_update_reference_count   | `void(%Result*, i64)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 
 ### Strings
 
@@ -112,9 +80,8 @@ strings:
 
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
-| __quantum__rt__string_create      | `%String*(i32, [0 x i8])`      | Creates a string from an array of UTF-8 bytes. |
-| __quantum__rt__string_reference   | `void(%String*)`               | Indicates that a new reference has been added. |
-| __quantum__rt__string_unreference | `void(%String*)`               | Indicates that an existing reference has been removed and potentially releases the string. |
+| __quantum__rt__string_create      | `%String*(i8*)`      | Creates a string from an array of UTF-8 bytes. The byte array is expected to be zero-terminated. |
+| __quantum__rt__string_update_reference_count   | `void(%String*, i64)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
 | __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
 
@@ -148,9 +115,8 @@ big integers.
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__bigint_create_i64  | `%BigInt*(i64)`                | Creates a big integer with the specified initial value. |
-| __quantum__rt__bigint_create_array | `%BigInt*(i32, [0 x i8])`    | Creates a big integer with the initial value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
-| __quantum__rt__bigint_reference   | `void(%BigInt*)`               | Indicates that a new reference has been added. |
-| __quantum__rt__bigint_unreference | `void(%BigInt*)`               | Indicates that an existing reference has been removed and potentially releases the big integer. |
+| __quantum__rt__bigint_create_array | `%BigInt*(i32, i8*)`    | Creates a big integer with the initial value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
+| __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i64)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__bigint_negate      | `%BigInt*(%BigInt*)`           | Returns the negative of the big integer. |
 | __quantum__rt__bigint_add         | `%BigInt*(%BigInt*, %BigInt*)` | Adds two big integers and returns their sum. |
 | __quantum__rt__bigint_subtract    | `%BigInt*(%BigInt*, %BigInt*)` | Subtracts the second big integer from the first and returns their difference. |
@@ -170,53 +136,46 @@ big integers.
 
 ### Tuples and User-Defined Types
 
-Tuple data, including values of user-defined types, is represented as an
-LLVM structure type.
-The structure type will contain a reference count as a standard header,
-followed by the tuple fields.
+Tuple data, including values of user-defined types, is represented as the corresponding LLVM structure type.
+For instance, a tuple containing two integers, `(Int, Int)`, would be represented in LLVM as `type {i64, i64}`.
 
-Because the `%TupleHeader` type actually appears as part of the structure, LLVM will
-not allow it to be an opaque type.
-Thus, QIR defines an LLVM type for the tuple header:
-
-```LLVM
-%TupleHeader = type { i32 }
-```
-
-For instance, a tuple containing two integers, `(Int, Int)`, would be represented in
-LLVM as `type {%TupleHeader, i64, i64}`.
-
-Tuple handles are simple pointers to the underlying data structure.
-When passed to a callable function, tuples should always be passed by reference,
-even if the source language treats them as immutable.
-
-In some situations, a pointer to a tuple of unknown or variable type may be required.
-To satisfy LLVM's strong typing in such a situation, tuple pointers are passed as
-pointers to the initial tuple header field; that is, as a `%TupleHeader*`.
-These pointers should be cast to pointers to the correct data structures by the
+When [invoking callable values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#invoking-a-callable-value) using the `__quantum__rt__callable_invoke` runtime function, 
+tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
 receiving code.
-For instance, this convention is used for callable wrapper functions; see
-[below](#callable-values-and-wrapper-functions).
+This permits the definition of runtime functions that are common for all tuples, such as the functions listed below.
 
-Many languages provide immutable tuples, along with operators that allow a modified
-copy of an existing tuple to be created.
-In QIR, this is represented by creating a new copy of the existing tuple and then
-modifying the newly-created tuple in place.
-If the compiler knows that the existing tuple is not used after the modification,
-it is possible to avoid the copy and modify the existing tuple in place.
+Many languages provide immutable tuples, along with operators that allow a modified copy of an existing tuple to be created.
+QIR supports this by requiring the runtime to track and be able to access the following given a `%Tuple*`:
+- The size of the tuple in bytes
+- The alias count indicating how many handles to the tuple exist in the source code
 
-The following utility functions are provided by the classical runtime to support
-tuples and user-defined types:
+The language specific compiler is responsible for injecting calls to increase and decrease the alias count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
+See [this section](#reference-and-alias-counting) for further details on the distinction between alias and reference counting. 
+
+In the case where the source language treats tuples as immutable values, the language-specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
+This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is therefore safe to modify the tuple in place.
+
+The following utility functions are provided by the classical runtime to support tuples and user-defined types:
 
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
-| __quantum__rt__tuple_create      | `%TupleHeader*(i64)`  | Allocates space for a tuple requiring the given number of bytes and sets the reference count to 1. |
-| __quantum__rt__tuple_reference   | `void(%TupleHeader*)` | Indicates that a new reference has been added. |
-| __quantum__rt__tuple_unreference | `void(%TupleHeader*)` | Indicates that an existing reference has been removed and potentially releases the tuple. |
+| __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. The reference count of the tuple items remains unchanged. |
+| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i64)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i64)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
+
+### Unit
+
+For source languages that include a unit type, the representation of this type
+in LLVM depends on its usage.
+If used as a return type for a callable, it should be translated into an LLVM
+`void` function.
+If it is used as a value, for instance as an element of a tuple, it should be represented as a null tuple pointer.
 
 ### Arrays
 
-Array data is represented as a pointer to an opaque LLVM structure, `%Array`.
+Within QIR, arrays are represented and passed around as a pointer to an opaque LLVM structure, `%Array`. 
+How array data is represented, i.e., what that pointer points to, is at the discretion of the runtime. All array manipulations, including item access, hence need to be performed by invoking the corresponding runtime function(s).
 
 Because LLVM does not provide any mechanism for type-parameterized functions,
 runtime library routines that provide access to array elements return byte
@@ -271,13 +230,13 @@ arrays:
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
-| __quantum__rt__array_copy        | `%Array*(%Array*)`                   | Returns a new array which is a copy of the passed-in `%Array*`. |
+| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. The reference count of the array items remains unchanged. |
 | __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
-| __quantum__rt__array_get_length  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be 0 for a 1-dimensional array. |
+| __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The `%Range` specifies the slice. |
+| __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
-| __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be 0 for a 1-dimensional array. The `%Range` specifies the slice. |
-| __quantum__rt__array_reference   | `void(%Array*)`                      | Indicates that a new reference has been added. |
-| __quantum__rt__array_unreference | `void(%Array*)`                      | Indicates that an existing reference has been removed and potentially releases the array. |
+| __quantum__rt__array_update_reference_count   | `void(%Array*, i64)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__array_update_alias_count | `void(%Array*, i64)` | Adds the given integer value to the alias count for the array. Fails if either count becomes negative. |
 
 The following utility functions are provided if multidimensional array support is enabled:
 
@@ -286,13 +245,38 @@ The following utility functions are provided if multidimensional array support i
 | __quantum__rt__array_create_2d   | `%Array* void(i32, i64, i64)`        | Creates a new 2-dimensional array. The `i32` is the size of each element in bytes. The first`i64` is the length of the first dimension of the array, and the second `i64` the length of the second dimension. The bytes of the new array should be set to zero. If either length is zero, the result should be an empty 2-dimensional array. |
 | __quantum__rt__array_create      | `%Array* void(i32, i32, i64*)`       | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The `i64*` should point to an array of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. If any length is zero, the result should be an empty array with the given number of dimensions. |
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
+| __quantum__rt__array_get_size  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be smaller than the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
+| __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be smaller than the number of dimensions in the array. The `%Range` specifies the slice. |
 | __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. |
 
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
 See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
+
+### Reference and Alias Counting
+
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. The exception is the `%Qubit*` type, for which no such functions exist since the management of quantum memory is distinct from classical memory management.
+
+To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
+
+Reference counts track the number of handles that allow access to a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
+
+Alias counts, on the other hand, track how many handles to a value exist *in the source language*. 
+They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are useful for optimizing the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
+
+The compiler is responsible for generating code that tracks both counts correctly by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for any inner items such as the elements of a tuple or an array, or a value captured by a callable; the compiler is responsible for injecting calls to update counts for inner items as needed.
+A runtime implementation is free to provide another mechanism for garbage collection and to treat calls to modify reference counts as hints or as simple no-ops.
+
+- Runtime routines that create a new instance always initialize the instance
+  with a reference count of 1, and an alias count of 0.
+- For each pointer type, with the exception of `%Qubit*`, 
+  a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
+- For all data types that support a runtime function to create a shallow copy, 
+  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime failure.
+- The functions that modify reference and alias count should accept a 
+  null instance pointer and simply ignore the call if the pointer is null.
 
 ---
 _[Back to index](README.md)_
