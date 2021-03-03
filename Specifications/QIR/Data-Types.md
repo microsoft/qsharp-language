@@ -10,19 +10,25 @@ appropriate for that target.
 
 QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. 
 
-- Runtime routines that create a new instance always initialize the instance
-  with a reference count of 1.
-- Each type has a `_reference` runtime routine that increments the reference
-  count of an instance and an `_unreference` routine that decrements the
-  reference count.
-- The `_unreference` routine will release the instance if the reference count
-  is decremented to zero.
-- The `_unreference` routine should accept a null instance pointer and simply
-  ignore the call if the pointer is null. This allows us to avoid null checks
-  strewn through the QIR, with the attendant plethors of LLVM basic blocks.
+To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
 
-A target is free to provide some other mechanism for garbage collection and
-treat calls to these runtime functions as hints or as simple no-ops.
+Reference counts track the number of handles that allow to access a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
+
+Alias counts, on the other hand, track how may handles exist *in the source language*. 
+They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are hence useful to optimize the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
+
+The compiler is responsible to track both counts as needed by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for inner item such as e.g. tuple or array items, or captured values for callables; the compiler is responsible for injecting calls to update counts for inner items as needed.
+A targeted runtime is free to provide other mechanism for garbage collection and treat calls to modify reference counts as hints or as simple no-ops.
+
+- Runtime routines that create a new instance always initialize the instance
+  with a reference count of 1, and an alias count of 0.
+- For each pointer type, with the exception of `%Qubit*`, 
+  a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
+- For all data types that support a runtime function to create a shallow copy, 
+  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime exception.
+- The function to modify reference and alias count accept a 
+  null instance pointer and should simply ignore the call if the pointer is null.
+
 
 ### Unit
 

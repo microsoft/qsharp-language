@@ -16,7 +16,7 @@ We define the following functions for managing qubits:
 | __quantum__rt__qubit_allocate       | `%Qubit*()`     | Allocates a single qubit. |
 | __quantum__rt__qubit_allocate_array | `%Array*(i64)`  | Creates an array of the given size and populates it with newly allocated qubits. |
 | __quantum__rt__qubit_release        | `void(%Qubit*)` | Release a single qubit. |
-| __quantum__rt__qubit_release_array  | `void(%Array*)` | Release each qubit in the given array. The array itself is *not* unreferenced, and needs to be dereferenced separately for the memory to be freed. |
+| __quantum__rt__qubit_release_array  | `void(%Array*)` | Release each qubit in the given array. The array itself is *not* unreferenced, and needs to be dereferenced separately for the (classical) memory to be freed. |
 
 Allocated qubits are not guaranteed to be in any particular state.
 If a language guarantees that allocated qubits will be in a specific state, the compiler
