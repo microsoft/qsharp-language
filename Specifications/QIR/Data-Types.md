@@ -1,7 +1,8 @@
 # Data Type Representation
 
-We define LLVM representations for a variety of classical and quantum data types.
-QIR does not require the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](Classical-Runtime.md#reference-and-alias-counting) for more detail.
+QIR defines an LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program.
+
+## Opaque Data Types
 
 Representing the types used for qubits and measurement results as pointers to
 opaque LLVM structure types allows each target to provide a structure definition
@@ -18,7 +19,7 @@ They are represented as follows:
 | `Double` | `double`                   | A 64-bit IEEE double-precision floating point number. Targets should specify their behavior on floating overflow and division by zero. |
 | `Bool`   | `i1`                       | 0 is false, 1 is true. |
 | `Result` | `%Result*`                 | `%Result` is an opaque type. |
-| `Pauli`  | `%Pauli = {i2}`            | 0 is PauliI, 1 is PauliX, 3 is PauliY, and 2 is PauliZ. |
+| `Pauli`  | `%Pauli = i2`            | 0 is PauliI, 1 is PauliX, 3 is PauliY, and 2 is PauliZ. |
 | `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
 | `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value, ranges should be passed by value. |
 
