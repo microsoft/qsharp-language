@@ -287,7 +287,7 @@ have access to the controlled count, and so can't unambiguously determine the
 expected argument tuple; specifically, it can't tell if an inner tuple is the
 result of an application of `Controlled` or just part of the base signature.
 
-## Implementing Lambdas, Partial Application. and Currying
+## Implementing Lambdas, Partial Application, and Currying
 
 The language-specific compiler should generate a new top-level callable of the
 appropriate type with implementation provided by the anonymous body of the lambda;
