@@ -317,9 +317,9 @@ construction before calling the underlying callable.
 Since any captured values need to remain alive as long as the callable value exists, they also need to be unreferenced when the callable value is released. While sufficient type information for the captured values is known upon creation of the value, the information is no longer available at the time when it is released.
 Upon creation, a table with two function pointers for modifying reference and alias counts for captured values is hence associated with a callable value. 
 
-Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i64)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the alias counts. Either of those pointers may be null, and if no managed values were captured, a null pointer should be passed instead of a table upon callable creation.
+Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i32)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the alias counts. Either of those pointers may be null, and if no managed values were captured, a null pointer should be passed instead of a table upon callable creation.
 
-As for tuple and array items, the responsibility of managing the reference and alias count for captured values lays with the compiler. The two functions can be invoked using the runtime function `__quantum__rt__callable_memory_management`, see the description [below](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#runtime-functions). 
+As for tuple and array items, the responsibility of managing the reference and alias count for captured values lays with the compiler. The two functions can be invoked using the runtime function `__quantum__rt__capture_update_reference_count` and `__quantum__rt__capture_update_alias_count` respectively, see the description [below](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#runtime-functions). 
 
 ### External Callables
 
@@ -354,14 +354,15 @@ callable values:
 
 | Function                        | Signature                                  | Description |
 |---------------------------------|--------------------------------------------|-------------|
-| __quantum__rt__callable_create  | `%Callable*([4 x void (%Tuple*, %Tuple*, %Tuple*)*]*, [2 x void(%Tuple*, i64)]*, %Tuple*)` | Initializes the callable with the provided function table, memory management table, and capture tuple. The memory management table pointer and the capture tuple pointer should be null if there is no capture. |
+| __quantum__rt__callable_create  | `%Callable*([4 x void (%Tuple*, %Tuple*, %Tuple*)*]*, [2 x void(%Tuple*, i32)]*, %Tuple*)` | Initializes the callable with the provided function table, memory management table, and capture tuple. The memory management table pointer and the capture tuple pointer should be null if there is no capture. |
 | __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer otherwise, after increasing its reference count by 1. The reference count of the capture tuple remains unchanged. |
 | __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
 | __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
-| __quantum__rt__callable_update_reference_count | `void(%Callable*, i64)`                      | Adds the given integer value to the reference count for the callable. Deallocates the callable if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
-| __quantum__rt__callable_update_alias_count | `void(%Callable*, i64)`                      | Adds the given integer value to the alias count for the callable. Fails if the count becomes negative. |
-| __quantum__rt__callable_memory_management | `void(i32, %Callable*, i64)`                      | Invokes the function at the given index in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
+| __quantum__rt__callable_update_reference_count | `void(%Callable*, i32)`                      | Adds the given integer value to the reference count for the callable. Deallocates the callable if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__callable_update_alias_count | `void(%Callable*, i32)`                      | Adds the given integer value to the alias count for the callable. Fails if the count becomes negative. |
+| __quantum__rt__capture_update_reference_count | `void(%Callable*, i32)`                      | Invokes the function at index 0 in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
+| __quantum__rt__capture_update_alias_count | `void(%Callable*, i32)`                      | Invokes the function at index 1 in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
 
 ---
 _[Back to index](README.md)_
