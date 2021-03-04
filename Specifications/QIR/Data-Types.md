@@ -1,13 +1,13 @@
-## Data Type Representation
+# Data Type Representation
 
 We define LLVM representations for a variety of classical and quantum data types.
-QIR does not require the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](#reference-and-alias-counting) for more detail.
+QIR does not require the runtime to provide garbage collection. Instead, it specifies a set of runtime functions that can be used by the language specific compiler to implement a reference counting scheme if needed, if the source language requires automatic memory management. See the section of [reference and alias counting](Classical-Runtime.md#reference-and-alias-counting) for more detail.
 
 Representing the types used for qubits and measurement results as pointers to
 opaque LLVM structure types allows each target to provide a structure definition
 appropriate for that target.
 
-### Simple Types
+## Simple Types
 
 The simple types are those whose values are fixed-size and do not contain pointers.
 They are represented as follows:
@@ -67,7 +67,7 @@ simple types:
 | __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
 | __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 
-### Strings
+## Strings
 
 Strings are represented as pointers to an opaque type.
 
@@ -100,7 +100,7 @@ allocated by the caller because the length of the string depends on the actual v
 | __quantum__rt__range_to_string   | `%String*(%Range)`   | Returns a string representation of the range. |
 | __quantum__rt__bigint_to_string  | `%String*(%BigInt*)` | Returns a string representation of the big integer. |
 
-### Big Integers
+## Big Integers
 
 Unlimited-precision integers, also known as "big integers", are represented
 as pointers to an opaque type.
@@ -134,12 +134,12 @@ big integers.
 | __quantum__rt__bigint_greater     | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than the second, false otherwise. |
 | __quantum__rt__bigint_greater_eq  | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than or equal to the second, false otherwise. |
 
-### Tuples and User-Defined Types
+## Tuples and User-Defined Types
 
 Tuple data, including values of user-defined types, is represented as the corresponding LLVM structure type.
 For instance, a tuple containing two integers, `(Int, Int)`, would be represented in LLVM as `type {i64, i64}`.
 
-When [invoking callable values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#invoking-a-callable-value) using the `__quantum__rt__callable_invoke` runtime function, 
+When [invoking callable values](Callables.md#invoking-a-callable-value) using the `__quantum__rt__callable_invoke` runtime function, 
 tuples are passed as a pointer to an opaque LLVM structure, `%Tuple`. The pointer is expected to point to the contained data such that it can be cast to the correct data structures by the
 receiving code.
 This permits the definition of runtime functions that are common for all tuples, such as the functions listed below.
@@ -150,7 +150,7 @@ QIR supports this by requiring the runtime to track and be able to access the fo
 - The alias count indicating how many handles to the tuple exist in the source code
 
 The language specific compiler is responsible for injecting calls to increase and decrease the alias count as needed, as well as to accurately reflect when references to the LLVM structure representing a tuple are created and removed. 
-See [this section](#reference-and-alias-counting) for further details on the distinction between alias and reference counting. 
+See [this section](Classical-Runtime.md#reference-and-alias-counting) for further details on the distinction between alias and reference counting. 
 
 In the case where the source language treats tuples as immutable values, the language-specific compiler is expected to request the necessary copies prior to modifying the tuple in place. 
 This is done by invoking the runtime function `__quantum__rt__tuple_copy` to create a byte-by-byte copy of a tuple. Unless the copying is forced via the second argument, the runtime may omit copying the value and instead simply return a pointer to the given argument if the alias count is 0 and it is therefore safe to modify the tuple in place.
@@ -160,11 +160,11 @@ The following utility functions are provided by the classical runtime to support
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
 | __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
-| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. The reference count of the tuple items remains unchanged. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. The reference count of the tuple elements remains unchanged. |
 | __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i32)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i32)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
 
-### Unit
+## Unit
 
 For source languages that include a unit type, the representation of this type
 in LLVM depends on its usage.
@@ -172,7 +172,7 @@ If used as a return type for a callable, it should be translated into an LLVM
 `void` function.
 If it is used as a value, for instance as an element of a tuple, it should be represented as a null tuple pointer.
 
-### Arrays
+## Arrays
 
 Within QIR, arrays are represented and passed around as a pointer to an opaque LLVM structure, `%Array`. 
 How array data is represented, i.e., what that pointer points to, is at the discretion of the runtime. All array manipulations, including item access, hence need to be performed by invoking the corresponding runtime function(s).
@@ -187,38 +187,29 @@ Many languages provide immutable arrays, along with operators that allow a modif
 copy of an existing array to be created.
 In QIR, this is implemented by creating a new copy of the existing array and then
 modifying the newly-created array in place.
-In some cases, if the source-language compiler knows that the existing array is not
-used after the creation of the modified copy, it is possible to avoid the copy and
-modify the existing array as long as there are known to be no other references to the
-array.
+If the existing array is not used after the creation of the modified copy, it is possible to avoid the copy and modify the existing array in place instead. 
+To achieve such a behavior, the language specific compiler should ensure that the alias count for arrays accurately reflects their use in the source language, and rely on the runtime function for copying to omit the copy when the alias count is 0.
 
-There are two special operations on arrays:
+In addition to creating modified copies of arrays, there are two other ways of constructing new arrays that permit for similar optimizations; array slicing and array projections.
 
 - An array *slice* is specified by providing a dimension to slice on and a `%Range` to
   slice with. The resulting array has the same number of dimensions as the original
-  array, but only those elements in the sliced dimension whose original indexes were
+  array, but only those elements in the sliced dimension whose original indices were
   part of the resolution of the `%Range`. Those elements get new indices in the resulting
   array based on their appearance order in the `%Range`. In particular, if the step of
   the `%Range` is negative, the elements in the sliced dimension will be in the reverse
   order than they were in the original array. If the `%Range` is empty, the resulting
-  array will be empty.
+  array will be empty.   
+  Array slices can be created using the `__quantum__rt__array_slice_1d` or `__quantum__rt__array_slice` runtime functions.
 - An array *projection* is specified by providing a dimension to project on and an `i64`
   index value to project to. The resulting array has one fewer dimension than the original
   array, and is the segment of the original array with the projected dimension fixed to the
   given index value. Projection is the array access analog to partial application;
   effectively it creates a new array that has the same elements as the original array,
-  but one of the indices is fixed at a constant value.
+  but one of the indices is fixed at a constant value.  
+  Array projections can be created using the `__quantum__rt__array_project` runtime function.
 
-Both slicing and projecting are implemented by creating a new `%Array*` that
-represents the resulting array as described above.
-Runtime library implementations may optimize by initially sharing data between
-the slice or projection and the original array and working with the source-language
-compiler to implement a copy-on-write strategy to minimize data copying.
-In particular, the source-language compiler should not assume that the result of a
-slice or projection operation is safe to write unless it can prove that the original
-array is no longer accessible.
-
-In all cases, attempting to access an index or dimension outside the bounds of
+Attempting to access an index or dimension outside the bounds of
 an array should cause an immediate runtime failure.
 This applies to slicing and projection operations as well as to element access.
 When validating indices for slicing, only indices that are actually part of the
@@ -230,9 +221,9 @@ arrays:
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
-| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. The reference count of the array items remains unchanged. |
+| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. The reference count of the array elements remains unchanged. |
 | __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
-| __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The `%Range` specifies the slice. |
+| __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range, i1)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The slice may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `%Range` specifies the indices that should be the elements of the returned array. The reference count of the elements remains unchanged. |
 | __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
 | __quantum__rt__array_update_reference_count   | `void(%Array*, i32)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
@@ -248,35 +239,12 @@ The following utility functions are provided if multidimensional array support i
 | __quantum__rt__array_get_size  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be smaller than the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
-| __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be smaller than the number of dimensions in the array. The `%Range` specifies the slice. |
-| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. |
+| __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range, i1)`      | Creates and returns an array that is a slice of an existing array. The slice may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the slice is on, and must be smaller than the number of dimensions in the array. The `%Range` specifies the indices in that dimension that should be the elements of the returned array. The reference count of the elements remains unchanged. |
+| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64, i1)`         | Creates and returns an array that is a projection of an existing array. The projection may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the projection is on, and the `i64` specifies the index in that dimension to project. The reference count of all array elements remains unchanged. |
 
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
 See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
-
-### Reference and Alias Counting
-
-QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. The exception is the `%Qubit*` type, for which no such functions exist since the management of quantum memory is distinct from classical memory management.
-
-To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
-
-Reference counts track the number of handles that allow access to a certain value *in LLVM*. They hence determine when the value can be released by the runtime; values are allocated with a reference count of 1, and will be released when their reference count reaches 0. 
-
-Alias counts, on the other hand, track how many handles to a value exist *in the source language*. 
-They determine when the runtime needs to copy data; when copy functions are invoked, the copy is executed only if the alias count is larger than 0, or the copy is explicitly forced. Alias counts are useful for optimizing the handling of data types that are represented as pointers in QIR, but are value types, i.e. immutable, within the source language. 
-
-The compiler is responsible for generating code that tracks both counts correctly by injecting the corresponding calls to modify them. A call to modify such counts will only ever modify the count for the given instance itself and not for any inner items such as the elements of a tuple or an array, or a value captured by a callable; the compiler is responsible for injecting calls to update counts for inner items as needed.
-A runtime implementation is free to provide another mechanism for garbage collection and to treat calls to modify reference counts as hints or as simple no-ops.
-
-- Runtime routines that create a new instance always initialize the instance
-  with a reference count of 1, and an alias count of 0.
-- For each pointer type, with the exception of `%Qubit*`, 
-  a runtime function ending in `_update_reference_count` exists that can be used to modify the reference count of an instance as needed. If the reference count reaches 0, the instance may be released. Decreasing the reference count below 0 or accessing a value after its reference count has reached 0 results in undefined behavior.
-- For all data types that support a runtime function to create a shallow copy, 
-  a runtime function ending in `_update_alias_count` exists that can be used to modify the alias count of an instance as needed. These functions exist for `%Tuple*`, `%Array*`, and `%Callable*` types. The alias count can never be negative; decreasing the alias count below 0 results in a runtime failure.
-- The functions that modify reference and alias count should accept a 
-  null instance pointer and simply ignore the call if the pointer is null.
 
 ---
 _[Back to index](README.md)_

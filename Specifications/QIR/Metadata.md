@@ -1,11 +1,11 @@
-## Metadata
+# Metadata
 
 Here we use "metadata" to signify both LLVM metadata and attributes.
 While metadata is more flexible, in some cases attributes may be preferred
 either because passes are required to keep them or because there are
 existing LLVM attributes with the required semantics.
 
-### Representing Source-Language Attributes
+## Representing Source-Language Attributes
 
 Many languages allow attributes to be placed on callable and type definitions.
 For instance, in Q# attributes are compile-time constant values of specific
@@ -54,19 +54,19 @@ and `Their.Attribute(2.1)`, applied to it would be represented in LLVM as follow
                         !{ !"quantum.Their.Attribute\00", double 2.1} }
 ```
 
-### Standard LLVM Metadata
+## Standard LLVM Metadata
 
-#### Debugging Information
+### Debugging Information
 
 Compilers are strongly urged to follow the recommendations in
 [Source Level Debugging with LLVM](http://llvm.org/docs/SourceLevelDebugging.html).
 
-#### Branch Prediction
+### Branch Prediction
 
 Compilers are strongly urged to follow the recommendations in
 [LLVM Branch Weight Metadata](http://llvm.org/docs/BranchWeightMetadata.html).
 
-### Other Compiler-Generated Metadata
+## Other Compiler-Generated Metadata
 
 If the QIR includes a function that is the quantum entry point, it should
 be marked with an LLVM "EntryPoint" attribute.

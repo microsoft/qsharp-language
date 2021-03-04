@@ -1,9 +1,9 @@
-## Callables
+# Callables
 
 We use to term _callable_ to mean a subroutine in the source language.
 Different source languages use different names for this concept.
 
-### Basics
+## Basics
 
 Callables are represented by up to four different LLVM functions to handle different
 combinations of functors: one for the base version and one each for the adjoint,
@@ -31,7 +31,7 @@ define %Result *Some__Namespace__Symbol__body (double theta, %Qubit *qb)
 Direct invocations of callables should be generated into normal LLVM function
 calls.
 
-### Callable Values
+## Callable Values
 
 In order to support lambda captures and partial application, as well as
 applying functors to callable values (function pointers), such values need to
@@ -39,7 +39,7 @@ be represented by a more complex data structure than simply a standard function
 pointer.
 These values are represented by a pointer to an opaque LLVM type, `%Callable`.
 
-#### Wrapper Functions
+### Wrapper Functions
 
 Because LLVM doesn't support generics, the LLVM function pointers used to
 initialize a `%Callable` have to be of a single type.
@@ -124,7 +124,7 @@ define void Some__Namespace__Symbol__ctladj__wrapper (%Tuple* capture,
 }
 ```
 
-#### Implementation Table
+### Implementation Table
 
 For each callable that is used to create a callable value, a table is created
 with pointers to the four wrapper functions; specializations that don't exist
@@ -153,7 +153,7 @@ For the example above, the following would be generated:
   ]
 ```
 
-### Creating Callable Values
+## Creating Callable Values
 
 As mentioned above, callable values are represented by a pointer to an opaque
 LLVM structure , `%Callable`.
@@ -173,7 +173,7 @@ It is most often used before using the `__quantum__rt__callable_make_adjoint`
 or `__quantum__rt__callable_make_controlled` functions to apply a functor
 to a callable value.
 
-### Invoking a Callable Value
+## Invoking a Callable Value
 
 As mentioned above, direct invocations of callables should be generated into
 normal LLVM function calls.
@@ -185,7 +185,7 @@ implementation with the appropriate parameters.
 To satisfy LLVM's strong typing, this function requires the arguments to be
 assembled into a tuple and passed to the runtime function as a tuple pointer.
 
-### Applying Functors to Callable Values
+## Applying Functors to Callable Values
 
 The Adjoint and Controlled functors are important for expressing quantum
 algorithms.
@@ -287,7 +287,7 @@ have access to the controlled count, and so can't unambiguously determine the
 expected argument tuple; specifically, it can't tell if an inner tuple is the
 result of an application of `Controlled` or just part of the base signature.
 
-### Implementing Lambdas, Partial Application. and Currying
+## Implementing Lambdas, Partial Application. and Currying
 
 The language-specific compiler should generate a new top-level callable of the
 appropriate type with implementation provided by the anonymous body of the lambda;
@@ -312,16 +312,16 @@ language-specific compiler.
 The lambda body may need to include additional code that performs argument tuple
 construction before calling the underlying callable.
 
-#### Memory Management Table
+### Memory Management Table
 
 Since any captured values need to remain alive as long as the callable value exists, they also need to be unreferenced when the callable value is released. While sufficient type information for the captured values is known upon creation of the value, the information is no longer available at the time when it is released.
 Upon creation, a table with two function pointers for modifying reference and alias counts for captured values is hence associated with a callable value. 
 
 Like the implementation table, the table is defined as global constant with a unique name. It contains two pointers of type `void(%Tuple*, i32)*`; the first one points to the function for modifying the reference counts of captured values, the second points to the one for modifying the alias counts. Either of those pointers may be null, and if no managed values were captured, a null pointer should be passed instead of a table upon callable creation.
 
-As for tuple and array items, the responsibility of managing the reference and alias count for captured values lays with the compiler. The two functions can be invoked using the runtime function `__quantum__rt__capture_update_reference_count` and `__quantum__rt__capture_update_alias_count` respectively, see the description [below](https://github.com/microsoft/qsharp-language/blob/main/Specifications/QIR/Callables.md#runtime-functions). 
+As for tuple and array elements, the responsibility of managing the reference and alias count for captured values lays with the compiler. The two functions can be invoked using the runtime function `__quantum__rt__capture_update_reference_count` and `__quantum__rt__capture_update_alias_count` respectively, see the description [below](Callables.md#runtime-functions). 
 
-### External Callables
+## External Callables
 
 Callables may be specified as external; that is, they are declared in the
 quantum source, but are defined in an external component that is statically
@@ -338,7 +338,7 @@ Declarations for other external callables can be included if desired.
 Generating the proper linkage is the responsibility of the target-specific
 compilation phase.
 
-### Generics
+## Generics
 
 QIR does not provide support for generic or type-parameterized callables.
 It relies on the language-specific compiler to generate a new, uniquely-named
@@ -347,7 +347,7 @@ The LLVM representation treats these generated callables as the actual
 callables to generate code for; the original callables with open type
 parameters are not represented in LLVM.
 
-### Runtime Functions
+## Runtime Functions
 
 The following functions are provided by the classical runtime to support
 callable values:

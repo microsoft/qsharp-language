@@ -1,4 +1,4 @@
-## Identifiers
+# Identifiers
 
 Identifiers in LLVM begin with a prefix, '@' for global symbols and '%' for
 local symbols, followed by the identifier name.
