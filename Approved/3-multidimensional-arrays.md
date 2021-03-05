@@ -393,7 +393,7 @@ for row in data2 {
 }
 ```
 
-Example 7:
+Example 8:
 Implementing array library functions using internal functions.
 
 ```qsharp
@@ -447,7 +447,7 @@ namespace Microsoft.Quantum.Arrays {
 }
 ```
 
-Example 8:
+Example 9:
 Using array library functions to work with 2D arrays.
 
 ```qsharp
