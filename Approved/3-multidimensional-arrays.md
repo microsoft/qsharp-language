@@ -258,12 +258,12 @@ Using the copy-and-update operator to manipulate multidimensional arrays.
 function ElementaryMatrix(
     (nRows : Int, nCols : Int), (idxRow : Int, idxCol : Int)
 ) : [|Double|] {
-    return ConstantArray2((nRows, nCols), 0.0) w/ (idxRow, idxCol) <- 1.0;
+    return [| 0.0, size = (nRows, nCols) |] w/ (idxRow, idxCol) <- 1.0;
 }
 ```
 
 Example 5:
-Slicing multidimensional arrays by ranges.
+Slicing multidimensional arrays.
 
 ```qsharp
 let data = [
@@ -272,8 +272,7 @@ let data = [
     |6, 7, 8|
 ];
 
-// Slicing an index by a Range does not reduce the dimensionality
-// of the resulting array.
+// Slicing does not reduce the dimensionality of the resulting array.
 let corners = data[0..2..2, 0..2..2];
 // corners = [|0, 2|, |6, 8|] and is of type [|Int|]
 
