@@ -203,7 +203,7 @@ let data = [
         |6, 7|
     |
 ];
-Message($"{data[0, 1, 0]}"); // ← 6
+Message($"{data[1, 1, 0]}"); // ← 6
 ```
 
 Example 2:
@@ -224,8 +224,8 @@ let data = [
         | [21, 22, 23, 24, 25, 26, 27], [28, 29, 30, 31, 32, 33, 34, 35] |
     |
 ];
-// data: [||[Int]||] (that is, a three-dimensional array of arrays of integers)
-// Get the zero-th "plane," first "row", zeroth "column," and third element.
+// data is of type [||[Int]||] (that is, a three-dimensional array of arrays of integers)
+// In the zero-th "plane", first "row", zero-th "column", get the element with index 2.
 Message($"{data[0, 1, 0][2]}"); // ← 5
 ```
 
@@ -252,7 +252,7 @@ let data = Concatenated2(0, // concatenate along the 0th (row) axis
 ```
 
 Example 4:
-Using the copy-and-replace operator to manipulate multidimensional arrays.
+Using the copy-and-update operator to manipulate multidimensional arrays.
 
 ```qsharp
 function ElementaryMatrix(
