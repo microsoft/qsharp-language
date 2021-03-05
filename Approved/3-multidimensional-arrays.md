@@ -153,7 +153,7 @@ Just as with indices like `(Int, Int)` and `(Int, Int, Int)`, subscripts that re
 Multidimensional indices can also be used with the copy-and-update operator (`w/`) to create a new array that replaces one or more specific element(s) of a multidimensional array, as shown in Example 4 below.
 In the case of `w/` operators, the `()` around index tuples cannot be dropped.
 
-When using values of type `Range` to index one or more axes in a multidimensional array, `...` is shorthand for the value `0..1..(n - 1)` where `n` is the length of the axis being indexed.
+When using values of type `Range` to index one or more axes in a multidimensional array the contextual `Range` expression `...`, e.g., is shorthand for the value `0..1..(n - 1)` where `n` is the length of the axis being indexed. The same [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) as for the one-dimensional case are valid for each dimension in the array. 
 
 When used in `for` loops, multidimensional arrays iterate "on the left," yielding loop variables of one rank lower than the array being looped over, as shown in Example 7, below.
 
