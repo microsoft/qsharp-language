@@ -530,7 +530,7 @@ Reversing an axis can be implemented by using negative strides and modifications
 By implementing multidimensional arrays in this way, we can reuse the existing infrastructure for immutable single-dimensional arrays.
 Moreover, in many cases, multiple distinct multidimensional arrays can share the same `::Data` item without requiring a copy.
 For example, in the variable binding `let view = array[0..2..., 0..2...];`, `view::Data` and `array::Data` can be the same single-dimensional array, as the difference between `view` and `data` can be expressed by only modifying `::Strides` and `::Size`.
-The cases where copies may still be required are when reshaping from more indices to less, when using `w/` to update slices, or if a particular intrinsic function or operation is implemented in simulation by interoperating with native libraries such as BLAS and LAPACK.
+The cases where copies may still be required are when constructing new arrays using a copy-and-update expression, or if a particular intrinsic function or operation is implemented in simulation by interoperating with native libraries such as BLAS and LAPACK, or when truncating the array.
 
 ### Timeline
 
