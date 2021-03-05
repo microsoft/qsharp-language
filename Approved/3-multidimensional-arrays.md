@@ -125,7 +125,7 @@ let e01 = ElementaryMatrix((2, 2), (0, 1), 0.0, 1.0);
 
 ### Proposed Modification
 
-Building on the utility of 1-D array notation, this suggestion proposes modifying Q# to include new multidimensional array types `[|'T`|], `[||'T||]`, and so forth. Like values of type `'T[]`, these new multidimensional would also be immutable, and could be manipulated by using the subscript (`[]`) and copy-and-update (`w/`) operators.
+Building on the utility of 1-D array notation, this suggestion proposes modifying Q# to include new multidimensional array types `[|'T|]`, `[||'T||]`, and so forth. Like values of type `'T[]`, these new multidimensional would also be immutable, and could be manipulated by using the subscript (`[]`) and copy-and-update (`w/`) operators.
 
 For any type `'T`, this proposal introduces a new two-dimensional array type `[|'T|]`, a three-dimensional array type `[||'T||]`, and so forth.
 For consistency with these new types, this proposal also introduces `['T]` as alternative notation for `'T[]`; we will use new notation for `'T[]` in the remainder of the proposal.
