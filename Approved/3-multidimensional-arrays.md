@@ -611,7 +611,7 @@ function Forced<'T>(maybe : Maybe<'T>) : 'T {
 
 #### Removing type suffixes with bounded polymorphism
 
-Were the bounded polymorphism feature suggested at https://github.com/microsoft/qsharp-compiler/issues/557 to be adopted, the different "overloads" for the library functions suggested in this proposal could be consolidated into a smaller number of concepts that then get implemented by each of `[|'T|]`, `[||'T||]`, and so forth.
+Were the bounded polymorphism feature suggested at https://github.com/microsoft/qsharp-compiler/issues/557 to be adopted, the different "overloads" for the library functions could be consolidated into a smaller number of concepts that then get implemented by each of `[|'T|]`, `[||'T||]`, and so forth.
 
 For example:
 
