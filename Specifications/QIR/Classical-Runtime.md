@@ -16,7 +16,7 @@ QIR does not require the runtime to provide garbage collection. Instead, it spec
 
 ### Reference and Alias Counting
 
-QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. The exception is the `%Qubit*` type, for which no such functions exist since the management of quantum memory is distinct from classical memory management, see [here](Quantum-Runtime.md#qubit-management-functions) for more detail.
+QIR specifies a set of runtime functions for types that are represented as pointers that may be used by the language-specific compiler to expose them as immutable types in the language. The exception is the `%Qubit*` type, for which no such functions exist since the management of quantum memory is distinct from classical memory management, see [here](Quantum-Runtime.md#qubits) for more detail.
 
 To ensure that unnecessary copying of data can be avoided, QIR distinguishes two kinds of counts that can be tracked: reference counts and alias counts. 
 

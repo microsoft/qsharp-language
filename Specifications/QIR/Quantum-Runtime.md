@@ -7,7 +7,7 @@ we do not define new LLVM instructions for quantum operations.
 Instead, we expect each target to define a set of quantum operations as LLVM functions
 that may be used by language-specific compilers.
 
-## Qubit Management Functions
+## Qubits
 
 We define the following functions for managing qubits:
 

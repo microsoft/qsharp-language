@@ -1,12 +1,29 @@
 # Data Type Representation
 
-QIR defines an LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program.
+QIR defines an LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program. For more information about classical memory management including reference and alias counting, see [here](Classical-Runtime.md#memory-management).
 
 ## Opaque Data Types
 
-Representing the types used for qubits and measurement results as pointers to
-opaque LLVM structure types allows each target to provide a structure definition
-appropriate for that target.
+Representing certain types as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
+
+In addition to arrays and callable values, the type `%Qubit*` used to represent qubits, and the type `%Result*` representing measurement results, are both opaque within QIR. 
+
+The following global constants are defined for use with the `%Result` type:
+
+```LLVM
+@ResultZero = external global %Result*
+@ResultOne = external global %Result*
+```
+
+The following utility functions are provided by the classical runtime for use with
+values of type `%Result*`:
+
+| Function                          | Signature                | Description |
+|-----------------------------------|--------------------------|-------------|
+| __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
+| __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+
+See the corresponding sections for more information on [arrays](#Arrays), [callables values](Callables.md), and [qubits](Quantum-Runtime.md#qubits). 
 
 ## Simple Types
 
@@ -18,9 +35,7 @@ They are represented as follows:
 | `Int`    | `i64`                      | A 64-bit signed integer. Targets should specify their behavior on integer overflow and division by zero. |
 | `Double` | `double`                   | A 64-bit IEEE double-precision floating point number. Targets should specify their behavior on floating overflow and division by zero. |
 | `Bool`   | `i1`                       | 0 is false, 1 is true. |
-| `Result` | `%Result*`                 | `%Result` is an opaque type. |
 | `Pauli`  | `%Pauli = i2`            | 0 is PauliI, 1 is PauliX, 3 is PauliY, and 2 is PauliZ. |
-| `Qubit`  | `%Qubit*`                  | `%Qubit` is an opaque type. |
 | `Range`  | `%Range = {i64, i64, i64}` | In order, these are the start, step, and inclusive end of the range. When passed as a function argument or return value, ranges should be passed by value. |
 
 LLVM and QIR place some limits on integer values.
@@ -48,25 +63,14 @@ For example:
 0..-1..1 = {}
 ```
 
-The following global constants are defined for use with the `%Result` and `%Pauli` types:
+The following global constants are defined for use with `%Pauli` type:
 
 ```LLVM
-@ResultZero = external global %Result*
-@ResultOne = external global %Result*
-
 @PauliI = constant i2 0
 @PauliX = constant i2 1
 @PauliY = constant i2 -1 ; The value 3 (binary 11) is displayed as a 2-bit signed value of -1 (binary 11).
 @PauliZ = constant i2 -2 ; The value 2 (binary 10) is displayed as a 2-bit signed value of -2 (binary 10).
 ```
-
-The following utility functions are provided by the classical runtime to support
-simple types:
-
-| Function                          | Signature                | Description |
-|-----------------------------------|--------------------------|-------------|
-| __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
-| __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 
 ## Strings
 
@@ -245,7 +249,7 @@ The following utility functions are provided if multidimensional array support i
 
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
-See [here](Quantum-Runtime.md#qubit-management-functions) for these functions.
+See [here](Quantum-Runtime.md#qubits) for these functions.
 
 ---
 _[Back to index](README.md)_
