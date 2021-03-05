@@ -131,7 +131,7 @@ For any type `'T`, this proposal introduces a new two-dimensional array type `[|
 For consistency with these new types, this proposal also introduces `['T]` as alternative notation for `'T[]`; we will use new notation for `'T[]` in the remainder of the proposal.
 
 New values of type `[|'T|]` can be written as literals using `[| ... |]` delimiters instead of `[]`, while literals of type `[||'T||]` can be written using `[|| ... ||]` delimiters (see example 1 below).
-The `|` and `|` delimeters occuring within square brackets can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
+The `|` and `|` delimiters occurring within square brackets can be thought of as denoting a rectangular grid, and as constraining one level of indexing to be rectangular.
 Similarly, new values of type `[|'T|]` can also be obtained by using the library functions in https://github.com/microsoft/QuantumLibraries/issues/408; e.g., `JaggedAsRectangular2([[2, 3], [4, 5]])` is equivalent to the literal `[|2, 3|, |4, 5|]`.
 
 Within multidimensional array literals, it is a _compile-time_ error to declare jagged subarrays, such as in Example 1, below.
