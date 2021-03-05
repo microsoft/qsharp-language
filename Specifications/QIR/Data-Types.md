@@ -2,7 +2,7 @@
 
 QIR defines an LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program. For more information about classical memory management including reference and alias counting, see [here](Classical-Runtime.md#memory-management).
 
-## Opaque Data Types
+## Opaque Types
 
 Representing certain types as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
 
@@ -238,11 +238,9 @@ The following utility functions are provided if multidimensional array support i
 
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
-| __quantum__rt__array_create_2d   | `%Array* void(i32, i64, i64)`        | Creates a new 2-dimensional array. The `i32` is the size of each element in bytes. The first`i64` is the length of the first dimension of the array, and the second `i64` the length of the second dimension. The bytes of the new array should be set to zero. If either length is zero, the result should be an empty 2-dimensional array. |
 | __quantum__rt__array_create      | `%Array* void(i32, i32, i64*)`       | Creates a new array. The first `i32` is the size of each element in bytes. The second `i32` is the dimension count. The `i64*` should point to an array of `i64`s contains the length of each dimension. The bytes of the new array should be set to zero. If any length is zero, the result should be an empty array with the given number of dimensions. |
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
 | __quantum__rt__array_get_size  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be smaller than the number of dimensions in the array. |
-| __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
 | __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range, i1)`      | Creates and returns an array that is a slice of an existing array. The slice may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the slice is on, and must be smaller than the number of dimensions in the array. The `%Range` specifies the indices in that dimension that should be the elements of the returned array. The reference count of the elements remains unchanged. |
 | __quantum__rt__array_project     | `%Array*(%Array*, i32, i64, i1)`         | Creates and returns an array that is a projection of an existing array. The projection may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the projection is on, and the `i64` specifies the index in that dimension to project. The reference count of all array elements remains unchanged. |
