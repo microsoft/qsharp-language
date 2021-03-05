@@ -4,7 +4,7 @@ author: Chris Granade
 date: 2021-03-01
 ---
 
-# QEP 3: Multi-dimensional arrays
+# QEP 3: Multidimensional arrays
 
 ## Proposal
 
@@ -135,7 +135,7 @@ The `|` and `|` delimiters occurring within square brackets can be thought of as
 Similarly, new values of type `[|'T|]` can also be obtained by using the library functions in https://github.com/microsoft/QuantumLibraries/issues/408; e.g., `JaggedAsRectangular2([[2, 3], [4, 5]])` is equivalent to the literal `[|2, 3|, |4, 5|]`.
 
 Within multidimensional array literals, it is a _compile-time_ error to declare jagged subarrays, such as in Example 1, below.
-It is similarly a compile-time error to use a non-literal array expression for part of a multi-dimensional array literal, as is shown in Example 3, below.
+It is similarly a compile-time error to use a non-literal array expression for part of a multidimensional array literal, as is shown in Example 3, below.
 
 Multidimensional arrays can also be created using extensions of the functionality in QEP 2.
 For example, `[| element, size=(2, 3) |]` is equivalent to `[|element, element, element|, |element, element, element|]`.
