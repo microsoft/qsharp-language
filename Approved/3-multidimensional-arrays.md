@@ -381,7 +381,7 @@ for plane in data {
 // of a multidimensional array:
 let data2 = [
     |0, 1|,
-    |2, 3
+    |2, 3|
 ];
 // In particular, the following loops are identical up to that the idxRow
 // variable is not defined in the second loop.
@@ -389,7 +389,7 @@ for idxRow in 0..Fst(Size2(data2)) - 1 {
     let row = data2[idxRow, ...];
     // ...
 }
-for row in array {
+for row in data2 {
     // ...
 }
 ```
