@@ -244,7 +244,7 @@ let data = [
 // Using new library functions that can `fail` at runtime, however, we can
 // achieve the desired effect.
 // In particular, JaggedAsRectangular2<'T>(jagged : 'T[][]) -> [|'T|] allows
-// us to build a [|Int|] value from `a`, which we can then join to `data` using
+// us to build a [|Int|] value from `a`, which we can then join to get `data` using
 // the Concatenated2<'T>(axis : Int, left : [|'T|], right : [|'T|])
 // -> [|'T|] function:
 let data = Concatenated2(0, // concatenate along the 0th (row) axis
