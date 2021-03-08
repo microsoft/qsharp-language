@@ -83,4 +83,4 @@ If there aren't enough qubits available to borrow, then qubits will be allocated
 >This [paper](https://arxiv.org/abs/1611.07995) gives an example of an algorithm that utilizes borrowed qubits.
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

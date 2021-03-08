@@ -70,4 +70,4 @@ Additional restrictions apply to cycles in the call graph that involve only type
 >For simplicity, the more restrictive requirement is enforced. Note that for cycles that involve at least one concrete callable without any type parameter, such a callable will ensure that the type parametrized callables within that cycle are always called with a fixed set of type arguments.
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

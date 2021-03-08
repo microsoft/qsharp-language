@@ -9,4 +9,3 @@ Additionally, left- and right-shift operators (`<<<` and `>>>` respectively) exi
 For left- and right-shift, the shift amount (i.e. the right-hand-side operand) must be greater than or equal to zero; the behavior for negative shift amounts is undefined. If the left-hand-side operand is of type `Int`, then the shift amount additionally needs to be smaller than 64; the behavior for larger shifts is undefined. 
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

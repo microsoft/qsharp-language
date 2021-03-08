@@ -5,4 +5,3 @@ Q# supports the standard logical operators *AND* (`and`), *OR* (`or`), and *NOT*
 As it is common in most languages, the evaluation of *AND* and *OR* short-circuits, meaning if the first expression of *OR* evaluates to `true`, the second expression is not evaluated, and the same holds if the first expression of *AND* evaluates to `false`. The behavior of conditional expressions in a sense is similar, in that only ever the condition and one of the two expressions is evaluated. 
 
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
