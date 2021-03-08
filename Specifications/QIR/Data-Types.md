@@ -1,6 +1,6 @@
 # Data Type Representation
 
-QIR defines an LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program. For more information about classical memory management including reference and alias counting, see [here](Classical-Runtime.md#memory-management).
+QIR defines LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program. For more information about classical memory management including reference and alias counting, see [here](Classical-Runtime.md#memory-management).
 
 ## Opaque Types
 
