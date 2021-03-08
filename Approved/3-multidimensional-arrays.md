@@ -642,15 +642,6 @@ let z = [
 ];
 ```
 
-These alternatives can possibly be combined with `[| |]`:
-
-```qsharp
-let bellTableau = [
-    true, true, false, false; // separate rows instead of nesting
-    false, false, true, true
-];
-```
-
 ### Comparison to Alternatives
 
 #### Comparison to Syntactic Sugar for Jagged Arrays
