@@ -151,6 +151,7 @@ That is, indexing a `[|'T|]` by `(Range, Range)` returns a rank-2 array (`[|'T|]
 
 Just as with indices like `(Int, Int)` and `(Int, Int, Int)`, subscripts that return slices can also be used in copy-and-update expressions, as shown in Example 6.
 Multidimensional indices can also be used with the copy-and-update operator (`w/`) to create a new array that replaces one or more specific element(s) of a multidimensional array, as shown in Example 4 below.
+The `w/` operator can also be used with slices as well as indices, in which case the right-hand side of the `<-` arrow must be a multidimensional array whose size matches the slice being updated in the new copy, as shown in Example 6 below.
 In the case of `w/` operators, the `()` around index tuples cannot be dropped.
 
 When using values of type `Range` to index one or more axes in a multidimensional array the contextual `Range` expression `...`, e.g., is shorthand for the value `0..1..(n - 1)` where `n` is the length of the axis being indexed. The same [contextual expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions) as for the one-dimensional case are valid for each dimension in the array. 
@@ -240,10 +241,15 @@ let data = [
     | 0, 1 |,
     a
 ];
-// Using a new library function that can `fail` at runtime works, however.
+// Using new library functions that can `fail` at runtime, however, we can
+// achieve the desired effect.
+// In particular, JaggedAsRectangular2<'T>(jagged : 'T[][]) -> [|'T|] allows
+// us to build a [|Int|] value from `a`, which we can then join to `data` using
+// the Concatenated2<'T>(axis : Int, left : [|'T|], right : [|'T|])
+// -> [|'T|] function:
 let data = Concatenated2(0, // concatenate along the 0th (row) axis
     [ | 0, 1 | ],
-    a
+    JaggedAsRectangular2([a])
 );
 // data: [|Int|] = [
 //     |0, 1|,
@@ -392,93 +398,6 @@ for row in data2 {
     // ...
 }
 ```
-
-Example 8:
-Implementing array library functions using internal functions.
-
-```qsharp
-namespace Microsoft.Quantum.Arrays {
-    open Microsoft.Quantum.Diagnostics;
-
-    function Transposed2<'T>(array : [|'T|]) : [|'T|] {
-        // Start by deconstructing the input using the internal intrinsic
-        // functions from this proposal; see Implementation below.
-        let data = NDArrayData<'T, [|'T|]>(array);
-        let strides = NDArrayStridesUnsafe(array);
-        let offset = NDArrayOffsetUnsafe(array);
-        let size = NDArraySizeUnsafe(array);
-
-        // Now use the internal AsNDArrayUnsafe function
-        // to reconstruct, but with size and strides
-        // reversed.
-        return AsNDArrayUnsafe<'T, [|'T|]>(data, strides[...-1...], offset, size[...-1...]);
-    }
-
-    function ConstantArray2<'T>(size : (Int, Int), element : 'T) : [|'T|] {
-        Fact(Fst(size) >= 0, "First axis had negative length.");
-        Fact(Snd(size) >= 0, "Second axis had negative length.");
-
-        // Here, we set a stride of zero to store everything as a single
-        // element. Using the copy-and-update operator will require actually
-        // allocating the whole array, but we can start off by "cheating."
-        return AsNDArrayUnsafe<'T, [|'T|]>([element], [0, 0], 0, size);
-    }
-
-    function Size2<'T>(array : [|'T|]) : (Int, Int) {
-        let size = NDArraySizeUnsafe(array);
-        return (size[0], size[1]);
-    }
-
-    function TimesD2(left : [|Double|], right : [|Double|]) : [|Double|] {
-        // For simplicity, we presume that left and right already match each
-        // other's size exactly. In an actual library implementation, we would
-        // want to generalize this to allow arbitrary binary operators, and to
-        // handle broadcasting between the two inputs.
-
-        mutable data = [];
-        let (nRows, nCols) = Size2(left);
-        for idxCol in 0..nCols - 1 {
-            for idxRow in 0..nRows - 1 {
-                set data += [left[(idxRow, idxCol)] * right[(idxRow, idxCol)]];
-            }
-        }
-        return AsNDArrayUnsafe<Double, [|Double|]>(data, [1, nRows], 0, [nRows, nCols]);
-    }
-}
-```
-
-Example 9:
-Using array library functions to work with 2D arrays.
-
-```qsharp
-let array = JaggedAsRectangular2([
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [10, 11, 12]
-]);
-// array = [ |1, 2, 3|, |4, 5, 6|, |7, 8, 9|, |10, 11, 12| ] and has type [|Int|].
-let size = Size2(array);
-// size = (4, 3);
-let diag = Diagonal2(array); // diag = [1, 5, 9];
-let sum = Folded(PlusI, 0, _);
-let rowSums = FoldedAlongAxis2(sum, 0, array);
-// rowSums = [6, 15, 24, 33];
-let colSums = FoldedAlongAxis2(sum, 1, array);
-// colSums = [22, 26, 30];
-let corners = Subarray2([(0, 0), (0, 2), (3, 0), (3, 2)], array);
-// corners = [1, 3, 10, 12];
-let x = [
-    |Complex(0.0, 0.0), Complex(1.0, 0.0)|,
-    |Complex(1.0, 0.0), Complex(0.0, 0.0)|
-];
-let y = [
-    |Complex(0.0, 0.0), Complex(0.0, -1.0)|,
-    |Complex(0.0, 1.0), Complex(0.0, 0.0)|
-];
-let z = Dot22C(x, y);
-```
-
 ## Implementation
 
 **NB: Code samples in this section are intended as pseudocode only, and may not work directly as written.**
