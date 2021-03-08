@@ -15,9 +15,9 @@ for qubit in qubits {
     H(qubit);
 }
 
-mutable results = new (Int, Results)[Length(qubits)];
-for index in 1 .. Length(qubits) {
-    set results += [(index-1, M(qubits[index]))];
+mutable results = new (Int, Result)[0];
+for index in 0 .. Length(qubits) - 1 {
+    set results += [(index, M(qubits[index]))];
 }
 
 mutable accumulated = 0;
