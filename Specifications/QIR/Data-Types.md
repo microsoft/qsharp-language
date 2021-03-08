@@ -6,7 +6,7 @@ QIR defines LLVM representations for a variety of classical and quantum data typ
 
 Representing certain types as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
 
-In addition to arrays and callable values, the type `%Qubit*` used to represent qubits, and the type `%Result*` representing measurement results, are both opaque within QIR. 
+In addition to arrays and callable values, the types `%Qubit*` that represents qubits and `%Result*` that represents measurement results are both opaque within QIR. 
 
 The following global constants are defined for use with the `%Result` type:
 
