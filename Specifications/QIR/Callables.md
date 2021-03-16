@@ -361,8 +361,8 @@ callable values:
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
 | __quantum__rt__callable_update_reference_count | `void(%Callable*, i32)`                      | Adds the given integer value to the reference count for the callable. Deallocates the callable if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__callable_update_alias_count | `void(%Callable*, i32)`                      | Adds the given integer value to the alias count for the callable. Fails if the count becomes negative. |
-| __quantum__rt__capture_update_reference_count | `void(%Callable*, i32)`                      | Invokes the function at index 0 in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
-| __quantum__rt__capture_update_alias_count | `void(%Callable*, i32)`                      | Invokes the function at index 1 in the memory management table of the callable with the capture tuple and the given 64-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
+| __quantum__rt__capture_update_reference_count | `void(%Callable*, i32)`                      | Invokes the function at index 0 in the memory management table of the callable with the capture tuple and the given 32-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
+| __quantum__rt__capture_update_alias_count | `void(%Callable*, i32)`                      | Invokes the function at index 1 in the memory management table of the callable with the capture tuple and the given 32-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
 
 ---
 _[Back to index](README.md)_

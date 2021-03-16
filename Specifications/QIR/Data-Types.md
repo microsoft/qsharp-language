@@ -8,18 +8,13 @@ Representing certain types as pointers to opaque LLVM structure types allows eac
 
 In addition to arrays and callable values, the type `%Qubit*` used to represent qubits, and the type `%Result*` representing measurement results, are both opaque within QIR. 
 
-The following global constants are defined for use with the `%Result` type:
-
-```LLVM
-@ResultZero = external global %Result*
-@ResultOne = external global %Result*
-```
-
 The following utility functions are provided by the classical runtime for use with
 values of type `%Result*`:
 
 | Function                          | Signature                | Description |
 |-----------------------------------|--------------------------|-------------|
+| __quantum__rt__result_get_zero    | `%Result*()`             | Returns a constant representing a measurement result zero.
+| __quantum__rt__result_get_one     | `%Result*()`             | Returns a constant representing a measurement result one.
 | __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
 | __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 
@@ -86,6 +81,8 @@ strings:
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__string_create      | `%String*(i8*)`      | Creates a string from an array of UTF-8 bytes. The byte array is expected to be zero-terminated. |
+| __quantum__rt__string_get_data    | `i8*(%String*)`      | Returns a pointer to the zero-terminated array of UTF-8 bytes. |
+| __quantum__rt__string_get_length  | `i32(%String*)`      | Returns the length of the byte array that contains the string data. |
 | __quantum__rt__string_update_reference_count   | `void(%String*, i32)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
 | __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
@@ -120,7 +117,9 @@ big integers.
 | Function                          | Signature                      | Description |
 |-----------------------------------|--------------------------------|-------------|
 | __quantum__rt__bigint_create_i64  | `%BigInt*(i64)`                | Creates a big integer with the specified initial value. |
-| __quantum__rt__bigint_create_array | `%BigInt*(i32, i8*)`    | Creates a big integer with the initial value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
+| __quantum__rt__bigint_create_array | `%BigInt*(i32, i8*)`    | Creates a big integer with the value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
+| __quantum__rt__bigint_get_data    | `i8*(%BigInt*)`      | Returns a pointer to the `i8` array containing the value of the big integer. |
+| __quantum__rt__bigint_get_length  | `i32(%BigInt*)`      | Returns the length of the `i8` array that represents the big integer value. |
 | __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i32)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__bigint_negate      | `%BigInt*(%BigInt*)`           | Returns the negative of the big integer. |
 | __quantum__rt__bigint_add         | `%BigInt*(%BigInt*, %BigInt*)` | Adds two big integers and returns their sum. |
