@@ -266,7 +266,7 @@ There are two special operations on arrays:
   the `%Range` is negative, the elements in the sliced dimension will be in the reverse
   order than they were in the original array. If the `%Range` is empty, the resulting
   array will be empty.
-- An array *projection* is specified by providing a dimension to project on and an `i64`
+- An array *projection* is specified by providing a dimension to project along and an `i64`
   index value to project to. The resulting array has one fewer dimension than the original
   array, and is the segment of the original array with the projected dimension fixed to the
   given index value. Projection is the array access analog to partial application;
@@ -313,7 +313,7 @@ The following utility functions are provided if multidimensional array support i
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
-| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is on, and the `i64` specifies the specific index value to project. |
+| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is along, and the `i64` specifies the specific index value to project. |
 
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
