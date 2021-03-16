@@ -288,7 +288,7 @@ This applies to slicing and projection operations as well as to element access.
 When validating indices for slicing, only indices that are actually part of the
 resolved range should be considered.
 When projecting, an attempt to project a one-dimensional array on its only dimension
-should cause a failure.
+should cause a runtime failure.
 
 The following utility functions are provided by the classical runtime to support
 arrays:
@@ -297,7 +297,7 @@ arrays:
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
 | __quantum__rt__array_copy        | `%Array*(%Array*)`                   | Returns a new array which is a copy of the passed-in `%Array*`. |
-| __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in one-dimensional arrays. If either array is not one-dimensional, then a runtime failure should occur. |
+| __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in one-dimensional arrays. If either array is not one-dimensional or if the array element sizes are not the same, then a runtime failure should occur. |
 | __quantum__rt__array_get_length  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be 0 for a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
 | __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range)`      | Creates and returns an array that is a slice of an existing array. The `i32` indicates which dimension the slice is on, which must be 0 for a 1-dimensional array. The `%Range` specifies the slice. |
@@ -313,7 +313,7 @@ The following utility functions are provided if multidimensional array support i
 | __quantum__rt__array_get_dim     | `i32(%Array*)`                       | Returns the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr_2d | `i8*(%Array*, i64, i64)`      | Returns a pointer to the element of the array at the zero-based indices given by the two `i64` arguments. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
-| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is along, and the `i64` specifies the specific index value to project. |
+| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64)`         | Creates and returns an array that is a projection of an existing array. The `i32` indicates which dimension the projection is along, and the `i64` specifies the specific index value to project. If the existing array is one-dimensional then a runtime failure should occur. |
 
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
