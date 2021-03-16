@@ -109,7 +109,7 @@ simple types:
 | __quantum__rt__result_reference   | `void(%Result*)`         | Increments the reference count of a Result pointer. |
 | __quantum__rt__result_unreference | `void(%Result*)`         | Decrements the reference count of a Result pointer and releases the result if appropriate. |
 
-For `equal`, if a `%Result*` parameter is null, a runtime failure should occur.
+For `__quantum__rt__result_equal`, if a `%Result*` parameter is null, a runtime failure should occur.
 
 ### Strings
 

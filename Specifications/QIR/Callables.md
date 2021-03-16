@@ -367,7 +367,8 @@ callable values:
 
 For all of these other than `reference` and `unreference`, if a null
 `%Callable*` is passed in, a runtime failure should result.
-For `make_adjoint` and `make_controlled`, a runtime failure should result
+For `__quantum__rt__callable_make_adjoint` and
+`__quantum__rt__callable_make_controlled`, a runtime failure should result
 if the corresponding entry in the callable's function table is null.
 It is expected that the `%TupleHeader*` parameters to `invoke` may be null
 if the callable either takes no arguments or returns `Unit`.
