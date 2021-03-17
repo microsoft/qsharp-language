@@ -164,7 +164,7 @@ The following utility functions are provided by the classical runtime to support
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
 | __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
-| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer otherwise, after increasing its reference count by 1. The reference count of the tuple elements remains unchanged. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the tuple elements remains unchanged. |
 | __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i32)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
 | __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i32)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
 
@@ -225,7 +225,7 @@ arrays:
 | Function                         | Signature                            | Description |
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
-| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer otherwise, after increasing its reference count by 1. The reference count of the array elements remains unchanged. |
+| __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the array elements remains unchanged. |
 | __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
 | __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range, i1)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The slice may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `%Range` specifies the indices that should be the elements of the returned array. The reference count of the elements remains unchanged. |
 | __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |

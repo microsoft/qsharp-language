@@ -7,7 +7,7 @@ from a simple rewrite of basic intrinsics to target machine code:
   garbage collection, and thus carefully tracks stack versus heap allocation
   and reference counting for heap-allocated structures. A runtime that provides
   full garbage collection may wish to remove the reference count field from several
-  intermediate representation structures and elide calls the various `unreference` functions.
+  intermediate representation structures and elide calls to the various `unreference` functions.
 - Many types are defined as pointers to opaque structures. The code generator
   will need to either provide a concrete realization of the structure or replace
   the pointer type with some other representation entirely.

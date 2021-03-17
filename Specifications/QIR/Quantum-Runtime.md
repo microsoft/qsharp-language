@@ -20,7 +20,7 @@ We define the following functions for managing qubits:
 
 The language-specific compiler may assume that qubits are always allocated in a zero-state. Since individual targets may give different guarantees regarding the qubit state upon allocation, the target-specific compilation phase should insert the code required to ensure that the state of qubits is set appropriately. 
 
-Any measurements or resets applied upon release are at the discretion of the target as well; the qubits that are to be released hence need to be unentangled from qubits that remain live prior to invoking the release function.
+Any measurements or resets applied upon release are at the discretion of the target as well; for the quantum algorithm to be correct, the qubits that are to be released hence should be unentangled from qubits that remain live prior to invoking the release function.
 
 ---
 _[Back to index](README.md)_

@@ -143,13 +143,13 @@ For the example above, the following would be generated:
   [void (%Tuple*, %Tuple*, %Tuple*)*]
   [
     void (%Tuple*, %Tuple*, %Tuple*)*
-        @Some__Namespace__Symbol__body,
+        @Some__Namespace__Symbol__body__wrapper,
     void (%Tuple*, %Tuple*, %Tuple*)*
-        @Some__Namespace__Symbol__adj,
+        @Some__Namespace__Symbol__adj__wrapper,
     void (%Tuple*, %Tuple*, %Tuple*)* 
-        @Some__Namespace__Symbol__ctl,
+        @Some__Namespace__Symbol__ctl__wrapper,
     void (%Tuple*, %Tuple*, %Tuple*)* 
-        @Some__Namespace__Symbol__ctladj
+        @Some__Namespace__Symbol__ctladj__wrapper
   ]
 ```
 
@@ -289,7 +289,7 @@ result of an application of `Controlled` or just part of the base signature.
 
 ## Implementing Lambdas, Partial Application, and Currying
 
-The language-specific compiler should generate a new top-level callable of the
+The language-specific compiler should generate a new callable at the global scope of the
 appropriate type with implementation provided by the anonymous body of the lambda;
 this is known as "lifting" the lambda. 
 A unique name should be generated for this callable.
@@ -355,7 +355,7 @@ callable values:
 | Function                        | Signature                                  | Description |
 |---------------------------------|--------------------------------------------|-------------|
 | __quantum__rt__callable_create  | `%Callable*([4 x void (%Tuple*, %Tuple*, %Tuple*)*]*, [2 x void(%Tuple*, i32)]*, %Tuple*)` | Initializes the callable with the provided function table, memory management table, and capture tuple. The memory management table pointer and the capture tuple pointer should be null if there is no capture. |
-| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer otherwise, after increasing its reference count by 1. The reference count of the capture tuple remains unchanged. |
+| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the capture tuple remains unchanged. |
 | __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
 | __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
 | __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
