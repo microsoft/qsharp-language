@@ -3,6 +3,12 @@
 We use to term _callable_ to mean a subroutine in the source language.
 Different source languages use different names for this concept.
 
+## Runtime Failure
+
+There are several error conditions that are specified as causing a runtime failure.
+The `__quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
+it is documented in the [Classical Runtime](Classical-Runtime.md) section.
+
 ## Basics
 
 Callables are represented by up to four different LLVM functions to handle different
@@ -356,14 +362,14 @@ callable values:
 | Function                        | Signature                                  | Description |
 |---------------------------------|--------------------------------------------|-------------|
 | __quantum__rt__callable_create  | `%Callable*([4 x void (%Tuple*, %Tuple*, %Tuple*)*]*, [2 x void(%Tuple*, i32)]*, %Tuple*)` | Initializes the callable with the provided function table, memory management table, and capture tuple. The memory management table pointer and the capture tuple pointer should be null if there is no capture. |
-| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the capture tuple remains unchanged. |
-| __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. |
-| __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. |
-| __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. |
-| __quantum__rt__callable_update_reference_count | `void(%Callable*, i32)`                      | Adds the given integer value to the reference count for the callable. Deallocates the callable if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
-| __quantum__rt__callable_update_alias_count | `void(%Callable*, i32)`                      | Adds the given integer value to the alias count for the callable. Fails if the count becomes negative. |
-| __quantum__rt__capture_update_reference_count | `void(%Callable*, i32)`                      | Invokes the function at index 0 in the memory management table of the callable with the capture tuple and the given 32-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
-| __quantum__rt__capture_update_alias_count | `void(%Callable*, i32)`                      | Invokes the function at index 1 in the memory management table of the callable with the capture tuple and the given 32-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null.  |
+| __quantum__rt__callable_copy    | `%Callable*(%Callable*, i1)`             | Creates a shallow copy of the callable if the alias count is larger than 0 or the second argument is `true`. Returns the given callable pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the capture tuple remains unchanged. If the `%Callable*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__callable_invoke  | `void(%Callable*, %Tuple*, %Tuple*)` | Invokes the callable with the provided argument tuple and fills in the result tuple. The `%Tuple*` parameters may be null if the callable either takes no arguments or returns `Unit`. If the `%Callable*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__callable_make_adjoint | `void(%Callable*)`                         | Updates the callable by applying the Adjoint functor. If the `%Callable*` parameter is null or if the corresponding entry in the callable's function table is null, a runtime failure should occur. |
+| __quantum__rt__callable_make_controlled | `void(%Callable*)`                      | Updates the callable by applying the Controlled functor. If the `%Callable*` parameter is null or if the corresponding entry in the callable's function table is null, a runtime failure should occur. |
+| __quantum__rt__callable_update_reference_count | `void(%Callable*, i32)`                      | Adds the given integer value to the reference count for the callable. Deallocates the callable if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%Callable*` is a null pointer. |
+| __quantum__rt__callable_update_alias_count | `void(%Callable*, i32)`                      | Adds the given integer value to the alias count for the callable. Fails if the count becomes negative. The call should be ignored if the given `%Callable*` is a null pointer. |
+| __quantum__rt__capture_update_reference_count | `void(%Callable*, i32)`                      | Invokes the function at index 0 in the memory management table of the callable with the capture tuple and the given 32-bit integer. Does nothing if if the memory management table pointer or the function pointer at that index is null, or if the given `%Callable*` is a null pointer. |
+| __quantum__rt__capture_update_alias_count | `void(%Callable*, i32)`                      | Invokes the function at index 1 in the memory management table of the callable with the capture tuple and the given 32-bit integer. Does nothing if the memory management table pointer or the function pointer at that index is null, or if the given `%Callable*` is a null pointer. |
 
 ---
 _[Back to index](README.md)_

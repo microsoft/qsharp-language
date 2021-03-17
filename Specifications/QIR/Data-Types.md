@@ -2,6 +2,10 @@
 
 QIR defines LLVM representations for a variety of classical and quantum data types that may be used as part of a compiled quantum program. For more information about classical memory management including reference and alias counting, see [here](Classical-Runtime.md#memory-management).
 
+There are several error conditions that are specified as causing a runtime failure.
+The `quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
+it is documented in the [Classical Runtime](Classical-Runtime.md) section.
+
 ## Opaque Types
 
 Representing certain types as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
@@ -15,8 +19,8 @@ values of type `%Result*`:
 |-----------------------------------|--------------------------|-------------|
 | __quantum__rt__result_get_zero    | `%Result*()`             | Returns a constant representing a measurement result zero.
 | __quantum__rt__result_get_one     | `%Result*()`             | Returns a constant representing a measurement result one.
-| __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. |
-| __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. If a `%Result*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%Result*` is a null pointer. |
 
 See the corresponding sections for more information on [arrays](#Arrays), [callables values](Callables.md), and [qubits](Quantum-Runtime.md#qubits). 
 
@@ -42,7 +46,8 @@ less than 64.
 A `%Range` is an expression that represents a sequence of integers.
 The first element of the sequence is the `start` of the range, the second
 element is `start+step`, the third element is `start+2*step`, and so forth.
-The `step` may be positive or negative, but not zero.
+The `step` may be positive or negative, but not zero. An attempt to create a `%Range` with a zero step should cause a runtime failure.
+
 The last element of the range may be `end`; that is, `end` is inclusive.
 A range is empty if `step` is positive and `end` is less than `start`,
 or if `step` is negative and `end` is greater than `start`.
@@ -83,9 +88,9 @@ strings:
 | __quantum__rt__string_create      | `%String*(i8*)`      | Creates a string from an array of UTF-8 bytes. The byte array is expected to be zero-terminated. |
 | __quantum__rt__string_get_data    | `i8*(%String*)`      | Returns a pointer to the zero-terminated array of UTF-8 bytes. |
 | __quantum__rt__string_get_length  | `i32(%String*)`      | Returns the length of the byte array that contains the string data. |
-| __quantum__rt__string_update_reference_count   | `void(%String*, i32)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
-| __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
-| __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
+| __quantum__rt__string_update_reference_count   | `void(%String*, i32)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%String*` is a null pointer. |
+| __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. If a `%String*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. If a `%String*` parameter is null, a runtime failure should occur. |
 
 The following utility functions support converting values of other types to strings.
 In every case, the returned string is allocated on the heap; the string can't be
@@ -101,6 +106,8 @@ allocated by the caller because the length of the string depends on the actual v
 | __quantum__rt__qubit_to_string   | `%String*(%Qubit*)`  | Returns a string representation of the qubit. |
 | __quantum__rt__range_to_string   | `%String*(%Range)`   | Returns a string representation of the range. |
 | __quantum__rt__bigint_to_string  | `%String*(%BigInt*)` | Returns a string representation of the big integer. |
+
+In all cases, if a pointer parameter is null, a runtime failure should occur.
 
 ## Big Integers
 
@@ -120,7 +127,7 @@ big integers.
 | __quantum__rt__bigint_create_array | `%BigInt*(i32, i8*)`    | Creates a big integer with the value specified by the `i8` array. The 0-th element of the array is the highest-order byte, followed by the first element, etc. |
 | __quantum__rt__bigint_get_data    | `i8*(%BigInt*)`      | Returns a pointer to the `i8` array containing the value of the big integer. |
 | __quantum__rt__bigint_get_length  | `i32(%BigInt*)`      | Returns the length of the `i8` array that represents the big integer value. |
-| __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i32)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
+| __quantum__rt__bigint_update_reference_count   | `void(%BigInt*, i32)` | Adds the given integer value to the reference count for the big integer. Deallocates the big integer if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%BigInt*` is a null pointer. |
 | __quantum__rt__bigint_negate      | `%BigInt*(%BigInt*)`           | Returns the negative of the big integer. |
 | __quantum__rt__bigint_add         | `%BigInt*(%BigInt*, %BigInt*)` | Adds two big integers and returns their sum. |
 | __quantum__rt__bigint_subtract    | `%BigInt*(%BigInt*, %BigInt*)` | Subtracts the second big integer from the first and returns their difference. |
@@ -137,6 +144,8 @@ big integers.
 | __quantum__rt__bigint_equal       | `i1(%BigInt*, %BigInt*)`       | Returns true if the two big integers are equal, false otherwise. |
 | __quantum__rt__bigint_greater     | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than the second, false otherwise. |
 | __quantum__rt__bigint_greater_eq  | `i1(%BigInt*, %BigInt*)`       | Returns true if the first big integer is greater than or equal to the second, false otherwise. |
+
+In all cases other than to `__quantum__rt__bigint_update_reference_count`, if a `%BigInt*` parameter is null, a runtime failure should occur.
 
 ## Tuples and User-Defined Types
 
@@ -164,9 +173,9 @@ The following utility functions are provided by the classical runtime to support
 | Function                         | Signature             | Description |
 |----------------------------------|-----------------------|-------------|
 | __quantum__rt__tuple_create      | `%Tuple*(i64)`  | Allocates space for a tuple requiring the given number of bytes, sets the reference count to 1 and the alias count to 0. |
-| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the tuple elements remains unchanged. |
-| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i32)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
-| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i32)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. |
+| __quantum__rt__tuple_copy      | `%Tuple*(%Tuple*, i1)`  | Creates a shallow copy of the tuple if the alias count is larger than 0 or the second argument is `true`. Returns the given tuple pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the tuple elements remains unchanged. If the `%Tuple*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__tuple_update_reference_count   | `void(%Tuple*, i32)` | Adds the given integer value to the reference count for the tuple. Deallocates the tuple if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%Tuple*` is a null pointer. |
+| __quantum__rt__tuple_update_alias_count | `void(%Tuple*, i32)` | Adds the given integer value to the alias count for the tuple. Fails if the count becomes negative. The call should be ignored if the given `%Tuple*` is a null pointer. |
 
 ## Unit
 
@@ -205,7 +214,7 @@ In addition to creating modified copies of arrays, there are two other ways of c
   order than they were in the original array. If the `%Range` is empty, the resulting
   array will be empty.   
   Array slices can be created using the `__quantum__rt__array_slice_1d` or `__quantum__rt__array_slice` runtime functions.
-- An array *projection* is specified by providing a dimension to project on and an `i64`
+- An array *projection* is specified by providing a dimension to project along and an `i64`
   index value to project to. The resulting array has one fewer dimension than the original
   array, and is the segment of the original array with the projected dimension fixed to the
   given index value. Projection is the array access analog to partial application;
@@ -226,12 +235,14 @@ arrays:
 |----------------------------------|--------------------------------------|-------------|
 | __quantum__rt__array_create_1d   | `%Array* void(i32, i64)`             | Creates a new 1-dimensional array. The `i32` is the size of each element in bytes. The `i64` is the length of the array. The bytes of the new array should be set to zero. If the length is zero, the result should be an empty 1-dimensional array. |
 | __quantum__rt__array_copy        | `%Array*(%Array*, i1)`                   | Creates a shallow copy of the array if the alias count is larger than 0 or the second argument is `true`. Returns the given array pointer (the first parameter) otherwise, after increasing its reference count by 1. The reference count of the array elements remains unchanged. |
-| __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in arrays. |
+| __quantum__rt__array_concatenate | `%Array*(%Array*, %Array*)`          | Returns a new array which is the concatenation of the two passed-in one-dimensional arrays. If either array is not one-dimensional or if the array element sizes are not the same, then a runtime failure should occur. |
 | __quantum__rt__array_slice_1d       | `%Array*(%Array*, %Range, i1)`      | Creates and returns an array that is a slice of an existing 1-dimensional array. The slice may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `%Range` specifies the indices that should be the elements of the returned array. The reference count of the elements remains unchanged. |
 | __quantum__rt__array_get_size_1d  | `i64(%Array*)`                  | Returns the length of a 1-dimensional array. |
 | __quantum__rt__array_get_element_ptr_1d | `i8*(%Array*, i64)`           | Returns a pointer to the element of the array at the zero-based index given by the `i64`. |
-| __quantum__rt__array_update_reference_count   | `void(%Array*, i32)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. |
-| __quantum__rt__array_update_alias_count | `void(%Array*, i32)` | Adds the given integer value to the alias count for the array. Fails if either count becomes negative. |
+| __quantum__rt__array_update_reference_count   | `void(%Array*, i32)` | Adds the given integer value to the reference count for the array. Deallocates the array if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%Array*` is a null pointer. |
+| __quantum__rt__array_update_alias_count | `void(%Array*, i32)` | Adds the given integer value to the alias count for the array. Fails if either count becomes negative. The call should be ignored if the given `%Array*` is a null pointer. |
+
+For all of these functions other than `__quantum__rt__array_update_reference_count` or `__quantum__rt__array_update_alias_count`, if an `%Array*` pointer is null, a runtime failure should result.
 
 The following utility functions are provided if multidimensional array support is enabled:
 
@@ -242,11 +253,13 @@ The following utility functions are provided if multidimensional array support i
 | __quantum__rt__array_get_size  | `i64(%Array*, i32)`                  | Returns the length of a dimension of the array. The `i32` is the zero-based dimension to return the length of; it must be smaller than the number of dimensions in the array. |
 | __quantum__rt__array_get_element_ptr | `i8*(%Array*, i64*)`             | Returns a pointer to the indicated element of the array. The `i64*` should point to an array of `i64`s that are the indices for each dimension. |
 | __quantum__rt__array_slice       | `%Array*(%Array*, i32, %Range, i1)`      | Creates and returns an array that is a slice of an existing array. The slice may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the slice is on, and must be smaller than the number of dimensions in the array. The `%Range` specifies the indices in that dimension that should be the elements of the returned array. The reference count of the elements remains unchanged. |
-| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64, i1)`         | Creates and returns an array that is a projection of an existing array. The projection may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the projection is on, and the `i64` specifies the index in that dimension to project. The reference count of all array elements remains unchanged. |
+| __quantum__rt__array_project     | `%Array*(%Array*, i32, i64, i1)`         | Creates and returns an array that is a projection of an existing array. The projection may be accessing the same memory as the given array unless its alias count is larger than 0 or the last argument is `true`. The `i32` indicates which dimension the projection is on, and the `i64` specifies the index in that dimension to project. The reference count of all array elements remains unchanged. If the existing array is one-dimensional then a runtime failure should occur. |
 
 There are special runtime functions defined for allocating or releasing an
 array of qubits.
 See [here](Quantum-Runtime.md#qubits) for these functions.
+
+For all of these functions, if an `%Array*` pointer is null, a runtime failure should occur.
 
 ---
 _[Back to index](README.md)_

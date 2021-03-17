@@ -1,5 +1,11 @@
 # Quantum Instruction Set and Runtime
 
+## Runtime Failure
+
+There are several error conditions that are specified as causing a runtime failure.
+The `quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
+it is documented in the [Classical Runtime](Classical-Runtime.md) section.
+
 ## Standard Operations (Gates)
 
 As recommended by the [LLVM documentation](https://llvm.org/docs/ExtendingLLVM.html),
@@ -15,8 +21,8 @@ We define the following functions for managing qubits:
 |-------------------------------------|-----------------|-------------|
 | __quantum__rt__qubit_allocate       | `%Qubit*()`     | Allocates a single qubit. |
 | __quantum__rt__qubit_allocate_array | `%Array*(i64)`  | Creates an array of the given size and populates it with newly-allocated qubits. |
-| __quantum__rt__qubit_release        | `void(%Qubit*)` | Releases a single qubit. |
-| __quantum__rt__qubit_release_array  | `void(%Array*)` | Releases an array of qubits; each qubit in the array is released, and the array itself is unreferenced. |
+| __quantum__rt__qubit_release        | `void(%Qubit*)` | Releases a single qubit. Passing a null pointer as argument should cause a runtime failure. |
+| __quantum__rt__qubit_release_array  | `void(%Array*)` | Releases an array of qubits; each qubit in the array is released, and the array itself is unreferenced. Passing a null pointer as argument should cause a runtime failure. |
 
 The language-specific compiler may assume that qubits are always allocated in a zero-state. Since individual targets may give different guarantees regarding the qubit state upon allocation, the target-specific compilation phase should insert the code required to ensure that the state of qubits is set appropriately. 
 
