@@ -89,11 +89,8 @@ strings:
 | __quantum__rt__string_get_data    | `i8*(%String*)`      | Returns a pointer to the zero-terminated array of UTF-8 bytes. |
 | __quantum__rt__string_get_length  | `i32(%String*)`      | Returns the length of the byte array that contains the string data. |
 | __quantum__rt__string_update_reference_count   | `void(%String*, i32)` | Adds the given integer value to the reference count for the string. Deallocates the string if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%String*` is a null pointer. |
-| __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. |
-| __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. |
-
-For `concatenate` and `equal`, if a `%String*` parameter is null, a runtime
-failure should occur.
+| __quantum__rt__string_concatenate | `%String*(%String*, %String*)` | Creates a new string that is the concatenation of the two argument strings. If a `%String*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__string_equal       | `i1(%String*, %String*)`       | Returns true if the two strings are equal, false otherwise. If a `%String*` parameter is null, a runtime failure should occur. |
 
 The following utility functions support converting values of other types to strings.
 In every case, the returned string is allocated on the heap; the string can't be
