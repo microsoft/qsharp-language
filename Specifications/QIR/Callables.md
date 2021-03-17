@@ -209,8 +209,9 @@ let g = Adjoint f;
 The following snippet of LLVM code could be generated:
 
 ```LLVM
-%f = call %__quantum__rt__callable_create(
-  [4 x void (%Tuple*, %Tuple*, %Tuple*)*]* @someOp,
+%f = call %Callable* @__quantum__rt__callable_create(
+  [4 x void (%Tuple*, %Tuple*, %Tuple*)*]* @someOp, 
+  [2 x void (%Tuple*, i32)*]* null, 
   %Tuple* null)
 %g = call %__quantum__rt__callable_copy(%f)
 call %__quantum__rt__callable_make_adjoint(%g)
