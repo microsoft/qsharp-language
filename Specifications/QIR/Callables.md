@@ -252,23 +252,23 @@ containing the array of control qubits as the first element and a tuple of
 the remaining arguments as the second tuple.
 
 For instance, if the base callable expects an argument tuple
-`{ %Tuple, i64, %Qubit* }`, then the `Controlled` version expects
-`{ %Tuple, %Array*, { %Tuple, i64, %Qubit* }* }`, and the twice-`Controlled`
+`{ i64, %Qubit* }`, then the `Controlled` version expects
+`{ %Array*, { i64, %Qubit* }* }`, and the twice-`Controlled`
 version expects
-`{ %Tuple, %Array*, { %Tuple, %Array*, { %Tuple, i64, %Qubit* }* }* }`.
+`{ %Array*, { %Array*, { i64, %Qubit* }* }* }`.
 The "ctl" implementation function always expects
-`{ %Tuple, %Array*, { %Tuple, i64, %Qubit* }* }`.
+`{ %Array*, { i64, %Qubit* }* }`.
 Thus, if the controlled count is greater than 1,
 `__quantum__rt__callable_invoke` needs to disassemble the argument tuple,
 concatenate the control qubit arrays, and form the expected argument tuple.
 
 One additional complexity is that the above is modified slightly if the base
-callable expects an argument tuple with exactly one element.
-In this case, the `Controlled` version expects a two-element tuples as
-above, but with the actual base argument as the second element.
-For instance, if the base callable expects `{ %Tuple, %Qubit* }`,
-the singly-`Controlled` version expects `{ %Tuple, %Array*, %Qubit* }`
-rather than `{ %Tuple, %Array*, { %Tuple, %Qubit* }* }`.
+callable expects a single argument.
+In this case, the `Controlled` version expects a two-element tuple as
+above, where the second element is the base argument.
+For instance, if the base callable expects `%Qubit*`,
+the singly-`Controlled` version expects `{ %Array*, %Qubit* }`
+rather than `{ %Array*, { %Qubit* }* }`.
 This means that the second element of the singly-`Controlled` argument tuple
 is not always a pointer to a struct, and in particular may have variable length
 up to the size of a `%Range`.
