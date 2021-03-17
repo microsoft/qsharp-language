@@ -4,8 +4,8 @@ Q# distinguishes between statements and expressions. Q# programs consist of a mi
 
 The following statements are currently available in Q#:
 
-* **Expression Statement**    
-    An expression statement consists of an operation or function call returning `Unit`. The invoked callable needs to satisfy the requirements imposed by the current context. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) for more details.
+* **Call Statement**    
+    A call statement consists of an operation or function call returning `Unit`. The invoked callable needs to satisfy the requirements imposed by the current context. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) for more details.
 
 * **Return Statement**    
     A return statement terminates the execution within the current callable context and returns control to the caller. Any finalizing tasks are executed after the return value is evaluated but before control is returned. See [this section](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/ReturnsAndTermination.md#returns-and-termination) for more details.
