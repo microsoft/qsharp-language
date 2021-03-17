@@ -132,10 +132,6 @@ for a specific callable have a null pointer in that place.
 The table is defined as a global constant whose name is the namespace-qualified
 name of the callable with periods replaced by double underscores, "__".
 
-There is no need to create wrappers or an implementation table for callables
-that are never pointed to.
-That is, **a callable that is never turned into a callable value doesn't need either wrapper functions or an implementation table**.
-
 For the example above, the following would be generated:
 
 ```LLVM
@@ -152,6 +148,10 @@ For the example above, the following would be generated:
         @Some__Namespace__Symbol__ctladj__wrapper
   ]
 ```
+
+There is no need to create an implementation table for callables
+that are never pointed to.
+That is, **a callable that is never turned into a callable value doesn't need an implementation table**.
 
 ## Creating Callable Values
 
