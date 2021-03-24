@@ -1,6 +1,6 @@
 # Introduction
 
-This page defines the Q# API design review process, used to help review API proposals for consistency with the [Q# API Design Principles](https://docs.microsoft.com/quantum/resources/contributing/api-design-principles).
+This page defines the Q# API design review process, used to help review API proposals for consistency with the [Q# API Design Principles](https://docs.microsoft.com/azure/quantum/contributing-api-design-principles).
 
 ## Scope
 
@@ -25,7 +25,7 @@ This document does not include and does not address:
 
 ## Principles
 
-- **Consistency with design principles**: All Q# APIs and library designs produced through this process will be consistent with established [API design principles](https://docs.microsoft.com/quantum/resources/contributing/api-design-principles).
+- **Consistency with design principles**: All Q# APIs and library designs produced through this process will be consistent with established [API design principles](https://docs.microsoft.com/azure/quantum/contributing-api-design-principles).
 
 - **Transparency**: Decisions about Q# APIs and library designs will be traceable to help members of the quantum development community understand motivations and principles behind the Quantum Development Kit product.
 
