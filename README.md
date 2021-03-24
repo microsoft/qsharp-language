@@ -36,7 +36,7 @@ Our goal is to ensure an efficient execution of quantum components, independent 
 5.	**Q# is a living body of work that will grow and evolve over time.**    
 We share a vision of how quantum devices will revolutionize computing in the future. We also believe the quantum stack of the future will go beyond our current imagination. Correspondingly, our vision for Q# will adapt and change as the technology advances.
 
-In addition to these principles, we try to adhere to a general set of good practices, and there are other aspects to consider that factor into a decision whether to pursue a certain feature. Please take a look at other [considerations](https://github.com/microsoft/qsharp-language/blob/main/Guidelines.md) that factor into our decision as well as our [FAQs](https://github.com/microsoft/qsharp-language/blob/main/FAQ.md) and [API design principles](https://docs.microsoft.com/azure/quantum/contributing-api-design-principles) for further questions.
+In addition to these principles, we try to adhere to a general set of good practices, and there are other aspects to consider that factor into a decision whether to pursue a certain feature. Please take a look at other [considerations](https://github.com/microsoft/qsharp-language/blob/main/Guidelines.md) that factor into our decision as well as our [FAQs](https://github.com/microsoft/qsharp-language/blob/main/FAQ.md) and [API design principles](https://docs.microsoft.com/azure/quantum/contributing-api-design-principles) for further questions. 
 
 
 ## Process and Implementation
