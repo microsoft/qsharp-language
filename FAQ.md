@@ -32,11 +32,11 @@ A suggestion may be declined for a variety of reasons, and sometimes we have to 
 
 ### *How can I use Q# and where do I get development tools?*
 
-Q# is part of the [Quantum Development Kit](https://www.microsoft.com/quantum/development-kit) (QDK) shipped by Microsoft. Please take a look at the [documentation](https://docs.microsoft.com/quantum/) for further instructions on what tools are available and how to [install](https://docs.microsoft.com/quantum/quickstarts/) them. 
+Q# is part of the [Quantum Development Kit](https://www.microsoft.com/quantum/development-kit) (QDK) shipped by Microsoft. Please take a look at the [documentation](https://docs.microsoft.com/azure/quantum/) for further instructions on what tools are available and how to [install](https://docs.microsoft.com/azure/quantum/install-overview-qdk/) them. 
 
 ### *Where can I learn more about quantum development and/or quantum computing?*
 
 There are a lot of good resources, and we will list but a few suggestions to help you get started. 
-Our [Microsoft Learn modules](https://docs.microsoft.com/learn/browse/?terms=quantum) are a good place to get started. The popular [Quantum Katas](https://github.com/microsoft/QuantumKatas) offer a hands-on experience consisting programming tasks that cover topics which progress from very simple to quite challenging. Further explanations can be found in our [tutorials](https://github.com/microsoft/QuantumKatas#list-of-tutorials-) and [docs](https://docs.microsoft.com/quantum/overview). 
+Our [Microsoft Learn modules](https://docs.microsoft.com/learn/browse/?terms=quantum) are a good place to get started. The popular [Quantum Katas](https://github.com/microsoft/QuantumKatas) offer a hands-on experience consisting programming tasks that cover topics which progress from very simple to quite challenging. Further explanations can be found in our [tutorials](https://github.com/microsoft/QuantumKatas#list-of-tutorials-) and [docs](https://docs.microsoft.com/azure/quantum/overview-azure-quantum). 
 
 
