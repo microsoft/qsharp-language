@@ -1,17 +1,17 @@
 # Specialization Declarations
 
-### *Discussion*
->As explained in the section about [callable declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations), there is currently no reason to explicitly declare specializations for functions. This may change in the future if we decide to introduce type classes and/or type-related specializations. For now, this section applies to operations and elaborates on how to declare the necessary specializations to support certain functors. 
+As explained in the section about [callable declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations), there is currently no reason to explicitly declare specializations for functions. This topic applies to operations and elaborates on how to declare the necessary specializations to support certain functors. 
 
-It is quite a common problem in quantum computing to require the adjoint of a given transformation. Many quantum algorithms require both an operation and its adjoint in order to perform a computation.
-Q# is able to employ symbolic computation to automatically generate the corresponding adjoint implementation for a particular body implementation. That generation is possible even for implementations that freely mix classical and quantum computations. There are, however, a couple of restrictions that apply in that case. For instance, auto-generation is not supported for performance reasons if the implementation makes use of mutable variables. Moreover, each operation called within the body for which to generate the corresponding adjoint needs to support the `Adjoint` functor itself. 
+It is quite a common problem in quantum computing to require the adjoint of a given transformation. Many quantum algorithms require both an operation and its adjoint  to perform a computation.
+Q# employs symbolic computation that can automatically generate the corresponding adjoint implementation for a particular body implementation. This generation is possible even for implementations that freely mix classical and quantum computations. There are, however, some restrictions that apply in this case. For example, auto-generation is not supported for performance reasons if the implementation makes use of mutable variables. Moreover, each operation called within the body  generates the corresponding adjoint needs to support the `Adjoint` functor itself. 
 
-Even though measurements cannot easily be undone in the multi-qubit case, it is possible to combine measurements in such a way that the applied transformation is unitary. In that case this means that even though the body implementation contains measurements which each one on its own doesn't support the `Adjoint` functor, the body in its entirety is adjointable. Nonetheless, auto-generating the adjoint implementation will fail in this case. For that reason, it is possible to manually specify that implementation. 
-The compiler automatically generates optimized implementations for common patterns such as, e.g., [conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations). 
+Even though you cannot easily undo measurements in the multi-qubit case, it is possible to combine measurements so that the applied transformation is unitary. In this case, it means that, even though the body implementation contains measurements that on their own don't support the `Adjoint` functor, the body in its entirety is adjointable. Nonetheless, auto-generating the adjoint implementation will fail in this case. For this reason, it is possible to manually specify the implementation. 
+The compiler automatically generates optimized implementations for common patterns such as [conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations). 
 Nonetheless, an explicit specialization may be desirable to define a more optimized implementation by hand. It is possible to specify any one implementation and any number of implementations explicitly.
-The correctness of such a manually specified implementation is not verified by the compiler. 
 
-The declaration for an operation `SWAP` in the example below, that exchanges the state of two qubits `q1` and `q2`, declares an explicit specialization for its adjoint version and its controlled version. While the implementations for `Adjoint SWAP` and `Controlled SWAP` are thus user defined, the compiler still needs to generate the implementation for the combination of both functors (`Controlled Adjoint SWAP`, which is the same as `Adjoint Controlled SWAP`). 
+> [!NOTE]The correctness of such a manually specified implementation is not verified by the compiler. 
+
+In the following example, the declaration for an operation `SWAP`, which exchanges the state of two qubits `q1` and `q2`, declares an explicit specialization for its adjoint version and its controlled version. While the implementations for `Adjoint SWAP` and `Controlled SWAP` are thus user-defined, the compiler still needs to generate the implementation for the combination of both functors (`Controlled Adjoint SWAP`, which is the same as `Adjoint Controlled SWAP`). 
 
 ```qsharp
     operation SWAP (q1 : Qubit, q2 : Qubit) : Unit
@@ -38,27 +38,32 @@ The declaration for an operation `SWAP` in the example below, that exchanges the
 
 ### Auto-generation directives
 
-When determining how to generate a certain specialization, the compiler will prioritize user defined implementations, meaning if an adjoint specialization is user defined and a controlled specialization is auto-generated, then the controlled adjoint specialization is generated based on the user defined adjoint, and vice versa. In this case, both specializations are user defined. 
-As the auto-generation of an adjoint implementation is subject to more limitation, the controlled adjoint specialization in this case will default to generating the controlled specialization of the explicitly defined implementation of the adjoint specialization. 
+When determining how to generate a particular specialization, the compiler prioritizes user-defined implementations. This means that if an adjoint specialization is user-defined and a controlled specialization is auto-generated, then the controlled adjoint specialization is generated based on the user-defined adjoint and vice versa. In this case, both specializations are user-defined. 
+As the auto-generation of an adjoint implementation is subject to more limitation, the controlled adjoint specialization defaults to generating the controlled specialization of the explicitly defined implementation of the adjoint specialization. 
 
-In the case of the `SWAP` implementation, the better option, however, is to adjoint the controlled specialization to avoid unnecessarily conditioning the execution of the first and the last `CNOT` on the state of the control qubits. 
+In the case of the `SWAP` implementation, the better option is to adjoint the controlled specialization to avoid unnecessarily conditioning the execution of the first and the last `CNOT` on the state of the control qubits. 
 Adding an explicit declaration for the controlled adjoint version that specifies a suitable *generation directive* forces the compiler to generate the controlled adjoint specialization based on the manually specified implementation of the controlled version instead. Such an explicit declaration of a specialization that is to be generated by the compiler takes the form 
+
 ```qsharp
     controlled adjoint invert;
 ```
-and is to be inserted inside the declaration of `SWAP`.
-Inserting the line 
+
+and is inserted inside the declaration of `SWAP`.
+On the other hand, inserting the line 
+
 ```qsharp
     controlled adjoint distribute;
 ```
-on the other hand would force the compiler to generate the specialization based the defined (or generated) adjoint specialization. See [this proposal](https://github.com/microsoft/qsharp-language/blob/main/Implemented/partial-specialization-inference.md) for more details.
 
-For the operation SWAP, there is a better option. The operation `SWAP` is *self adjoint*, i.e. it is its own inverse; the user defined implementation of the adjoint merely calls the body of `SWAP`. This can be expressed with the directive
+forces the compiler to generate the specialization based on the defined (or generated) adjoint specialization. See this [partial specialization inference](https://github.com/microsoft/qsharp-language/blob/main/Implemented/partial-specialization-inference.md)  proposal for more details.
+
+For the operation `SWAP`, there is a better option. `SWAP` is *self-adjoint*, that is, it is its own inverse; the -defined implementation of the adjoint merely calls the body of `SWAP`. You express this with the directive
+
 ```qsharp
     adjoint self;
 ```
 
-Declaring the adjoint specialization in that manner will ensure that also the controlled adjoint specialization that is automatically inserted by the compiler will merely invoke the controlled specialization. 
+Declaring the adjoint specialization in this manner ensures that the controlled adjoint specialization that is automatically inserted by the compiler merely invokes the controlled specialization. 
 
 The following generation directives exist and are valid:
 
@@ -69,9 +74,9 @@ The following generation directives exist and are valid:
 | `controlled` specialization: | `distribute`  |
 | `controlled adjoint` specialization: | `self`, `invert`, `distribute` |
 
-That all generation directives are valid for a controlled adjoint specialization is not a coincidence; as long as functors commute, the set of valid generation directives for implementing the specialization for a combination of functors is always the union of the set of valid generators for each individual one. 
+That all generation directives are valid for a controlled adjoint specialization is not a coincidence; as long as functors commute, the set of valid generation directives for implementing the specialization for a combination of functors is always the union of the set of valid generators for each one. 
 
-In addition to the above listed directives, the directive `auto` is always valid; it indicates that the compiler should automatically pick a suitable generation directive. 
+In addition to the previously listed directives, the directive `auto` is always valid; it indicates that the compiler should automatically pick a suitable generation directive. 
 The declaration
 
 ```qsharp
@@ -82,20 +87,19 @@ The declaration
         controlled adjoint auto;
     }
 ```
+
 is equivalent to
+
 ```qsharp
     operation DoNothing() : Unit 
     is Adj + Ctl { }
 ```
-The annotation `is Adj + Ctl` here specifies the [*operation characteristics*](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operation-characteristics), which contain the information about what functors a certain operation supports. 
 
-While for readability's sake it is recommended that each operation is annotated with a complete description of its characteristics, the compiler will automatically insert or complete the annotation based on explicitly declared specializations. Conversely, the compiler also generates specializations that haven't been declared explicitly but need to exist based on the annotated characteristics. We say these specializations have been *implicitly declared* by the given annotation. The compiler automatically generates the necessary specializations if it is able to, picking a suitable directive.
-Q# thus supports inference of both operation characteristics and existing specializations based on (partial) annotations as well as explicitly defined specializations.
+The annotation `is Adj + Ctl` in this example specifies the [*operation characteristics*](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operation-characteristics), which contain the information about what functors a particular operation supports. 
 
-In a sense, specializations are similar to individual overloads for the same callable, with the caveat that certain restrictions to what overloads can be declared apply.  
+While for readability's sake, it is recommended that you annotate each operation with a complete description of its characteristics, the compiler automatically inserts or completes the annotation based on explicitly declared specializations. Conversely, the compiler also generates specializations that haven't been declared explicitly but need to exist based on the annotated characteristics. We say the given annotation has *implicitly declared* these specializations. The compiler automatically generates the necessary specializations if it can, picking a suitable directive.
+Q# thus supports inference of both operation characteristics and existing specializations based on (partial) annotations and explicitly defined specializations.
 
-### *Discussion*
->It is conceivable to allow declaring specializations outside the original callable declaration in a future version of Q#. This, however, still requires significant design and engineering work.
-
+In a sense, specializations are similar to individual overloads for the same callable, with the caveat that certain restrictions apply to which overloads you can declare.  
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
