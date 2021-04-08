@@ -45,7 +45,7 @@ The operation maps |lhs⟩|rhs⟩|res⟩ → |lhs⟩|rhs⟩|res ⊕ (lhs>rhs)⟩
 A temporarily used storage qubit `anc` is automatically cleaned up before it is released at the end of the operation; the statements in the `within`-block are applied first, followed by the statements in the `apply`-block, and finally the automatically generated adjoint of the `within`-block is applied to clean up the temporarily used helper qubit `anc`. 
 
 ### *Discussion*
->Returning control from within the `apply`-block is not yet supported. It should be possible to support this in the future. The expected behavior in this case is to evaluate the returned value before the adjoint of the `within`-block is executed, any qubits going out of scope are released (`anc` in this case), and the control is returned to the callee. In short, the statement should behave similarly to a `try-finally` pattern in C#. However, the necessary functionality is not yet implemented. 
+>Returning control from within the `apply`-block is not yet supported. It should be possible to support this in the future. The expected behavior in this case is to evaluate the returned value before the adjoint of the `within`-block is executed, any qubits going out of scope are released (`anc` in this case), and the control is returned to the caller. In short, the statement should behave similarly to a `try-finally` pattern in C#. However, the necessary functionality is not yet implemented. 
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
