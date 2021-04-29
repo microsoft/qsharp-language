@@ -2,7 +2,7 @@
 
 Comments begin with two forward slashes (`//`) and continue until the end of line.
 Such end-of-line comments may appear anywhere in the source code.
-Q# does not current support block comments.
+Q# does not currently support block comments.
 
 ## Documentation Comments
 
