@@ -25,7 +25,7 @@ namespace Microsoft.Quantum.Samples {
 }
 ```
 
-The example also uses two `open` directives, which import all types and callables declared in the opened namespace. They can then be referred to by their unqualified name unless that name conflicts with a declaration in the namespace block or another opened namespace. 
+The example uses an `open` directive to import all types and callables declared in the Microsoft.Quantum.Artithmetic namespace. They can then be referred to by their unqualified name unless that name conflicts with a declaration in the namespace block or another opened namespace. 
 
 To avoid typing out the full name while still distinguishing where certain elements come from, you can define an alternative name, or *alias*, which is usually shorter, for a particular namespace. In this case, all types and callables declared in that namespace can be qualified by the defined short name instead. 
 In the previous example, this is the case for the `Microsoft.Quantum.Arrays` namespace. A function `IndexRange` declared in `Microsoft.Quantum.Arrays`, for example, can then be used via `Array.IndexRange` within that namespace block.

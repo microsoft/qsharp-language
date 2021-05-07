@@ -6,7 +6,7 @@ Q# supports two kinds of callables: operations and functions. The topic [Operati
 
 > [!NOTE] Such type-parametrized implementations may not use any language constructs that rely on particular properties of the type arguments; there is currently no way to express type constraints in Q#, or to define specialized implementations for particular type arguments. However, it is conceivable to introduce a suitable mechanism, similar to type classes in Haskell, for example, to allow for more expressiveness in the future. 
 
-## Callables and functors
+## Callables and Functors
 
 Q# allows specialized implementations for specific purposes; for example, operations in Q# can implicitly or explicitly define support for certain *functors*, and along with it the specialized implementations to invoke when a specific functor is applied to that callable. 
 
