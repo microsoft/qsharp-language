@@ -1,6 +1,6 @@
 # Functor Application
 
-Functors are factories that allow to access particular specialization implementations of a callable. Q# currently supports two functors; the `Adjoint` and the `Controlled` function, both of which can be applied to operations that provide the necessary specialization(s). 
+Functors are factories that allow to access particular specialization implementations of a callable. Q# currently supports two functors; the `Adjoint` and the `Controlled`, both of which can be applied to operations that provide the necessary specialization(s). 
 
 The `Controlled` and `Adjoint` functors commute; if `ApplyUnitary` is an operation that supports both functors, then there is no difference between `Controlled Adjoint ApplyUnitary` and `Adjoint Controlled ApplyUnitary`.
 Both have the same type and upon invocation execute the implementation defined for the `controlled adjoint` [specialization](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations).
