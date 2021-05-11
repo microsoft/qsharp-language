@@ -28,7 +28,7 @@ for (index, measured) in results {
 }
 ```
 
-## Target-Specific Restrictions
+## Target-specific restrictions
 
 Because there are no `break` or `continue` primitives in Q#, the length of the loop is known as soon as the iteration is known. As such, `for` loops can be run on all quantum hardware.
 

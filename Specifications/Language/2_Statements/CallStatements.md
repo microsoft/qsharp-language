@@ -1,4 +1,4 @@
-# Call Statements
+# Call statements
 
 Call statements are an important part of any programming language. Operation and function calls, much like [partial applications](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application), can be used as an expression anywhere as long as the returned value is of a suitable type. However, they can also be used as statements if they return `Unit`. 
 
@@ -21,7 +21,8 @@ With callables being first-class values, call statements are a generic way of su
 
 For the compiler to auto-generate the specializations to support particular [functors](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application), it usually requires that the called operations support those functors as well. The two exceptions are calls in outer blocks of [conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations), which always need to support the `Adjoint` functor but never need to support the `Controlled` functor, and self-adjoint operations, which support the `Adjoint` functor without imposing any additional requirements on the individual calls. 
 
-> [!NOTE] Future development of more sophisticated [generation directives](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#auto-generation-directives) may allow the compiler to further relax this requirement. 
+> [!NOTE] 
+> Future development of more sophisticated [generation directives](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#auto-generation-directives) may allow the compiler to further relax this requirement. 
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

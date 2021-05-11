@@ -7,7 +7,8 @@ In this regard, Q# models the quantum computer as a qubit heap.
 Rather than supporting separate *allocate* and *release* statements for quantum memory, 
 Q# supports quantum memory allocation in the form of *block statements*, where the memory is accessible only within the scope of that block statement. Attempting to access that memory after the statement terminates results in a runtime exception.
 
-> [!NOTE]Ensuring that qubits cannot escape their scope facilitates reasoning about quantum dependencies and how the quantum parts of the computation can impact the continuation of the program. 
+> [!NOTE]
+> Ensuring that qubits cannot escape their scope facilitates reasoning about quantum dependencies and how the quantum parts of the computation can impact the continuation of the program. 
 >An additional benefit of this scope limitation is that qubits cannot be allocated and never released, which avoids a class of common bugs in manual memory management languages without the overhead of qubit garbage collection.
 
 Q# has two statements, `use` and `borrow`, that instantiate qubit values, arrays of qubits, or any combination thereof. You can only use these statements within operations. They gather the instantiated qubit values, bind them to the variables specified in the statement, and then run a block of statements.
@@ -80,8 +81,8 @@ The borrower commits to leaving the qubits in the same state as when they were b
 The `borrow` statement retrieves in-use qubits that are guaranteed not to be used by the program from the time the qubit is bound until the last use of that qubit.
 If there aren't enough qubits available to borrow, then qubits are allocated from and returned to the heap like a `use` statement.
 
-> [!NOTE]Among the known use-cases of dirty qubits are implementations of multi-controlled CNOT gates that require very few qubits, and implementations of incrementers.
->This [paper on factoring with qubits](https://arxiv.org/abs/1611.07995) provides an example of an algorithm that utilizes borrowed qubits.
+> [!NOTE]
+> Among the known use-cases of dirty qubits are implementations of multi-controlled CNOT gates that require very few qubits, and implementations of incrementers. This [paper on factoring with qubits](https://arxiv.org/abs/1611.07995) provides an example of an algorithm that utilizes borrowed qubits.
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

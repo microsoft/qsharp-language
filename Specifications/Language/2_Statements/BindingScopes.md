@@ -2,7 +2,7 @@
 
 In general, symbol bindings in Q# become inoperative at the end of the statement block they occur in. However, there are some exceptions to this rule.
 
-## Visibility of Local Variables
+## Visibility of local variables
 
 
 | Type | Visibility |
