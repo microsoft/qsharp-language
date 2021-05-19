@@ -1,12 +1,13 @@
-# Callable Declarations
+# Callable declarations
 
 Callable declarations, or *callables*, are declared at a global scope and publicly visible by default; that is, they can be used anywhere in the same project and in a project that references the assembly in which they are declared. [Access modifiers](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/6_AccessModifiers.md#access-modifiers) allow you to restrict their visibility to the current assembly only, such that implementation details can be changed later on without breaking code that relies on a specific library. 
 
 Q# supports two kinds of callables: operations and functions. The topic [Operations and Functions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/OperationsAndFunctions.md#operations-and-functions) elaborates on the distinction between the two. Q# also supports defining *templates*; for example, type-parameterized implementations for a certain callable. For more information, see [Type parameterizations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations). 
 
-> [!NOTE] Such type-parametrized implementations may not use any language constructs that rely on particular properties of the type arguments; there is currently no way to express type constraints in Q#, or to define specialized implementations for particular type arguments. However, it is conceivable to introduce a suitable mechanism, similar to type classes in Haskell, for example, to allow for more expressiveness in the future. 
+> [!NOTE] 
+> Such type-parametrized implementations may not use any language constructs that rely on particular properties of the type arguments; there is currently no way to express type constraints in Q#, or to define specialized implementations for particular type arguments. However, it is conceivable to introduce a suitable mechanism, similar to type classes in Haskell, for example, to allow for more expressiveness in the future. 
 
-## Callables and Functors
+## Callables and functors
 
 Q# allows specialized implementations for specific purposes; for example, operations in Q# can implicitly or explicitly define support for certain *functors*, and along with it the specialized implementations to invoke when a specific functor is applied to that callable. 
 

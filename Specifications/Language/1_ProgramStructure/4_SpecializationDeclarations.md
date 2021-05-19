@@ -1,4 +1,4 @@
-# Specialization Declarations
+# Specialization declarations
 
 As explained in the section about [callable declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations), there is currently no reason to explicitly declare specializations for functions. This topic applies to operations and elaborates on how to declare the necessary specializations to support certain functors. 
 
@@ -9,7 +9,8 @@ Even though one cannot easily undo measurements in the multi-qubit case, it is p
 The compiler automatically generates optimized implementations for common patterns such as [conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations). 
 Nonetheless, an explicit specialization may be desirable to define a more optimized implementation by hand. It is possible to specify any one implementation and any number of implementations explicitly.
 
-> [!NOTE]The correctness of such a manually specified implementation is not verified by the compiler. 
+> [!NOTE]
+> The correctness of such a manually specified implementation is not verified by the compiler. 
 
 In the following example, the declaration for an operation `SWAP`, which exchanges the state of two qubits `q1` and `q2`, declares an explicit specialization for its adjoint version and its controlled version. While the implementations for `Adjoint SWAP` and `Controlled SWAP` are thus user-defined, the compiler still needs to generate the implementation for the combination of both functors (`Controlled Adjoint SWAP`, which is the same as `Adjoint Controlled SWAP`). 
 
@@ -36,7 +37,7 @@ In the following example, the declaration for an operation `SWAP`, which exchang
 
 ```
 
-### Auto-generation directives
+## Auto-generation directives
 
 When determining how to generate a particular specialization, the compiler prioritizes user-defined implementations. This means that if an adjoint specialization is user-defined and a controlled specialization is auto-generated, then the controlled adjoint specialization is generated based on the user-defined adjoint and vice versa. In this case, both specializations are user-defined. 
 As the auto-generation of an adjoint implementation is subject to more limitation, the controlled adjoint specialization defaults to generating the controlled specialization of the explicitly defined implementation of the adjoint specialization. 
