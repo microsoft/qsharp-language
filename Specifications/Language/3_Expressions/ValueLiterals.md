@@ -109,7 +109,7 @@ See also the section on [contextual expressions](https://github.com/microsoft/qs
 An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions, separated by commas, enclosed in `[` and `]`, e.g. `[1,2,3]`.
 All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance), which will be the item type of the array.
 
-Arrays or arbitrary length, and in particular empty arrays, may be created using a new array expression. 
+Arrays of arbitrary length, and in particular empty arrays, may be created using a new array expression. 
 Such an expression is of the form `new <ItemType>[expr]`, where `expr` can be any expression of type `Int` and `<ItemType>` is to be replace by the type of the array items.   
 
 For instance, `new Int[10]` creates an array of integers with containing ten items. 
