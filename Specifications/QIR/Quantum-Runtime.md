@@ -13,6 +13,13 @@ we do not define new LLVM instructions for quantum operations.
 Instead, we expect each target to define a set of quantum operations as LLVM functions
 that may be used by language-specific compilers.
 
+We do specify a set of reserved [quantum operation names](Reserved-Operations.md).
+While targets are not required to implement any or all of these operations,
+if they define an operation with a reserved name that operation's effect is required
+to match the specified action.
+This ensures that quantum code that uses, say, a `CNOT` operation can rely on the
+effect of that operation being consistent across targets that define it.
+
 ## Qubits
 
 We define the following functions for managing qubits:
