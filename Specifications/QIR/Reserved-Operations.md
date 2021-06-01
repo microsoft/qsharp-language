@@ -9,7 +9,7 @@ effect of that operation being consistent across targets that define it.
 
 | Operation Name | Subroutine Name | Description | Matrix |
 |----------------|-----------------|-------------|--------|
-| I | __quantum__qis__I | The identity operation | ![formula](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D0%261%5C%5C1%260%5Cend%7Bbmatrix%7D) |
+| I | __quantum__qis__I | The identity operation | ![formula](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D1%260%5C%5C0%261%5Cend%7Bbmatrix%7D) |
 | X | __quantum__qis__X | The Pauli X operation | ![formula](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D0%261%5C%5C1%260%5Cend%7Bbmatrix%7D) |
 
 ---
