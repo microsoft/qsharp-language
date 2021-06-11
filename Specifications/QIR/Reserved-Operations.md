@@ -8,29 +8,34 @@ This ensures that quantum code that uses, say, a `CNOT` operation can rely on th
 effect of that operation being consistent across targets that define it.
 
 In this table, operation names should be considered case-insensitive.
-That is, if a target implements `Rx` instead of `RX`, its effect still must match that
+That is, if a target implements `RX` instead of `Rx`, its effect still must match that
 defined in the table.
 
-The matrices in this table take some time to load.
+The matrices in this tables below take some time to load.
 Please be patient!
 
-| Operation Name | Subroutine Name | Description | Matrix |
-|----------------|-----------------|-------------|--------|
-| I | __quantum__qis__I | The identity operation | ![formula](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+1+%5Cend%7Bbmatrix%7D) |
-| X | __quantum__qis__X | The Pauli X operation | ![formula](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+1+%5C%5C+1+%26+0+%5Cend%7Bbmatrix%7D) |
-| Y | | | |
-| Z | | | |
-| H | | | |
-| S | | | |
-| T | | | |
-| RX | | | |
-| RY | | | |
-| RZ | | | |
-| CNOT | | | |
-| CCNOT or Toffoli | | | |
-| SWAP | | | |
-| M or MZ | | | |
-| RESET | | | |
+| Operation Name | QIR Implementation | Description | Notes |
+|----------------|-----------------|-------------|-------|
+| H | [`__quantum__qis__h__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L127) | The [Hadamard operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.h) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Other Single-Qubit Cliffords](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#other-single-qubit-cliffords) |
+| T | [`__quantum__qis__t__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L224) | The [T operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.t) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Rotations](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#rotations). ![T = \begin{bmatrix} 1 & 0 \\ 0 & e^{i\pi/4} \\ \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 0 & \frac{1}{\sqrt{2}}+ \frac{1}{\sqrt{2}}i \\ \end{bmatrix}](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+T+%3D+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7Bi%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D+%3D+%0A%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%2B+%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7Di+%5C%5C+%5Cend%7Bbmatrix%7D) |
+
+| Operation Name | QIR Implementation | Description | Notes |
+|----------------|-----------------|-------------|-------|
+| Tdg | [`__quantum__qis__t__adj`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L230) | The adjoint [T operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.t) or T Dagger (![T^\dagger](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+T%5E%5Cdagger)) | ![T^\dagger = \begin{bmatrix} 1 & 0 \\ 0 & e^{-i\pi/4} \\ \end{bmatrix}](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+T%5E%5Cdagger+%3D+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7B-i%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) (see ![T^\dagger](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+T%5E%5Cdagger) [here](https://en.wikipedia.org/wiki/Clifford_gates#Building_a_universal_set_of_quantum_gates)) |
+| S | [`__quantum__qis__s__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L198) | The [S operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.s) (Phase Gate)  | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Other Single-Qubit Cliffords](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#other-single-qubit-cliffords). ![S = T^2](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+S+%3D+T%5E2) |
+| Sdg | [`__quantum__qis__s__adj`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L204) | The adjoint [S operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.s) or S Dagger (![S^\dagger](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+S%5E%5Cdagger)) | ![S^\dagger = ZS = S^3](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+S%5E%5Cdagger+%3D+ZS+%3D+S%5E3) |
+| Z | [`__quantum__qis__z__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L276) | The [Z operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.z) (Parity Gate) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Pauli Operators](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#pauli-operators), ![Z = T^4 = S^2 = HXH](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+Z+%3D+T%5E4+%3D+S%5E2+%3D+HXH) |
+| X | [`__quantum__qis__x__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L250) | The [X operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.x) (NOT Gate) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Pauli Operators](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#pauli-operators), ![X = HT^4H = HZH](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+X+%3D+HT%5E4H+%3D+HZH) |
+| Y | [`__quantum__qis__y__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L263) | The [Y operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.y) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Pauli Operators](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#pauli-operators), ![Y = T^2HT^4HT^6 = SXZS = SXS^\dagger](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+Y+%3D+T%5E2HT%5E4HT%5E6+%3D+SXZS+%3D+SXS%5E%5Cdagger) |
+| Rx | [`__quantum__qis__r__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L148), see [R](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.r) | The [Rx operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.rx) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Rotations](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#rotations) |
+| Ry | [`__quantum__qis__r__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L148), see [R](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.r) | The [Ry operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.ry) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Rotations](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#rotations) |
+| Rz | [`__quantum__qis__r__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L148), see [R](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.r) | The [Rz operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.rz) | [Single-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-the-qubit#single-qubit-operations), [Rotations](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#rotations) |
+| Cx, CNOT | [`__quantum__qis__x__ctl`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L256) | The controlled [X operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.x), aka [CNOT operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.cnot) | [Two-qubit operations](https://docs.microsoft.com/en-us/azure/quantum/concepts-multiple-qubits), [Multi-Qubit Operations](https://docs.microsoft.com/en-us/azure/quantum/user-guide/libraries/standard/prelude#multi-qubit-operations) |
+| Cz | [`__quantum__qis__z__ctl`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L282) | The controlled [Z operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.z) |  |
+| Reset |  | The [Reset operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.reset) |  |
+| Measure | [`__quantum__qis__measure__body`](https://github.com/microsoft/qsharp-runtime/blob/5a379fd1c72ea19cb50d6acc501c6896894e96ac/src/Qir/Runtime/lib/QSharpCore/qsharp-core-qis.ll#L140) | The [Measure operation](https://docs.microsoft.com/en-us/qsharp/api/qsharp/microsoft.quantum.intrinsic.measure) |  |
+
+To be continued.
 
 ---
 _[Back to index](README.md)_
