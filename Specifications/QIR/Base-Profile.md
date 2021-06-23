@@ -20,8 +20,8 @@ The QIR representing a quantum program consists of a single file containing the 
 
 The LLVM IR file contains the following:
 
-- Declarations of the functions that make up the quantum instruction set. All of these functions start with a `__quantum__qis` prefix.
-- Declarations of the functions that make up the QIR runtime. All of these functions start with a `__quantum__qir` prefix.
+- Declarations of the functions that make up the quantum instruction set. All of these functions start with a `quantum_qis_` prefix.
+- Declarations of the functions that make up the QIR runtime. All of these functions start with a `quantum_qir_` prefix.
 - Declarations of the `%Qubit`, `%Result`, and ... types.
 - Declarations of the `%ResultZero` and `%ResultOne` constants. The values of these constants are not actually meaningful, although the names are.
 - Definition of the [entry point function](#entry-point).
@@ -29,26 +29,47 @@ The LLVM IR file contains the following:
 
 ### Entry Point
 
-The entry point will be a void LLVM function named `main`.
-
+The entry point will be a void LLVM function named `qmain`.
 
 In LLVM, this looks like:
 
 ```llvm
-define void main() {
+define void qmain() {
 entry:
     ; Function implementation goes here
 }
 ```
 
-### Classical Registers
+### Classical Register
 
-All classical bits get mapped to a single global variable named `results`.
-Each classical register becomes a global variable.
- to a fixed-size
-array of bytes (LLVM type `[n x i8]`, for some fixed integer `n`)
+All classical bits get mapped to a single global variable named `qresults`.
+The QIR generator should compute the total required number of classical bits,
+round that up to a full byte, and define `qresults` as a global byte array of the
+required size (or larger).
 
-// define write_bit and read_bit functions that take a bit position
+For example, if between 17 and 24 bits are required, the following LLVM code would appear:
+
+```llvm
+@qresults = global [3 x i8]
+```
+
+The classical bits for all classical registers are stored together in the
+`qresults` global.
+The QIR generator is responsible for mapping bits in specific classical registers
+to bits within the `qresults` global.
+
+All classical bits are accessed using the `quantum_qir_read_qresult` and 
+`quantum_qir_write_qresult` functions, which will be defined in the QIR file as:
+
+```llvm
+define i1 quantum_qir_read_qresult(i32 bitNumber) {
+    ; code to go here
+}
+
+define void quantum_qir_write_qresult(i32 bitNumber, i1 value) {
+    ; code to go here
+}
+```
 
 ### Device Qubits
 
@@ -65,9 +86,30 @@ the following LLVM code would be used:
     %qubit3 = inttoptr i32 3 to %Qubit addrspace(2)*
 ```
 
+The only operations that may be performed on qubits are initializing them
+and passing them to functions.
+In particular, even though qubits are represented as pointers, it is not
+legal to dereference a qubit.
+
 ### Custom Functions (Subroutines)
 
-//
+Custom functions can take integer, double, or qubit parameters.
+All custom functions are void; results are communicated through the
+global classical register.
+
+Custom functions may not be directly or indirectly recursive.
+
+### Control Flow
+
+The only forms of control flow allowed in the basic profile are:
+
+- Branching based on the contents of a classical bit; and
+- Calling a subroutine.
+
+Branching based on Boolean combinations of classical bits should be
+expressed by multiple branches; for example,
+
+// example of branching on a[0] && a[1]
 
 ### Quantum Instruction Set
 
@@ -131,5 +173,4 @@ measure q[2] -> c1[4];
 
 // More precise specification; e.g.:
 
-- Only built-in functions can take qubit parameters.
 - ...
