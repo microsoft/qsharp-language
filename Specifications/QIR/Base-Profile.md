@@ -71,12 +71,39 @@ All classical bits are accessed using the `quantum_qir_read_qresult` and
 `quantum_qir_write_qresult` functions, which will be defined in the QIR file as:
 
 ```llvm
-define i1 quantum_qir_read_qresult(i32 bitNumber) {
-    ; code to go here
+define i1 @quantum_qir_read_qresult(i32 bit_number) {
+    ; If the quantum_results variable is a single byte, then the following line may be
+    ; optimized away as byte_index will always be 0.
+    %byte_index = udiv i32 %bit_number, 8
+    %bit_index = urem i32 %bit_number, 8
+    ; In the following line, "3" should get replaced by the actual number of bytes in the
+    ; quantum_results variable.
+    %byte_ptr = getelemptr [3 x i8], [3 x i8]* @quantum_results, i64 0, i32 %byte_index
+    %orig_byte = load i8, i8* %byte_ptr
+    %mask = shl i8 1, %bit_index
+    %bit = and i8 %orig_byte, %mask
+    %result = icmp ne i8 %bit, 0
+    ret %result
 }
 
-define void quantum_qir_write_qresult(i32 bitNumber, i1 value) {
-    ; code to go here
+define void @quantum_qir_write_qresult(i32 bit_number, i1 value) {
+    %byte_index = udiv i32 %bit_number, 8
+    %bit_index = urem i32 %bit_number, 8
+    %byte_ptr = getelemptr [3 x i8], [3 x i8]* @quantum_results, i64 0, i32 %byte_index
+    %orig_byte = load i8, i8* %byte_ptr
+    %mask = shl i8 1, %bit_index
+    br i1 %value, label %set, label %clear
+set:
+    %new_byte_1 = or i8 %mask, %orig_byte
+    br label %update
+clear:
+    %not_mask = xor i8 %mask, 255
+    %new_byte_2 = and i8 %not_mask, %orig_byte
+    br label %update
+update:
+    %new_byte = phi i8 [ %new_byte_1, %set ], [ %new_byte_2, %clear ]
+    store i8 %new_byte, i8* %byte_ptr
+    ret void
 }
 ```
 
@@ -121,7 +148,7 @@ The entry point will be a void LLVM function named `quantum_main`.
 In LLVM, this looks like:
 
 ```llvm
-define void quantum_main() {
+define void @quantum_main() {
 entry:
     ; Function implementation goes here
 }
@@ -163,9 +190,50 @@ continue:
     ; Function continues here
 ```
 
+### LLVM Restrictions
+
+The following LLVM IR instructions are allowed in the base profile:
+
+- `ret`
+- `br`
+- `call`
+
+Other LLVM IR instructions are not allowed.
+In particular, no arithmetic instructions or memory accesses are allowed.
+
 ## Sample Programs
 
-// In OpenQASM and in QIR
+### [OpenQASM 2.0 QFT](https://github.com/Qiskit/openqasm/blob/OpenQASM2.x/examples/qft.qasm)
+
+In OpenQASM:
+
+```qasm
+// quantum Fourier transform
+OPENQASM 2.0;
+include "qelib1.inc";
+qreg q[4];
+creg c[4];
+x q[0]; 
+x q[2];
+barrier q;
+h q[0];
+cu1(pi/2) q[1],q[0];
+h q[1];
+cu1(pi/4) q[2],q[0];
+cu1(pi/2) q[2],q[1];
+h q[2];
+cu1(pi/8) q[3],q[0];
+cu1(pi/4) q[3],q[1];
+cu1(pi/2) q[3],q[2];
+h q[3];
+measure q -> c;
+```
+
+In the QIR base profile:
+
+```llvm
+@quantum_results = global [1 x i8]
+```
 
 ### Current Format (to be removed)
 
