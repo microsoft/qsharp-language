@@ -107,6 +107,9 @@ update:
 }
 ```
 
+If either or both of these functions aren't used in the program,
+the QIR generator may omit them from the LLVM file.
+
 ### Quantum Instruction Set
 
 All quantum instructions are represented by LLVM external functions.
@@ -125,21 +128,21 @@ any of the following quantum instructions must match the specified definition:
 
 | Operation Name | LLVM Function Declaration  | Description | Matrix |
 |----------------|----------------------------|-------------|--------|
-| Cx, CNOT | `quantum_qis_x_ctl (%Qubit addrspace(2) *control, %Qubit addrspace(2) *target)` | CNOT or controlled X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+1+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Cz | `quantum_qis_z_ctl (%Qubit addrspace(2) *control, %Qubit addrspace(2) *target)` | Controlled Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+0+%26+0+%26+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| H | `quantum_qis_h (%Qubit addrspace(2) *q)` | Hadamard | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%5Cbegin%7Bbmatrix%7D+1+%26+1+%5C%5C+1+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Mz or Measure | `quantum_qis_mz (%Qubit addrspace(2) *q, i32 result_offset)` | Measure a qubit along the the Pauli Z axis |
-| Reset | `quantum_qis_reset (%Qubit addrspace(2) *q)` | Prepare a qubit in the \|0⟩ state |
-| Rx | `quantum_qis_rx (%Qubit addrspace(2) *q, double theta)` | Rotate a qubit around the Pauli X axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Ry | `quantum_qis_ry (%Qubit addrspace(2) *q, double theta)` | Rotate a qubit around the Pauli Y axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Rz | `quantum_qis_rz (%Qubit addrspace(2) *q, double theta)` | Rotate a qubit around the Pauli Z axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+e%5E%7B-i+%5Ctheta%2F2%7D+%26+0+%5C%5C+0+%26+e%5E%7Bi+%5Ctheta%2F2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) | |
-| S | `quantum_qis_s (%Qubit addrspace(2) *q)` | S (phase gate)  | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+i+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| S&dagger; | `quantum_qis_s_adj (%Qubit addrspace(2) *q)` | The adjoint of S | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-i+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| T | `quantum_qis_t (%Qubit addrspace(2) *q)` | T | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7Bi%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| T&dagger; | `quantum_qis_t_adj (%Qubit addrspace(2) *q)` | The adjoint of T operation | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7B-i%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| X | `quantum_qis_x (%Qubit addrspace(2) *q)` | Pauli X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+1+%5C%5C+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Y | `quantum_qis_y (%Qubit addrspace(2) *q)` | Pauli Y | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+-i+%5C%5C+i+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Z | `quantum_qis_z (%Qubit addrspace(2) *q)` | Pauli Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Cx, CNOT | `quantum_qis_cnot (%Qubit addrspace(2)* control, %Qubit addrspace(2)* target)` | CNOT or singly-controlled X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+1+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Cz | `quantum_qis_cz (%Qubit addrspace(2)* control, %Qubit addrspace(2)* target)` | Singly-controlled Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+0+%26+0+%26+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| H | `quantum_qis_h (%Qubit addrspace(2)* q)` | Hadamard | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%5Cbegin%7Bbmatrix%7D+1+%26+1+%5C%5C+1+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Mz or Measure | `quantum_qis_mz (%Qubit addrspace(2)* q, i32 result_offset)` | Measure a qubit along the the Pauli Z axis |
+| Reset | `quantum_qis_reset (%Qubit addrspace(2)* q)` | Prepare a qubit in the \|0⟩ state |
+| Rx | `quantum_qis_rx (%Qubit addrspace(2)* q, double theta)` | Rotate a qubit around the Pauli X axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Ry | `quantum_qis_ry (%Qubit addrspace(2)* q, double theta)` | Rotate a qubit around the Pauli Y axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Rz | `quantum_qis_rz (%Qubit addrspace(2)* q, double theta)` | Rotate a qubit around the Pauli Z axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+e%5E%7B-i+%5Ctheta%2F2%7D+%26+0+%5C%5C+0+%26+e%5E%7Bi+%5Ctheta%2F2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) | |
+| S | `quantum_qis_s (%Qubit addrspace(2)* q)` | S (phase gate)  | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+i+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| S&dagger; | `quantum_qis_s_adj (%Qubit addrspace(2)* q)` | The adjoint of S | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-i+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| T | `quantum_qis_t (%Qubit addrspace(2)* q)` | T | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7Bi%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| T&dagger; | `quantum_qis_t_adj (%Qubit addrspace(2)* q)` | The adjoint of T operation | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7B-i%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| X | `quantum_qis_x (%Qubit addrspace(2)* q)` | Pauli X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+1+%5C%5C+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Y | `quantum_qis_y (%Qubit addrspace(2)* q)` | Pauli Y | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+-i+%5C%5C+i+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Z | `quantum_qis_z (%Qubit addrspace(2)* q)` | Pauli Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
 
 ### Entry Point
 
@@ -197,11 +200,14 @@ The following LLVM IR instructions are allowed in the base profile:
 - `ret`
 - `br`
 - `call`
+- Floating-point arithmetic (`fadd`, `fsub`, `fmul`, and `fdiv`), but one parameter must be a constant literal.
 
 Other LLVM IR instructions are not allowed.
-In particular, no arithmetic instructions or memory accesses are allowed.
+In particular, no integer arithmetic, comparisons, or memory accesses are allowed, and therefore no loops.
 
 ## Sample Programs
+
+In all of the samples, we have dropped the QIR declarations that are not used in the base profile.
 
 ### [OpenQASM 2.0 QFT](https://github.com/Qiskit/openqasm/blob/OpenQASM2.x/examples/qft.qasm)
 
@@ -233,6 +239,52 @@ In the QIR base profile:
 
 ```llvm
 @quantum_results = global [1 x i8]
+
+; Since neither read_qresult nor write_qresult are used in this example,
+; the QIR generator is free to not include their implementations.
+
+; Definition of the cu1 function from [qelib1.inc](https://github.com/Qiskit/openqasm/blob/OpenQASM2.x/examples/qelib1.inc)
+define void @cu1(double %theta, %Qubit addrspace(2)* %a, %Qubit addrspace(2)* %b) {
+entry:
+    %theta_2 = fdiv double %theta, 2.0
+    call void quantum_qis_rz(%theta_2, %a)
+    call void quantum_qis_cnot(%a, %b);
+    %neg_theta_2 = fsub double 0.0, %theta_2
+    call void quantum_qis_rz(%neg_theta_2, %a)
+    call void quantum_qis_cnot(%a, %b);
+    call void quantum_qis_rz(%theta_2, %b)
+}
+
+; The main OpenQASM program
+define void @quantum_main() {
+entry:
+    %q0 = inttoptr i32 0 to %Qubit addrspace(2)*
+    call void @quantum_qis_x(%Qubit addrspace(2)* %q0)
+    %q2 = inttoptr i32 0 to %Qubit addrspace(2)*
+    call void @quantum_qis_x(%Qubit addrspace(2)* %q2)
+    ; We assume barrier is a quantum instruction, rather than using the LLVM fence instruction
+    call void @quantum_qis_barrier()
+    call void @quantum_qis_h(%Qubit addrspace(2)* %q0)
+
+    %q1 = inttoptr i32 1 to %Qubit addrspace(2)*
+    call void @cu1(1.5707963267948966192313216916398, %q1, %q0)
+    call void @quantum_qis_h(%Qubit addrspace(2)* %q1)
+
+    call void @cu1(0.78539816339744830961566084581988, %q2, %q0)
+    call void @cu1(1.5707963267948966192313216916398, %q2, %q1)
+    call void @quantum_qis_h(%Qubit addrspace(2)* %q2)
+
+    %q3 = inttoptr i32 3 to %Qubit addrspace(2)*
+    call void @cu1(0.39269908169872415480783042290994, %q3, %q0)
+    call void @cu1(0.78539816339744830961566084581988, %q3, %q1)
+    call void @cu1(1.5707963267948966192313216916398, %q3, %q2)
+    call void @quantum_qis_h(%Qubit addrspace(2)* %q3)
+
+    call void quantum_qis_mz(%Qubit addrspace(2)* %q0, 0)
+    call void quantum_qis_mz(%Qubit addrspace(2)* %q1, 1)
+    call void quantum_qis_mz(%Qubit addrspace(2)* %q2, 2)
+    call void quantum_qis_mz(%Qubit addrspace(2)* %q3, 3)
+}
 ```
 
 ### Current Format (to be removed)
