@@ -2,36 +2,31 @@
 
 ## Introduction
 
-This QIR profile is intended to work well with current NISQ hardware with limited classical capabilities.
-It should be suitable for a wide variety of hardware using a variety of programming languages.
+This QIR profile is intended for quantum hardware that supports limited control flow but not classical computations otherwise.
 
 ## Description
 
 ### Program Structure
 
-The QIR representing a quantum program consists of a single file containing the LLVM bitcode. The human readable equivalent of that bitcode can be obtained using standard LLVM tools, and consists of a header
-
-The LLVM IR file contains the following, not necessarily in this precise order:
+The QIR representing a quantum program consists of a single file containing the LLVM bitcode. The human readable equivalent of that bitcode can be obtained using standard LLVM tools. The LLVM IR file contains the following, not necessarily in this precise order:
 
 - The declaration of the [`%Qubit` data type](#qubits).
-- The definitions of the `quantum_results` global and the `quantum_qir_read_qresult` and `quantum_qir_write_qresult` functions; see [below](#classical-bits).
+- The definitions of the `measurement_results` global and the `quantum_qir_read_result` and `quantum_qir_write_result` functions; see [below](#classical-bits).
 - The declarations of the functions that make up the quantum instruction set. All of these functions start with a `quantum_qis_` prefix.
 - The definition of the [entry point function](#entry-point).
-- The definitions of [custom functions (subroutines)](#custom-functions), if any.
-- The declarations and definitions of various data types and globals for full QIR compatibility, such as the `%Result`, `%Array`, and `%Tuple` types and the `%ResultZero` and `%ResultOne` globals. These may be ignored for this profile.
+- The definitions of [custom functions (subroutines)](#custom-functions).
 
 ### Data Types
 
 Integers and double-precision floating point numbers are available as in full QIR;
 however, computations using these numeric types are not available.
 
-The QIR result, Pauli, range, string, big integer, array, tuple, and callable types
-should not be used in the basic profile.
+The QIR result, Pauli, range, string, big integer, array, tuple, and callable types should not be used in the basic profile.
 
 ### Qubits
 
 Qubits are represented as pointers to the opaque `%Qubit` type.
-In the basic profile, device qubits are not allocated and released;
+In the basic control flow profile, device qubits are not allocated and released;
 instead, it is assumed that qubits are identified by an integer
 that is the qubit pointer value in "qubit address space".
 We conventionally reserve LLVM address space 2 for qubits.
@@ -50,34 +45,27 @@ legal to dereference a qubit.
 
 ### Classical Bits
 
-All classical bits get mapped to a single global variable named `quantum_results`.
-The QIR generator should compute the total required number of classical bits,
-round that up to a full byte, and define `quantum_results` as a global byte array of the
-required size (or larger).
+The QIR should define storage space for measurements in the form of a byte array that can be accessed via the global variable `measurement_results`.
+How that space is used is up to the QIR generator; it may opt to populate some of the bits with classical data representing e.g. constant bit values in the program.
 
-For example, if between 17 and 24 bits are required, the following LLVM code would appear:
+For example, if between 17 and 24 bits are required by a program, the following LLVM code would appear:
 
 ```llvm
-@quantum_results = global [3 x i8]
+@measurement_results = global [3 x i8]
 ```
 
-The classical bits for all classical registers are stored together in the
-`quantum_results` global.
-The QIR generator is responsible for mapping bits in specific classical registers
-to bits within the `quantum_results` global.
-
-All classical bits are accessed using the `quantum_qir_read_qresult` and 
-`quantum_qir_write_qresult` functions, which will be defined in the QIR file as:
+All classical bits are accessed using the `quantum_qir_read_result` and 
+`quantum_qir_write_result` functions, which will be defined in the QIR file as:
 
 ```llvm
-define i1 @quantum_qir_read_qresult(i32 bit_number) {
-    ; If the quantum_results variable is a single byte, then the following line may be
+define i1 @quantum_qir_read_result(i32 bit_number) {
+    ; If the measurement_results variable is a single byte, then the following line may be
     ; optimized away as byte_index will always be 0.
     %byte_index = udiv i32 %bit_number, 8
     %bit_index = urem i32 %bit_number, 8
     ; In the following line, "3" should get replaced by the actual number of bytes in the
-    ; quantum_results variable.
-    %byte_ptr = getelemptr [3 x i8], [3 x i8]* @quantum_results, i64 0, i32 %byte_index
+    ; measurement_results variable.
+    %byte_ptr = getelemptr [3 x i8], [3 x i8]* @measurement_results, i64 0, i32 %byte_index
     %orig_byte = load i8, i8* %byte_ptr
     %mask = shl i8 1, %bit_index
     %bit = and i8 %orig_byte, %mask
@@ -85,10 +73,10 @@ define i1 @quantum_qir_read_qresult(i32 bit_number) {
     ret %result
 }
 
-define void @quantum_qir_write_qresult(i32 bit_number, i1 value) {
+define void @quantum_qir_write_result(i32 bit_number, i1 value) {
     %byte_index = udiv i32 %bit_number, 8
     %bit_index = urem i32 %bit_number, 8
-    %byte_ptr = getelemptr [3 x i8], [3 x i8]* @quantum_results, i64 0, i32 %byte_index
+    %byte_ptr = getelemptr [3 x i8], [3 x i8]* @measurement_results, i64 0, i32 %byte_index
     %orig_byte = load i8, i8* %byte_ptr
     %mask = shl i8 1, %bit_index
     br i1 %value, label %set, label %clear
@@ -115,8 +103,8 @@ All quantum instructions are represented by LLVM external functions.
 Quantum instructions may take qubits, doubles, or integers as parameters,
 and should all have no return; that is, they should be void.
 
-Measurements should take an offset into the `quantum_results` global as a parameter.
-The measurement result should be stored into the appropriate bit in `quantum_results`.
+Measurements should take an offset into the `measurement_results` global as a parameter.
+The measurement result should be stored into the appropriate bit in `measurement_results`.
 
 The LLVM functions that implement the quantum instruction set should all have
 names that start with `quantum_qis_`.
@@ -181,13 +169,13 @@ expressed by a sequence of branches; for example, to execute a block of
 code only if both classical bits 2 and 4 are 1, use LLVM code such as:
 
 ```llvm
-    %0 = call i1 @quantum_qir_read_qresult(i32 2)
+    %0 = call i1 @quantum_qir_read_result(i32 2)
     br i1 %0, label %block1, label %continue
 block1:
-    %1 = call i1 @quantum_qir_read_qresult(i32 4)
+    %1 = call i1 @quantum_qir_read_result(i32 4)
     br i1 %0, label %true-block, label %continue
 true-block:
-    ; Code to execute when quantum_results[2] && quantum_results[4] == 1
+    ; Code to execute when measurement_results[2] && measurement_results[4] == 1
     br label %continue
 continue:
     ; Function continues here
@@ -200,7 +188,6 @@ The following LLVM IR instructions are allowed in the base profile:
 - `ret`
 - `br`
 - `call`
-- Floating-point arithmetic (`fadd`, `fsub`, `fmul`, and `fdiv`), but one argument must be a constant literal.
 
 Other LLVM IR instructions are not allowed.
 In particular, no integer arithmetic, comparisons, or memory accesses are allowed, and therefore no loops.
