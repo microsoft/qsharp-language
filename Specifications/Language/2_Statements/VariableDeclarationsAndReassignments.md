@@ -1,7 +1,7 @@
 # Variable declarations and reassignments
 
 Values can be bound to symbols using the `let` and `mutable` statements. 
-These types of bindings provide a convenient way to access a value via the defined handle. 
+These kinds of bindings provide a convenient way to access a value via the defined handle. 
 Despite the misleading terminology borrowed from other languages, handles  declared on a local scope and containing values are called *variables*.
 This may be misleading because `let` statements define *single-assignment handles*, which are handles that remain bound to the same value for the duration of their validity. Variables that can be re-bound to different values at different points in the code need to be explicitly declared as such, and are specified using the `mutable` statement. 
 
@@ -43,7 +43,7 @@ In particular, this is true for arrays and array items.
 In contrast to popular classical languages where arrays often are reference types, arrays in Q# - like all types - are value types and always immutable; that is, you cannot modify them after initialization.
 Changing the values accessed by array-type variables thus requires explicitly constructing a new array and reassigning it to the same symbol. For more information, see [Immutability](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/Immutability.md) and [Copy and update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions).
 
-## Evaluate and reassign statements
+## Evaluate-and-reassign statements
 
 Statements of the form `set intValue += 1;` are common in many other languages. Here, `intValue` needs to be a mutably bound variable of type `Int`.
 Such statements provide a convenient way of concatenation if the right-hand side consists of applying a binary operator and the result is rebound to the left argument of the operator. 
@@ -67,7 +67,7 @@ for i in 1 .. 2 .. 10 {
 }
 ```
 
-Similar statements exist for a wide range of [operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators). The `set` keyword in the previous example must be followed by a single mutable variable, which is inserted as the left-most sub-expression by the compiler.
+Similar statements exist for a wide range of [operators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#operators). The `set` keyword in such evaluate-and-reassign statements must be followed by a single mutable variable, which is inserted as the left-most sub-expression by the compiler.
 Such evaluate-and-reassign statements exist for all operators where the type of the left-most sub-expression matches the expression type. 
 More precisely, they are available for binary logical and bitwise operators including right and left shift, arithmetic expressions including exponentiation and modulus, and concatenations, as well as [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions).
 

@@ -5,11 +5,8 @@ Instead, a program allocates and releases qubits, or quantum memory, as it goes.
 In this regard, Q# models the quantum computer as a qubit heap.
 
 Rather than supporting separate *allocate* and *release* statements for quantum memory, 
-Q# supports quantum memory allocation in the form of *block statements*, where the memory is accessible only within the scope of that block statement. Attempting to access that memory after the statement terminates results in a runtime exception.
+Q# supports quantum memory allocation in the form of *block statements*, where the memory is accessible only within the scope of that block statement. The statement block can be implicitly defined when allocating qubits for the duration of the current scope, as described in more detail in the sections about the `use` and `borrow` statements. Attempting to access the allocated qubits after the statement terminates results in a runtime exception.
 
-> [!NOTE]
-> Ensuring that qubits cannot escape their scope facilitates reasoning about quantum dependencies and how the quantum parts of the computation can impact the continuation of the program. 
->An additional benefit of this scope limitation is that qubits cannot be allocated and never released, which avoids a class of common bugs in manual memory management languages without the overhead of qubit garbage collection.
 
 Q# has two statements, `use` and `borrow`, that instantiate qubit values, arrays of qubits, or any combination thereof. You can only use these statements within operations. They gather the instantiated qubit values, bind them to the variables specified in the statement, and then run a block of statements.
 At the end of the block, the bound variables go out of scope and are no longer defined.
@@ -50,8 +47,8 @@ The `use` statement allocates the qubits from the quantum processor's free qubit
 
 ## Borrow statement
 
-The `borrow` statement creates qubits available for temporary use and do not need to be in a specific state.
-Some quantum algorithms can use qubits without relying on their exact state or even if they are unentangled with the rest of the system. That is, they require extra qubits temporarily, but they can ensure that those qubits are returned exactly to their original state, independent of which state that was. 
+The `borrow` statement grants access to qubits that are already allocated but not currently in use. These qubits can be in an arbitrary state and need to be in the same state again when the borrow statement terminates.
+Some quantum algorithms can use qubits without relying on their exact state, and without requiring that they are unentangled with the rest of the system. That is, they require extra qubits temporarily, but they can ensure that those qubits are returned exactly to their original state, independent of which state that was. 
 
 If there are qubits that are in use but not touched during the run of a subroutine, those qubits can be borrowed for use by such an algorithm instead of allocating additional quantum memory. 
 Borrowing instead of allocating can significantly reduce the overall quantum memory requirements of an algorithm and is a quantum example of a typical space-time tradeoff. 

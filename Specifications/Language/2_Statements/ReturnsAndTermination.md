@@ -1,7 +1,7 @@
 # Returns and termination
 
 There are two statements available that conclude the execution of the current subroutine or the program; the `return` and the `fail` statements.
-For callables that return any type other than `Unit`, each run path needs to terminate in a `return` or a `fail` statement
+For callables that return any type other than `Unit`, each possible execution path needs to terminate in a `return` or a `fail` statement.
 
 ## Return statement
 
@@ -25,7 +25,7 @@ return ();
 
 ## Fail statement
 
-The `fail` statement, on the other hand, ends the computation entirely. It corresponds to an unexpected fatal error that happens as part of the normal run process. 
+The `fail` statement, on the other hand, ends the computation entirely. It corresponds to a fatal error that aborts the program. 
 
 It consists of the keyword `fail`, followed by an expression of type `String` and a terminating semicolon.
 The `String` value provides information about the encountered failure.

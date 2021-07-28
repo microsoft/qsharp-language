@@ -1,8 +1,8 @@
 # Conditional loops
 
-Like most classical programming languages, Q# supports loops that break based on a condition: loops for which the number of iterations is unknown and may vary from run to run. Since the instruction sequence is unknown at compile-time, you need to handle these conditional loops with particular care in a quantum runtime. 
+Like most classical programming languages, Q# supports loops that break based on a condition: loops for which the number of iterations is unknown and may vary from run to run. Since the instruction sequence is unknown at compile-time, the compiler handles these conditional loops in a particular way in a quantum runtime. 
 
-As long as the condition does not depend on quantum measurements, conditional loops can be handled without issues by doing a just-in-time compilation before sending the instruction sequence to the quantum processor. 
+As long as the condition does not depend on quantum measurements, conditional loops are processed with a just-in-time compilation before sending the instruction sequence to the quantum processor. 
 In particular, using conditional loops within functions is unproblematic since code within functions can always run on conventional (non-quantum) hardware. 
 Q#, therefore, supports to use of traditional `while` loops within functions. 
 
@@ -44,7 +44,7 @@ The compiler treats all parts of the `repeat` statement (both blocks and the con
 
 Loops that break based on a condition are challenging to process on quantum hardware if the condition depends on measurement outcomes since the length of the instruction sequence to run is not known ahead of time. 
 
-Despite their common presence in particular classes of quantum algorithms, current hardware does not yet provide native support for these kinds of control flow constructs. Running on quantum hardware can potentially be supported in the future by imposing a maximum number of iterations.
+Despite their common presence in particular classes of quantum algorithms, current hardware does not yet provide native support for these kinds of control flow constructs. Running on quantum hardware can potentially be supported in the future by imposing a maximum number of iterations, or as additional hardware support becomes available.
 
 ## While loop
 
