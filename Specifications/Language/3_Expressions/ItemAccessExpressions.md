@@ -42,10 +42,10 @@ The item access operator (`::`) retrieves named items. For example, it can be us
 ```qsharp
 newtype TwoBitString = (bit1: String, bit2: String);
 
-operation Str(bits: TwoBitString):String {
-    let b1= bits::bit1;
+operation Str(bits : TwoBitString) : String {
+    let b1 = bits::bit1;
     let b2 = bits::bit2;
-    return b1+b2;
+    return b1 + b2;
 }
 ```
 While named items can be accessed by their name or via deconstruction, anonymous items can only be accessed by the latter. Since deconstruction relies on all of the contained items, the usage anonymous items is discourage when these items need to be accessed outside the compilation unit in which the type is defined. 
