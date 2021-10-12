@@ -12,10 +12,10 @@ Additional modifiers and combinators are listed further below and bind tighter t
 | --- | --- | --- | --- | --- |
 | [copy-and-update operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) | `w/` `<-` | ternary | left  | 1  |
 | [range operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#range-literals) | `..` | infix | left | 2 |
-| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md#conditional-expressions) | `?` `&vert;` | ternary | right | 5 |
+| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md#conditional-expressions) | <code>?&vert;</code> | ternary | right | 5 |
 | [logical OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `or` | infix | left | 10 |
 | [logical AND](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `and` | infix | left | 11 |
-| [bitwise OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `&vert;&vert;&vert;` | infix | left | 12 |
+| [bitwise OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | <code>&vert;&vert;&vert;</code> | infix | left | 12 |
 | [bitwise XOR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `^^^` | infix | left | 13 |
 | [bitwise AND](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `&&&` | infix | left | 14 |
 | [equality](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#equality-comparison) | `==` | infix | left | 20 |
