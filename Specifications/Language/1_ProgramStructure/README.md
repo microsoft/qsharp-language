@@ -71,7 +71,7 @@ The corresponding project file to build the application is the following:
 
 The first line specifies the version number of the software development kit used to build the application, and line 4 indicates that the project is executable opposed to e.g. a library that cannot be invoked from the command line.
 
-To run the application, you will need to install [.NET Core](https://docs.microsoft.com/dotnet/core/install/). Then put both files in the same folder and run `dotnet build <projectFile>`, where `<projectFile>` is to be replaced with the path to the project file. 
+To run the application, you will need to install [.NET Core](/dotnet/core/install/). Then put both files in the same folder and run `dotnet build <projectFile>`, where `<projectFile>` is to be replaced with the path to the project file. 
 
 To run the program after having built it, run the command
 
