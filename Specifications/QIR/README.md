@@ -63,4 +63,4 @@ Please file a pull request to this page if you'd like your project listed.
 1. [Quantum Runtime](Quantum-Runtime.md)
 1. [Code Generation](Code-Generation.md)
 1. [Profiles](Profiles.md)
-2. [Appendis: Library Reference](Library-Reference.md)
+2. [Appendix: Library Reference](Library-Reference.md)
