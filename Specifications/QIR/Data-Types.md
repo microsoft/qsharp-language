@@ -6,24 +6,6 @@ There are several error conditions that are specified as causing a runtime failu
 The `quantum__rt__fail` function is the mechanism to use to cause a runtime failure;
 it is documented in the [Classical Runtime](Classical-Runtime.md) section.
 
-## Opaque Types
-
-Representing certain types as pointers to opaque LLVM structure types allows each target to provide a structure definition appropriate for that target.
-
-In addition to arrays and callable values, the types `%Qubit*` that represents qubits and `%Result*` that represents measurement results are both opaque within QIR. 
-
-The following utility functions are provided by the classical runtime for use with
-values of type `%Result*`:
-
-| Function                          | Signature                | Description |
-|-----------------------------------|--------------------------|-------------|
-| __quantum__rt__result_get_zero    | `%Result*()`             | Returns a constant representing a measurement result zero.
-| __quantum__rt__result_get_one     | `%Result*()`             | Returns a constant representing a measurement result one.
-| __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. If a `%Result*` parameter is null, a runtime failure should occur. |
-| __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%Result*` is a null pointer. |
-
-See the corresponding sections for more information on [arrays](#Arrays), [callables values](Callables.md), and [qubits](Quantum-Runtime.md#qubits). 
-
 ## Simple Types
 
 The simple types are those whose values are fixed-size and do not contain pointers.
@@ -71,6 +53,48 @@ The following global constants are defined for use with `%Pauli` type:
 @PauliY = constant i2 -1 ; The value 3 (binary 11) is displayed as a 2-bit signed value of -1 (binary 11).
 @PauliZ = constant i2 -2 ; The value 2 (binary 10) is displayed as a 2-bit signed value of -2 (binary 10).
 ```
+
+## Measurement Results
+
+Measurement results are represented as pointers to an opaque LLVM structure type, `%Result`.
+This allows each target implementation to provide a structure definition appropriate for that target.
+In particular, this makes it easier for implementations where measurement results might come back asynchronously.
+
+The following utility functions are provided by the classical runtime for use with
+values of type `%Result*`:
+
+| Function                          | Signature                | Description |
+|-----------------------------------|--------------------------|-------------|
+| __quantum__rt__result_get_zero    | `%Result*()`             | Returns a constant representing a measurement result zero.
+| __quantum__rt__result_get_one     | `%Result*()`             | Returns a constant representing a measurement result one.
+| __quantum__rt__result_equal       | `i1(%Result*, %Result*)` | Returns true if the two results are the same, and false if they are different. If a `%Result*` parameter is null, a runtime failure should occur. |
+| __quantum__rt__result_update_reference_count   | `void(%Result*, i32)` | Adds the given integer value to the reference count for the result. Deallocates the result if the reference count becomes 0. The behavior is undefined if the reference count becomes negative. The call should be ignored if the given `%Result*` is a null pointer. |
+
+## Qubits
+
+Qubits are represented as pointers to an opaque LLVM structure type, `%Qubit`.
+This is done so that qubit values may be distinugished from other value types.
+It is not expected that qubit values actually be valid memory addresses,
+and neither user code nor runtime code should ever attempt to dereference a qubit value.
+We conventionally reserve LLVM address space 2 for qubits.
+
+A qubit value should be thought of as an integer identifier that has been bit-cast
+into a special type so that it cen be distinguished from normal integers.
+The only operation that may be performed on a qubit value is to pass it to a function.
+
+Qubits may be managed either statically or dynamically.
+Static qubits have target-specific identifiers known at compile time, while dynamic
+qubits are managed by the quantum runtime.
+
+A statc qubit value may be created using the LLVM `inttoptr` instruction.
+For instance, to initialize a value that identifies device qubit 3,
+the following LLVM code would be used:
+
+```llvm
+    %qubit3 = inttoptr i32 3 to %Qubit addrspace(2)*
+```
+
+Dynamic qubits are managed using the [quantum runtime](Quantum-Runtime.md) functions.
 
 ## Strings
 
