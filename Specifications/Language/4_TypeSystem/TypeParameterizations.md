@@ -2,7 +2,7 @@
 
 Q# supports type-parameterized operations and functions. The Q# standard libraries make heavy use of type-parametrized callables to provide a host of useful abstractions, including functions like `Mapped` and `Fold` that are familiar from functional languages.
 
-To motivate the concept of type parameterizations, consider the example of the function `Mapped`, which applies a given function to each value in an array and returns a new array with the computed values. This functionality can be perfectly described without specifying the item types of the input and output array. Since the exact types do not change the implementation of the function `Mapped`, it makes sense that it should be possible to define this implementation for arbitrary item types; we want to define a *factory* or *template* that, given the concrete types for the items in the input and output array, returns the corresponding function implementation. This notion is formalized in the form of type parameters.
+To motivate the concept of type parameterizations, consider the example of the function `Mapped`, which applies a given function to each value in an array and returns a new array with the computed values. This functionality can be perfectly described without specifying the item types of the input and output arrays. Since the exact types do not change the implementation of the function `Mapped`, it makes sense that it should be possible to define this implementation for arbitrary item types; we want to define a *factory* or *template* that, given the concrete types for the items in the input and output array, returns the corresponding function implementation. This notion is formalized in the form of type parameters.
 
 ## Concretization
 
