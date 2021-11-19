@@ -2,6 +2,28 @@
 
 This draft specification defines an intermediate representation for compiled quantum 
 computations.
+
+## Motivation
+
+There are many languages and circuit-building packages that are used today to
+program quantum computers.
+These languages have some similarities, but vary significantly in their syntax
+and semantics.
+
+Similarly, there are many different types of quantum computers available already, 
+and more types being developed.
+Different computers have different instruction sets, different timings, and
+different classical capabilities.
+
+It is very useful to have a single representation that can express programs from 
+all of the different quantum languages and can be converted into code for any
+of the different quantum computers.
+This allows language developers to write one compiler and quantum computer developers
+to write one code generator, while still allowing all languages to run on all computers.
+This is a well-established pattern in classical compilation.
+
+## Principles
+
 The intent is that a quantum computation written in any language can be
 compiled into this representation as a common intermediate _lingua franca_.
 The intermediate representation would then be an input to a code generation
