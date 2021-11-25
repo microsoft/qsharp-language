@@ -90,7 +90,7 @@ For instance, to initialize a value that identifies device qubit 3,
 the following LLVM code would be used:
 
 ```llvm
-    %qubit3 = inttoptr i32 3 to %Qubit addrspace(2)*
+    %qubit3 = inttoptr i32 3 to %Qubit*
 ```
 
 Dynamic qubits are managed using the [quantum runtime](Quantum-Runtime.md) functions.
