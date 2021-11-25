@@ -76,7 +76,6 @@ Qubits are represented as pointers to an opaque LLVM structure type, `%Qubit`.
 This is done so that qubit values may be distinugished from other value types.
 It is not expected that qubit values actually be valid memory addresses,
 and neither user code nor runtime code should ever attempt to dereference a qubit value.
-We conventionally reserve LLVM address space 2 for qubits.
 
 A qubit value should be thought of as an integer identifier that has been bit-cast
 into a special type so that it cen be distinguished from normal integers.
