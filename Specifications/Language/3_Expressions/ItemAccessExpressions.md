@@ -37,7 +37,7 @@ The contained items can be accessed via their name or by deconstruction, illustr
     let im = complex::Imaginary;  // item access via name
 ```
 
-The item access operator (`::`) retrieves named items. For example, it can be used to unpack a newtype operation parameter in a neater way than with individual item extraction: 
+The item access operator (`::`) retrieves named items, as illustrated by the following example:
 
 ```qsharp
 newtype TwoStrings = (str1: String, str2: String);
