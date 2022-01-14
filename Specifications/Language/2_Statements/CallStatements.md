@@ -17,7 +17,7 @@ call statements in a sense are the generic way of supporting patterns that aren'
     }
 ```
 
-`ApplyWithInputTransformation` takes a function `fn`, an operation `op`, and an `input` value as argument, applies the give function to the input, before invoking the given operation with the value returned form the function.
+`ApplyWithInputTransformation` takes a function `fn`, an operation `op`, and an `input` value as argument, applies the given function to the input, before invoking the given operation with the value returned from the function.
 
 For the compiler to be able to auto-generate the specializations to support particular [functors](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application) usually requires that the called operations support those functors as well. The exception are calls in outer blocks of [conjugations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/Conjugations.md#conjugations), which always need to support the `Adjoint` functor but never need to support the `Controlled` functor, and self-adjoint operations, which support the `Adjoint` functor without imposing any additional requirements on the individual calls. 
 
