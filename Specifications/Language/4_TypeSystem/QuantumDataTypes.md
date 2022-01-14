@@ -5,7 +5,7 @@ This topic describes the `Qubit` type, along with two other types that are somew
 ## Qubit
 
 Q# treats qubits as opaque items that can be passed to both functions and operations, but can only be interacted with by passing them to instructions that are native to the targeted quantum processor. Such instructions are always defined in the form of operations, since their intent is to modify the quantum state. 
-The limitation that functions cannot modify the quantum state, despite the fact that qubits can be passed as input arguments, is enforced by the restriction that functions can only call other functions, and cannot call operations.
+The restriction that functions cannot modify the quantum state, despite the fact that qubits can be passed as input arguments, is enforced by the requiring that functions can only call other functions, and cannot call operations.
 
 The Q# libraries are compiled against a standard set of intrinsic operations, meaning operations which have no definition for their implementation within the language. 
 Upon targeting, the implementations that express them in terms of the instructions that are native to the execution target are linked in by the compiler. 
