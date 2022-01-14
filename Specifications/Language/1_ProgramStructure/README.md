@@ -37,7 +37,7 @@ namespace Microsoft.Quantum.Samples {
         }
 
         let amps = Array.Mapped(ComplexPolar(_,0.), vector);
-        using (qs = Qubit[n]) {
+        use qs = Qubit[n] {
             let reg = LittleEndian(qs);
 
             PrepareArbitraryState(amps, reg); 
