@@ -84,9 +84,11 @@ Colon : ':';
 Comma : ',';
 DollarQuote : '$"' -> pushMode(INTERPOLATED);
 Dot : '.';
+DoubleAmpersand : '&&';
 DoubleColon : '::';
 DoubleDot : '..';
 DoubleEqual : '==';
+DoublePipe : '||';
 DoubleQuote : '"' -> pushMode(STRING);
 Ellipsis : '...';
 Equal : '=';
@@ -145,7 +147,7 @@ DoubleLiteral
     | '.' Digit+ Exponent?
     | Digit+ '.' Exponent
     // "n.." should be interpreted as an integer range, not the double "n." followed by a dot.
-    | Digit+ '.' { InputStream.LA(1) != '.' }?
+    | Digit+ '.' { _input.LA(1) != '.' }?
     | Digit+ Exponent
     ;
 
