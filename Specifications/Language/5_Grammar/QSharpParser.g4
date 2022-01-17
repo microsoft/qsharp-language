@@ -228,7 +228,7 @@ expression
     | expression 'w/' expression '<-' expression
     ;
 
-sizeKey : Identifier {_localctx.getText() == "size"}?;
+sizeKey : Identifier {_localctx.getText().equals("size")}?;
 
 boolLiteral
     : 'false'
