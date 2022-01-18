@@ -148,8 +148,7 @@ statement
     | 'until' expression (';' | 'fixup' scope)
     | 'within' scope
     | 'apply' scope
-    | ('use' | 'using') (qubitBinding | '(' qubitBinding ')') (';' | scope)
-    | ('borrow' | 'borrowing') (qubitBinding | '(' qubitBinding ')') (';' | scope)
+    | ('use' | 'using' | 'borrow' | 'borrowing') (qubitBinding | '(' qubitBinding ')') (';' | scope)
     ;
 
 scope : BraceLeft statement* BraceRight;
@@ -201,13 +200,15 @@ expression
     | pauliLiteral
     | '(' (expression (',' expression)* ','?)? ')'
     | '[' (expression (',' expression)* ','?)? ']'
+    | '[' expression ',' sizeKey '=' expression ']'
     | 'new' type '[' expression ']'
     | expression ('::' Identifier | '[' expression ']')
+    | expression '[' expression ']'
     | expression '!'
     | <assoc=right> 'Controlled' expression
     | <assoc=right> 'Adjoint' expression
     | expression '(' (expression (',' expression)* ','?)? ')'
-    | <assoc=right> ('-' | 'not' | '~~~') expression
+    | <assoc=right> ('!' | '+' | '-' | 'not' | '~~~') expression
     | <assoc=right> expression '^' expression
     | expression ('*' | '/' | '%') expression
     | expression ('+' | '-') expression
@@ -217,8 +218,8 @@ expression
     | expression '&&&' expression
     | expression '^^^' expression
     | expression '|||' expression
-    | expression 'and' expression
-    | expression 'or' expression
+    | expression ('&&' | 'and') expression
+    | expression ('||' | 'or') expression
     | <assoc=right> expression '?' expression '|' expression
     | expression '..' expression
     | expression '...'
@@ -226,6 +227,8 @@ expression
     | '...'
     | expression 'w/' expression '<-' expression
     ;
+
+sizeKey : Identifier {_localctx.getText().equals("size")}?;
 
 boolLiteral
     : 'false'
