@@ -27,20 +27,19 @@ The QIR types `%Result`, `%Pauli`, `%Range`, `%String`, `%BigInteger`, `%Array`,
 
 Qubits are represented as pointers to the opaque `%Qubit` type.
 In the basic control flow profile, qubits are not allocated and released and the following functions are **not available**:
-- `__quantum__rt__qubit_allocate`, 
-- `__quantum__rt__qubit_allocate_array`, 
-- `__quantum__rt__qubit_release`, 
+- `__quantum__rt__qubit_allocate`,
+- `__quantum__rt__qubit_allocate_array`,
+- `__quantum__rt__qubit_release`,
 - `__quantum__rt__qubit_release_array`.
 
 Instead, it is assumed that qubits are identified by an integer
 that is the qubit pointer value in "qubit address space".
-We conventionally reserve LLVM address space 2 for qubits.
 
 For instance, to initialize a value that identifies device qubit 3,
 the following LLVM code would be used:
 
 ```llvm
-    %qubit3 = inttoptr i32 3 to %Qubit addrspace(2)*
+    %qubit3 = inttoptr i32 3 to %Qubit*
 ```
 
 Beyond creating a `%Qubit*` in that manner, the only operations that may be performed on qubits are passing them to functions.
@@ -52,15 +51,18 @@ legal to dereference a qubit.
 The QIR should define storage space for measurements in the form of a byte array that can be accessed via the global variable `ClassicalStorage`.
 How that space is used is up to the QIR generator; it may opt to populate some of the bits with classical data representing e.g. constant bit values in the program.
 
-The classical storage is allocated as a byte array, meaning the number of classical bits available for storage is expected to be a multiple of 8. 
+The classical storage is allocated as a byte array, meaning the number of classical bits available for storage is expected to be a multiple of 8.
 For example, if between 17 and 24 bits are required by a program, the following LLVM code would appear:
 
 ```llvm
 @ClassicalStorage = global [3 x i8]
 ```
 
-All classical bits are accessed using the `__quantum__qir__read_result` and 
-`__quantum__qir__write_result` functions, which will be defined in the QIR file as:
+All classical bits are accessed using the `__quantum__qir__read_result` and
+`__quantum__qir__write_result` functions. Both of these functions are not part
+of the generated QIR profile but are instead are defined as part of a runtime
+implementation. The behavior of these functions is equivalent to the following
+LLVM code:
 
 ```llvm
 define i1 @__quantum__qir__read_result(i32 bit_number) {
@@ -99,9 +101,6 @@ update:
 }
 ```
 
-If either or both of these functions aren't used in the program,
-the QIR generator may omit them from the LLVM file.
-
 ### Quantum Instruction Set
 
 All quantum instructions are represented by LLVM external functions.
@@ -120,22 +119,22 @@ any of the following quantum instructions must match the specified definition:
 
 | Operation Name | LLVM Function Declaration  | Description | Matrix |
 |----------------|----------------------------|-------------|--------|
-| CCx, CCNOT, Toffoli | `__quantum__qis__toffoli__body (%Qubit addrspace(2)* control1, %Qubit addrspace(2)* control1, %Qubit addrspace(2)* target)` | Toffoli or doubly-controlled X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+1+%26+0+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+1+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+0+%26+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+0+%26+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+1+%5C%5C+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Cx, CNOT | `__quantum__qis__cnot__body (%Qubit addrspace(2)* control, %Qubit addrspace(2)* target)` | CNOT or singly-controlled X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+1+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Cz | `__quantum__qis__cz__body (%Qubit addrspace(2)* control, %Qubit addrspace(2)* target)` | Singly-controlled Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+0+%26+0+%26+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| H | `__quantum__qis__h__body (%Qubit addrspace(2)* q)` | Hadamard | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%5Cbegin%7Bbmatrix%7D+1+%26+1+%5C%5C+1+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Mz or Measure | `__quantum__qis__mz__body (%Qubit addrspace(2)* q, i32 result_offset)` | Measure a qubit along the the Pauli Z axis |
-| Reset | `__quantum__qis__reset__body (%Qubit addrspace(2)* q)` | Prepare a qubit in the \|0⟩ state |
-| Rx | `__quantum__qis__rx__body (%Qubit addrspace(2)* q, double theta)` | Rotate a qubit around the Pauli X axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Ry | `__quantum__qis__ry__body (%Qubit addrspace(2)* q, double theta)` | Rotate a qubit around the Pauli Y axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Rz | `__quantum__qis__rz__body (%Qubit addrspace(2)* q, double theta)` | Rotate a qubit around the Pauli Z axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+e%5E%7B-i+%5Ctheta%2F2%7D+%26+0+%5C%5C+0+%26+e%5E%7Bi+%5Ctheta%2F2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) | |
-| S | `__quantum__qis__s__body (%Qubit addrspace(2)* q)` | S (phase gate)  | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+i+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| S&dagger; | `__quantum__qis__s_adj (%Qubit addrspace(2)* q)` | The adjoint of S | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-i+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| T | `__quantum__qis__t__body (%Qubit addrspace(2)* q)` | T | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7Bi%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| T&dagger; | `__quantum__qis__t__adj (%Qubit addrspace(2)* q)` | The adjoint of T operation | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7B-i%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| X | `__quantum__qis__x__body (%Qubit addrspace(2)* q)` | Pauli X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+1+%5C%5C+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Y | `__quantum__qis__y__body (%Qubit addrspace(2)* q)` | Pauli Y | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+-i+%5C%5C+i+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
-| Z | `__quantum__qis__z__body (%Qubit addrspace(2)* q)` | Pauli Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| CCx, CCNOT, Toffoli | `__quantum__qis__toffoli__body (%Qubit* control1, %Qubit* control1, %Qubit* target)` | Toffoli or doubly-controlled X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+1+%26+0+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+1+%26+0+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+0+%26+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+0+%26+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+1+%5C%5C+0+%26+0+%26+0+%26+0+%26+0+%26+0+%26+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Cx, CNOT | `__quantum__qis__cnot__body (%Qubit* control, %Qubit* target)` | CNOT or singly-controlled X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+0+%26+1+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Cz | `__quantum__qis__cz__body (%Qubit* control, %Qubit* target)` | Singly-controlled Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%26+0+%26+0+%5C%5C+0+%26+1+%26+0+%26+0+%5C%5C+0+%26+0+%26+1+%26+0+%5C%5C+0+%26+0+%26+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| H | `__quantum__qis__h__body (%Qubit* q)` | Hadamard | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%5Cbegin%7Bbmatrix%7D+1+%26+1+%5C%5C+1+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Mz or Measure | `__quantum__qis__mz__body (%Qubit* q, i32 result_offset)` | Measure a qubit along the the Pauli Z axis |
+| Reset | `__quantum__qis__reset__body (%Qubit* q)` | Prepare a qubit in the \|0⟩ state |
+| Rx | `__quantum__qis__rx__body (%Qubit* q, double theta)` | Rotate a qubit around the Pauli X axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+-i%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Ry | `__quantum__qis__ry__body (%Qubit* q, double theta)` | Rotate a qubit around the Pauli Y axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+-%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Csin+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%26+%5Ccos+%5Cfrac+%7B%5Ctheta%7D+%7B2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Rz | `__quantum__qis__rz__body (%Qubit* q, double theta)` | Rotate a qubit around the Pauli Z axis | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+e%5E%7B-i+%5Ctheta%2F2%7D+%26+0+%5C%5C+0+%26+e%5E%7Bi+%5Ctheta%2F2%7D+%5C%5C+%5Cend%7Bbmatrix%7D) | |
+| S | `__quantum__qis__s__body (%Qubit* q)` | S (phase gate)  | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+i+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| S&dagger; | `__quantum__qis__s_adj (%Qubit* q)` | The adjoint of S | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-i+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| T | `__quantum__qis__t__body (%Qubit* q)` | T | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7Bi%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| T&dagger; | `__quantum__qis__t__adj (%Qubit* q)` | The adjoint of T operation | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+e%5E%7B-i%5Cpi%2F4%7D+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| X | `__quantum__qis__x__body (%Qubit* q)` | Pauli X | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+1+%5C%5C+1+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Y | `__quantum__qis__y__body (%Qubit* q)` | Pauli Y | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+0+%26+-i+%5C%5C+i+%26+0+%5C%5C+%5Cend%7Bbmatrix%7D) |
+| Z | `__quantum__qis__z__body (%Qubit* q)` | Pauli Z | ![latex](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bbmatrix%7D+1+%26+0+%5C%5C+0+%26+-1+%5C%5C+%5Cend%7Bbmatrix%7D) |
 
 ### Control Flow
 
@@ -175,9 +174,9 @@ Custom functions should not have names that conflict with these names.
 
 ### Entry Point and Interop Functions
 
-For the purpose of interoperability with other languages and to facilitate command line handling, 
+For the purpose of interoperability with other languages and to facilitate command line handling,
 a QIR generator may choose to generate C-callable wrapper functions that call into QIR code but do not adhere to the QIR specification.
-Such functions may only be called from external code, meaning they may not be called by anything within QIR itself. 
+Such functions may only be called from external code, meaning they may not be called by anything within QIR itself.
 They are marked with at least one of the following custom attributes:
 
 ```llvm
@@ -187,7 +186,7 @@ attributes #3 = { "EntryPoint" }
 
 ### LLVM Restrictions
 
-Aside from within entry point and interop functions, 
+Aside from within entry point and interop functions,
 the following LLVM IR instructions are the only ones allowed in the base profile:
 
 - `ret`
