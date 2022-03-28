@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 lexer grammar QSharpLexer;
 
 // Keywords
@@ -75,7 +78,7 @@ AsteriskEqual : '*=';
 At : '@';
 Bang : '!';
 BraceLeft : '{' -> pushMode(DEFAULT_MODE);
-BraceRight : '}' { if (!_modeStack.isEmpty()) popMode(); };
+BraceRight : '}' { if (ModeStack.Count > 0) PopMode(); };
 BracketLeft : '[';
 BracketRight : ']';
 Caret : '^';
@@ -147,7 +150,7 @@ DoubleLiteral
     | '.' Digit+ Exponent?
     | Digit+ '.' Exponent
     // "n.." should be interpreted as an integer range, not the double "n." followed by a dot.
-    | Digit+ '.' { _input.LA(1) != '.' }?
+    | Digit+ '.' { InputStream.LA(1) != '.' }?
     | Digit+ Exponent
     ;
 
