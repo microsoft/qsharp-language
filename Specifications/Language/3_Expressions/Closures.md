@@ -94,8 +94,6 @@ For example, given that `f` is a function and `o` is an operation, and the captu
 | `f(_, (1, _))`         | `(a, b) -> f(a, (1, b))`[^1]          |
 | `f((_, _, x), (1, _))` | `((a, b), c) -> f((a, b, x), (1, c))` |
 
-[^1]: The parameter tuple is strictly written `(a, (b))`, but [`(b)` is equivalent to `b`](../4_TypeSystem/SingletonTupleEquivalence.md).
-
 ### Mutable Capture Variables
 
 Unlike lambda expressions, partial application can automatically capture a copy of the value of a mutable variable:
@@ -116,3 +114,5 @@ let f = x -> Foo(value, x);
 ---
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+
+[^1]: The parameter tuple is strictly written `(a, (b))`, but [`(b)` is equivalent to `b`](../4_TypeSystem/SingletonTupleEquivalence.md).
