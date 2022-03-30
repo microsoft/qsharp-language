@@ -3,6 +3,10 @@
 
 lexer grammar QSharpLexer;
 
+options {
+    language = CSharp;
+}
+
 // Keywords
 
 Adj : 'Adj';

@@ -4,6 +4,7 @@
 parser grammar QSharpParser;
 
 options {
+    language = CSharp;
     tokenVocab = QSharpLexer;
 }
 
