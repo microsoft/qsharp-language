@@ -223,6 +223,7 @@ expression
     | '...' expression # LeftOpenRangeExpression
     | '...' # OpenRangeExpression
     | record=expression 'w/' index=expression '<-' value=expression # UpdateExpression
+    | symbolBinding arrow=('->' | '=>') expression # LambdaExpression
     ;
 
 size : Identifier { _localctx.Identifier().Symbol.Text == "size" }?;
