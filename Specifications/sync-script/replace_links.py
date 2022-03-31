@@ -50,6 +50,8 @@ def links_to_xrefs(source_dir, map_link_to_uid):
                             line = line.replace(full_blob_url, full_uid)
                             line = line.replace(
                                 '← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)', '')
+                            line = line.replace(
+                                'https://docs.microsoft.com', '')
                             line = line.replace(full_tree_url, full_uid)
                         new_text.append(line)
                 with open(filepath, "wt", encoding='utf-8') as f:
