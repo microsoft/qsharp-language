@@ -15,7 +15,7 @@ and this expression:
 Mapped(Length, [[], ["a"], ["b", "c"]])
 ```
 
-then the type argument to `Length` is inferred to be instantiated as `Length<String[]>`, and the type arguments to `Mapped` are inferred to be instantiated as `Mapped<String[], Int>`.
+then the type argument to `Length` is inferred to be `Length<String[]>`, and the type arguments to `Mapped` are inferred to be `Mapped<String[], Int>`.
 It is not required to write these types explicitly.
 
 ## Ambiguous Types
