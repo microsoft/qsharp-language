@@ -18,7 +18,7 @@ A symbol may only be bound once per block; it is not valid to define a symbol wi
 The following sequences are valid:
 
 ```qsharp
-if (a == b) {
+if a == b {
     ...
     let n = 5;
     ...             // n is 5
@@ -30,7 +30,7 @@ let n = 8;
 and
 
 ```qsharp
-if (a == b) {
+if a == b {
     ...
     let n = 5;
     ...             // n is 5
@@ -55,7 +55,7 @@ and
 
 ```qsharp
 let n = 8;
-if (a == b) {
+if a == b {
     ...             // n is 8
     let n = 5;      // Error
     ...
