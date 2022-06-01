@@ -108,7 +108,7 @@ For more information, see [Contextual expressions](https://github.com/microsoft/
 
 ## Array literals
 
-An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions, separated by commas and enclosed in brackets `[` and `]`, for example, `[1,2,3]`.
+An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions, separated by commas and enclosed in brackets `[` and `]`; for example, `[1,2,3]`.
 All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance), which is the item type of the array.
 
 Arrays of arbitrary length, and in particular empty arrays, may be created using a new array expression.
