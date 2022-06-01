@@ -1,4 +1,11 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 lexer grammar QSharpLexer;
+
+options {
+    language = CSharp;
+}
 
 // Keywords
 
@@ -75,7 +82,7 @@ AsteriskEqual : '*=';
 At : '@';
 Bang : '!';
 BraceLeft : '{' -> pushMode(DEFAULT_MODE);
-BraceRight : '}' { if (!_modeStack.isEmpty()) popMode(); };
+BraceRight : '}' { if (ModeStack.Count > 0) PopMode(); };
 BracketLeft : '[';
 BracketRight : ']';
 Caret : '^';
@@ -84,9 +91,11 @@ Colon : ':';
 Comma : ',';
 DollarQuote : '$"' -> pushMode(INTERPOLATED);
 Dot : '.';
+DoubleAmpersand : '&&';
 DoubleColon : '::';
 DoubleDot : '..';
 DoubleEqual : '==';
+DoublePipe : '||';
 DoubleQuote : '"' -> pushMode(STRING);
 Ellipsis : '...';
 Equal : '=';
@@ -138,12 +147,15 @@ IntegerLiteral
 
 BigIntegerLiteral : IntegerLiteral ('L' | 'l');
 
+fragment Exponent : ('e' | 'E') ('+' | '-')? Digit+;
+
 DoubleLiteral
-    : Digit+ '.' Digit+
-    | '.' Digit+
+    : Digit+ '.' Digit+ Exponent?
+    | '.' Digit+ Exponent?
+    | Digit+ '.' Exponent
     // "n.." should be interpreted as an integer range, not the double "n." followed by a dot.
-    | Digit+ '.' { _input.LA(1) != '.' }?
-    | Digit+ ('e' | 'E') Digit+
+    | Digit+ '.' { InputStream.LA(1) != '.' }?
+    | Digit+ Exponent
     ;
 
 Identifier : IdentifierStart IdentifierContinuation*;
