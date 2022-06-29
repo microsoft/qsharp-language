@@ -27,7 +27,7 @@ As for any operator that constructs an expression of the same type as the left-m
 The two following statements, for example, achieve the following: The first statement declares a mutable variable `arr` and binds it to the default value of an integer array. The second statement then builds a new array with the first item (with index 0) set to 10 and reassigns it to `arr`. 
 
 ```qsharp
-    mutable arr = new Int[3]; // arr contains [0,0,0]
+    mutable arr = [0, size = 3]; // arr contains [0,0,0]
     set arr w/= 0 <- 10;      // arr contains [10,0,0] 
 ```
 
