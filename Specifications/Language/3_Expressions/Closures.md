@@ -57,7 +57,7 @@ For example:
 () => M(q)
 ```
 
-Because of limitations in characteristics inference, this is based only on type information known by the point where the lambda expression occurs.
+Because of limitations in characteristics inference, this is based only on type information known at the point where the lambda expression occurs.
 For example:
 
 ```qsharp
