@@ -138,14 +138,9 @@ Values of a [user defined type](https://github.com/microsoft/qsharp-language/tre
 
 For instance, if `IntPair` has two items of type `Int`, then `IntPair(2, 3)` creates a new instance by invoking the default constructor.
 
-## Operation Literals
+## Operation and Function Literals
 
-No literals exist for values of [operation type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types); operations have to be [declared](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations) on a global scope and new operations can be constructed locally using [partial application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application).
-
-## Function Literals
-
-No literals exist for values of [function type](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types); functions have to be [declared](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/3_CallableDeclarations.md#callable-declarations) on a global scope and new functions can be constructed locally using [partial application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application).
-
+Anonymous operations and functions can be created using a [lambda expression](Closures.md#lambda-expressions).
 
 ## Default Values
 
