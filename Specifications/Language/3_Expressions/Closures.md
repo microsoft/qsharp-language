@@ -65,13 +65,13 @@ let foo = op => op(q);
 foo(X);
 ```
 
-Here, `foo` is inferred to have type:
+`foo` is inferred to have the following type based on both the body of the lambda and the type of `X`:
 
 ```qsharp
 (Qubit => Unit is Adj + Ctl) => Unit
 ```
 
-But that type is *not* the principal type for `foo`, which is:
+But the most specific type that `foo` could have is:
 
 ```qsharp
 (Qubit => Unit is Adj + Ctl) => Unit is Adj + Ctl
