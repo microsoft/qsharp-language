@@ -12,6 +12,7 @@ The first statement instantiates a new array of integers `[0,0,0]` and assigns i
 The next statement assigns that value to a variable with name `arr2`. The last statement creates a new array instance based on `arr1` with the same values except for the value at index 0 which is set to 3. The newly created array is then assigned to the variable `arr1`. The last line makes use of the abbreviated syntax for [evaluate-and-reassign statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements), and could equivalently have been written as `set arr1 = arr1 w/ 0 <- 1;`.  
 After running the three statements, `arr1` will contain the value `[3,0,0]` while `arr2` remains unchanged and contains the value `[0,0,0]`. 
 
+
 Q# clearly thus distinguishes the mutability of a handle and the behavior of a type. 
 Mutability within Q# is a concept that applies to a *symbol* rather than a type or value; 
 it applies to the handle that allows you to access a value rather than to the value itself. It is *not* represented in the type system, implicitly or explicitly.

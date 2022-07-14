@@ -24,7 +24,7 @@ The chosen left associativity allows easy chaining of copy-and-update expression
 Like for any operator that constructs an expression that is of the same type as the left-most expression involved, the corresponding [evaluate-and-reassign statement](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements) is available. 
 The two statements below for example achieve the following: The first statement declares a mutable variable `arr` and binds it to the default value of an integer array. The second statement then builds a new array with the first item (with index 0) set to 10, and reassigns it to `arr`. 
 ```qsharp
-    mutable arr = new Int[3]; // arr contains [0,0,0]
+    mutable arr = [0, size = 3]; // arr contains [0,0,0]
     set arr w/= 0 <- 10;      // arr contains [10,0,0] 
 ```
 The second statement is nothing but a short-hand for the more verbose syntax `set arr = arr w/ 0 <- 10;`.
