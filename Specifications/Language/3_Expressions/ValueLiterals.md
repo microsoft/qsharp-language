@@ -130,7 +130,7 @@ A [tuple](https://github.com/microsoft/qsharp-language/tree/main/Specifications/
 | `("Id", 0, 1.)` | `(String, Int, Double)` |
 | `(PauliX,(3,1))` | `(Pauli, (Int, Int))` |
 
-Tuples containing a single item are treated as identical to the item itself, both in type and value, and are called a [singleton tuple equivalence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence).
+Tuples containing a single item are treated as identical to the item itself, both in type and value, which is called [singleton tuple equivalence](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md#singleton-tuple-equivalence).
 
 Tuples are used to bundle values together into a single value, making it easier to pass them around. This makes it possible for every callable to take exactly one input and return exactly one output.
 
