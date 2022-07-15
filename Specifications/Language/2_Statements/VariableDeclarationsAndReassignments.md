@@ -2,7 +2,7 @@
 
 Values can be bound to symbols using the `let` and `mutable` statements. 
 These kinds of bindings provide a convenient way to access a value via the defined handle. 
-Despite the misleading terminology borrowed from other languages, handles  declared on a local scope and containing values are called *variables*.
+Despite the misleading terminology borrowed from other languages, handles declared on a local scope and containing values are called *variables*.
 This may be misleading because `let` statements define *single-assignment handles*, which are handles that remain bound to the same value for the duration of their validity. Variables that can be re-bound to different values at different points in the code need to be explicitly declared as such, and are specified using the `mutable` statement. 
 
 ```qsharp

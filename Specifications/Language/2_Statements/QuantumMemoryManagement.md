@@ -50,7 +50,7 @@ The `use` statement allocates the qubits from the quantum processor's free qubit
 The `borrow` statement grants access to qubits that are already allocated but not currently in use. These qubits can be in an arbitrary state and need to be in the same state again when the borrow statement terminates.
 Some quantum algorithms can use qubits without relying on their exact state, and without requiring that they are unentangled with the rest of the system. That is, they require extra qubits temporarily, but they can ensure that those qubits are returned exactly to their original state, independent of which state that was. 
 
-If there are qubits that are in use but not touched during the run of a subroutine, those qubits can be borrowed for use by such an algorithm instead of allocating additional quantum memory. 
+If there are qubits that are in use but not touched during parts of a subroutine, those qubits can be borrowed for use by such an algorithm instead of allocating additional quantum memory. 
 Borrowing instead of allocating can significantly reduce the overall quantum memory requirements of an algorithm and is a quantum example of a typical space-time tradeoff. 
 
 A `borrow` statement follows the same pattern described previously for the [`use` statement](#use-statement), with the same initializers being available.
