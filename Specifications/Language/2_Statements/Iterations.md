@@ -1,14 +1,14 @@
 # Iterations
 
-Loops that iterate over a sequence of values are expressed as `for`-loops in Q#. A `for`-loop in Q# does not break based on a condition, but instead corresponds to what is often expressed as `foreach` or `iter` in other languages. There are currently two data types in Q# that support iteration: arrays and ranges. 
+Loops that iterate over a sequence of values are expressed as `for` loops in Q#. A `for` loop in Q# does not break based on a condition but instead corresponds to an iteration, or what is often expressed as `foreach` or `iter` in other languages. There are currently two data types in Q# that support iteration: arrays and ranges. 
 
 The statement consists of the keyword `for`, followed by a symbol or symbol tuple, the keyword `in`, an expression of array or `Range` type, and a statement block.
 
-The statement block (the body of the loop) is executed repeatedly, with the defined symbol(s) (the loop variable(s)) bound to each value in the range or array.
-The same deconstruction rules apply to the defined loop variable(s) as to any other variable assignment, such as bindings in `let`-, `mutable`-, `set`-, `use`- and `borrow`-statements. The loop variables themselves are immutably bound, cannot be reassigned within the body of the loop, and go out of scope when the loop terminates.
-The expression over which the loop iterates is fully evaluated before entering the loop, and will not change while the loop is executing.
+The statement block (the body of the loop) is run repeatedly, with one or more loop variables bound to each value in the range or array.
+The same deconstruction rules apply to the defined loop variables as to any other variable assignment, such as bindings in `let`, `mutable`, `set`, `use` and `borrow` statements. The loop variables themselves are immutably bound, cannot be reassigned within the body of the loop, and go out of scope when the loop terminates.
+The expression over which the loop iterates is evaluated before entering the loop and does not change while the loop is running.
 
-Supposing `qubits` is a value of type `Qubit[]`. The following examples illustrate what is described above:
+This is illustrated in the following example. Suppose `qubits` is a value of type `Qubit[]`, then
 
 ```qsharp
 for qubit in qubits {
@@ -28,9 +28,9 @@ for (index, measured) in results {
 }
 ```
 
-## *Target-Specific Restrictions*
+## Target-specific restrictions
 
-There are no `break`- or `continue`-primitives in Q#, such that the length of the loop is perfectly predictable as soon as the value to iterate over is known. Such `for`-loops can hence be executed on all quantum hardware.
+Because there are no `break` or `continue` primitives in Q#, the length of the loop is known as soon as the iteration value is known. As such, `for` loops can be run on all quantum hardware.
 
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
