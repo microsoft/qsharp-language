@@ -6,7 +6,7 @@ An operation closure can be created inside a function, but it can only be applie
 
 Q# has two mechanisms for creating closures: lambda expressions and partial application.
 
-## Lambda Expressions
+## Lambda expressions
 
 A lambda expression creates an anonymous function or operation.
 The basic syntax is a symbol tuple to bind the parameters, an arrow (`->` for a function and `=>` for an operation), and an expression to evaluate when applied.
@@ -28,7 +28,7 @@ Parameters are bound using a symbol tuple that is identical to the left-hand sid
 The type of the parameter tuple is implicit.
 Type annotations are not supported; if type inference fails, you may need to create a top-level callable declaration and use partial application instead.
 
-### Mutable Capture Variables
+### Mutable capture variables
 
 Mutable variables cannot be captured.
 If you only need to capture the value of a mutable variable at the instant the lambda expression is created, you can create an immutable copy:
@@ -79,7 +79,7 @@ But the most specific type that `foo` could have is:
 
 If you need different characteristics for an operation lambda than what was inferred, you will need to create a top-level operation declaration instead.
 
-## Partial Application
+## Partial application
 
 Partial application is a convenient shorthand for applying some, but not all, of a callable's arguments.
 The syntax is the same as a call expression, but unapplied arguments are replaced with `_`.
@@ -94,7 +94,7 @@ For example, given that `f` is a function and `o` is an operation, and the captu
 | `f(_, (1, _))`         | `(a, b) -> f(a, (1, b))`[^1]          |
 | `f((_, _, x), (1, _))` | `((a, b), c) -> f((a, b, x), (1, c))` |
 
-### Mutable Capture Variables
+### Mutable capture variables
 
 Unlike lambda expressions, partial application can automatically capture a copy of the value of a mutable variable:
 
