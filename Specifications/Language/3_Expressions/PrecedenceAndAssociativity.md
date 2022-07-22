@@ -42,7 +42,7 @@ Similar considerations hold for the range operator to ensure a consistent behavi
 
 ## Modifiers and combinators
 
-Modifiers can be seen as special operators that can be applied to certain expressions only. You can assign them an artificial precedence to capture their behavior. 
+Modifiers can be seen as special operators that can be applied to certain expressions only. They can be assigned an artificial precedence to capture their behavior. 
 
 For more information, see [Expressions](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/3_Expressions#expressions).
 
