@@ -1,4 +1,4 @@
-# Type Inference
+# Type inference
 
 Q#'s type inference algorithm is based on inference algorithms designed for the Hindley-Milner type system.
 While top-level callables must be declared with explicit type annotations, most types used within a callable can be inferred.
@@ -18,7 +18,7 @@ Mapped(Length, [[], ["a"], ["b", "c"]])
 then the type argument to `Length` is inferred to be `Length<String[]>`, and the type arguments to `Mapped` are inferred to be `Mapped<String[], Int>`.
 It is not required to write these types explicitly.
 
-## Ambiguous Types
+## Ambiguous types
 
 Sometimes there is not one single principal type that can be inferred for a type variable.
 In these cases, type inference fails with an error referring to an ambiguous type.
