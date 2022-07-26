@@ -17,7 +17,7 @@ function Pow<'T>(op : 'T => Unit, pow : Int) : 'T => Unit {
 ```
 
 
-Both can be instantiated based on a type-parametrized definition, for example, the [type parametrized](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations) function `Pow` above, and they can be [partially applied](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application) as done in the `return` statement in the example. 
+Both can be instantiated based on a type-parametrized definition, for example, the [type parametrized](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/TypeParameterizations.md#type-parameterizations) function `Pow` above, and they can be [partially applied](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/closures.md#partial-application) as done in the `return` statement in the example. 
 
 
 

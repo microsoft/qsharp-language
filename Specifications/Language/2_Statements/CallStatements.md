@@ -1,7 +1,7 @@
 # Call statements
 
 
-Call statements are an important part of any programming language. Operation and function calls, much like [partial applications](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PartialApplication.md#partial-application), can be used as an expression anywhere as long as the returned value is of a suitable type. However, they can also be used as statements if they return `Unit`. 
+Call statements are an important part of any programming language. Operation and function calls, much like [partial applications](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/closures.md#partial-application), can be used as an expression anywhere as long as the returned value is of a suitable type. However, they can also be used as statements if they return `Unit`. 
 
 The usefulness of calling functions in this form primarily lies in debugging, and such operation calls are one of the most common constructs in any Q# program. At the same time, operations can only be called from within other operations and not from within functions. For more information, see also [Qubits](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits).
 

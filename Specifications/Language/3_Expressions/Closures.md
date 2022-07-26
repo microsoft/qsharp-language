@@ -24,7 +24,7 @@ deg => Rx(deg * PI() / 180.0, qubit)
 
 ### Parameters
 
-Parameters are bound using a symbol tuple that is identical to the left-hand side of a [variable declaration statement](../2_Statements/VariableDeclarationsAndReassignments.md).
+Parameters are bound using a symbol tuple that is identical to the left-hand side of a [variable declaration statement](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md).
 The type of the parameter tuple is implicit.
 Type annotations are not supported; if type inference fails, you may need to create a top-level callable declaration and use partial application instead.
 
@@ -115,4 +115,4 @@ let f = x -> Foo(value, x);
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
 
-[^1]: The parameter tuple is strictly written `(a, (b))`, but [`(b)` is equivalent to `b`](../4_TypeSystem/SingletonTupleEquivalence.md).
+[^1]: The parameter tuple is strictly written `(a, (b))`, but [`(b)` is equivalent to `b`](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SingletonTupleEquivalence.md).
