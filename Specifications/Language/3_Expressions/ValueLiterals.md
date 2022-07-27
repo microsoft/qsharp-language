@@ -142,7 +142,7 @@ For instance, if `IntPair` has two items of type `Int`, then `IntPair(2, 3)` cre
 
 ## Operation and function literals
 
-Anonymous operations and functions can be created using a [lambda expression](Closures.md#lambda-expressions).
+Anonymous operations and functions can be created using a [lambda expression](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md#lambda-expressions).
 
 ## Default values
 
