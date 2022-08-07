@@ -45,11 +45,11 @@ Q# implements programs in terms of statements and expressions, much like classic
         1. [Arithmetic Expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions)
         1. [Concatenations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Concatentation.md#concatenation)
     1. [Modifiers \& Combinators](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/PrecedenceAndAssociativity.md#modifiers-and-combinators)
-        1. [Closures](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md)
         1. [Functor Application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/FunctorApplication.md#functor-application)
         1. [Item Access Expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access)
     1. [Contextual Expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions)
     1. [Value Literals](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#literals) \& [Default Values](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#default-values)
+    1. [Closures](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md)
     1. [Identifiers](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Identifiers.md#identifiers)
 
 
