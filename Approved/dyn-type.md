@@ -7,7 +7,7 @@ This proposal introduces a `dyn` type to reflect values that are only known at r
 
 ## Description
 
-The `dyn` type doesn't require any user annotation as it is inferred by the compiler. The `dyn` type is used with global callables. `dyn` values come from intrinsic operations. Functions can't introduce `dyn` values, but can pass them. The Result type is always a `dyn`. A `dyn` Result can be converted to a `dyn` Bool.  The `dyn` static analysis replaces mutable variable and result analysis.
+The `dyn` type doesn't require any user annotation as it is inferred by the compiler. The `dyn` type is used with global callables. `dyn` values come from intrinsic operations. Functions can't introduce `dyn` values, but can pass them. The Result type is always a `dyn`. A `dyn` Result can be converted to a `dyn` Bool.  The `dyn` static analysis replaces mutable variable and result analysis. A callable cannot return a `dyn` value unless one input in its signature is a `dyn`.
 
 ## Use Cases
 
@@ -54,7 +54,7 @@ Without introducing dynamic types, callables defined in libraries could only be 
 
 The example generates an error when calling `Foo` with a dynamic value as argument `i` unless the target supports arrays.
 
-The developer can create values at runtime by measuring a qubit and then pass these values to other callables that process it further and return it.
+The developer can create values at runtime and then pass these values to other callables that process it further and return it. The only way to create a value of `dyn` type is by measuring a qubit.
 
 > Define the array index as a callable input parameter
 
@@ -63,18 +63,22 @@ operation Foo(b : Bool, i : Int) : Int {
     return [1, 2, 3][i]; // This needs runtime support if i is dynamic
 }
 
+This would return an error indicating that the callable Foo requires array support which is not supported.
+
 operation Bar() : Int {
-// get a dynamic value (usually by measuring a qubit)
+// get a dynamic value (by measuring a qubit)
     use q = Qubit();
     H(q);
-    let val = M(q) == Zero ? 0 : 1; // val is of type dyn Int
+    let val = M(q) == Zero ? 0 : 1; // val is a dynamic value
 
     let res = Foo(true, val); // requires that the runtime supports arrays
-    return res; // res is of type dyn Int
+    return res; // res is a dynamic value
 }
 ```
 
 > Define the lifting operator for the array index
+
+With the `dyn` type as part of the Q# syntax:
 
 ```qsharp
 lift_i Foo : (Bool, dyn Int) => dyn Int
@@ -103,12 +107,14 @@ lift_b Foo : (dyn Bool, Int) => Int
 
 > The boolean is lifted into `dyn`. The result value of the operation is not `dyn`. The result is opaque as `b` is used to branch for a gate.
 
+A dynamic signature doesn't guarantee that an operation is dynamic.
+
 ### Cannot lift anonymous parameters into dyn
 
 > Define anonymous parameters as a callable input parameter
 
 ```qsharp
-operation Foo(Bool, Int) : Int {
+operation Foo(b: Bool, i: Int) : Int {
     use q = Qubit();
     if b { X(q); }
         return [1, 2, 3][i];
@@ -135,7 +141,7 @@ If x : T, then inject x : dyn T
 ## Implementation
 
 The implementation will be informed by below design goals:
-> Goal 1: Keep compilation and optimization logic within llvm as much as possible, rather than replicating it in the Q# compiler
+> Goal 1: Keep compilation and optimization logic within LLVM as much as possible, rather than replicating it in the Q# compiler
 
 > Goal 2: Q# functions serve the same purpose as const functions in other languages, i.e. we basically want to guarantee that a function can be evaluated when and as soon as all arguments are known. This in particular means that unless an argument is `dyn`, we expect that the function call will be fully evaluated/evaluatable at compile time.
 
@@ -162,7 +168,9 @@ For the purpose of type inference (i.e. how `dyn` is propagated), we make the be
 
 ### Operations always return a dyn
 
-The return type of an operation is always `dyn`. While it is conceivable to write an operation that has a non-`dyn` return value, it is also always possible - and arguably best practice - to split out any computation of a non-`dyn` return value into a function instead.
+The return type of an operation is always `dyn`. While it is conceivable to write an operation that has a non-`dyn` return value, it is also always possible - and arguably best practice - to split out any computation of a non-`dyn` return value into a function instead. 
+
+A warning will be raised explaining that operations always returns a `dyn`.  
 
 ### Functions return dyn only if one argument is dyn
 
@@ -181,7 +189,7 @@ This in particular means that we do not intend to distinguish, now or in the fut
 Concretely, we do not intend to distinguish the ability to execute the following two pieces of code:
 
 ```qsharp
-if (M(q) == Zero) {
+if M(q) == Zero {
     X(q);
 }
 ```
@@ -189,7 +197,7 @@ if (M(q) == Zero) {
 compared to
 
 ```qsharp
-if (M(q1) != M(q2)) {
+if M(q1) != M(q2) {
     X(q);
 }
 ```
