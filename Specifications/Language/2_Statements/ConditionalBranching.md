@@ -33,7 +33,7 @@ else {
 
 You can also express simple branching in the form of a [conditional expression](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md#conditional-expressions).
 
-## *Target-specific restrictions*
+## Target-specific restrictions
 
 The tight integration between control-flow constructs and quantum computations poses a challenge for current quantum hardware. Certain quantum processors do not support branching based on measurement outcomes. As such, comparison for values of type `Result` will always result in a compilation error for Q# programs that are targeted to run on such hardware. 
 

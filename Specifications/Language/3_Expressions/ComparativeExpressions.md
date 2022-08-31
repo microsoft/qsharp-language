@@ -10,7 +10,7 @@ Equality comparisons for `Double` values may be misleading due to rounding effec
 For instance, the following comparison evaluates to `false` due to rounding errors: `49.0 * (1.0/49.0) == 1.0`.
 
 >[!NOTE]
->In the future, qsharp may support the comparisons of ranges, as well as arrays, tuples, and user-defined types provided their items support comparison. As for all types, the comparison would be by value, meaning two values are considered equal if all of their items are. For values of user-defined type, their type also needs to match. Future support for the comparison of values of type `Range` follows the same logic; they should be equal as long as they produce the same sequence of integers, meaning the two ranges 
+>In the future, Q# may support the comparisons of ranges, as well as arrays, tuples, and user-defined types provided their items support comparison. As for all types, the comparison would be by value, meaning two values are considered equal if all of their items are. For values of user-defined type, their type also needs to match. Future support for the comparison of values of type `Range` follows the same logic; they should be equal as long as they produce the same sequence of integers, meaning the two ranges 
 >```qsharp
 >    let r1 = 0..2..5; // generates the sequence 0,2,4
 >    let r2 = 0..2..4; // generates the sequence 0,2,4
