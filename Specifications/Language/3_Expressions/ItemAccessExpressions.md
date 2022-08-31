@@ -46,7 +46,7 @@ newtype TwoStrings = (str1: String, str2: String);
 
 operation LinkTwoStrings(str : TwoStrings) : String {
     let s1 = str::str1;
-    let s2 = str::str2:
+    let s2 = str::str2;
     return s1 + s2;
 }
 ```
