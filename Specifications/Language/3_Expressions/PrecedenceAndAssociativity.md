@@ -10,32 +10,31 @@ Additional [modifiers and combinators](#modifiers-and-combinators) are also list
 
 | Description | Syntax | Operator | Associativity | Precedence |
 | --- | --- | --- | --- | --- |
-| [copy-and-update operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) | `w/` `<-` | ternary | left  | 1  |
+| [copy-and-update operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) | `w/` `<-` | ternary | left  | 1 |
 | [range operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ValueLiterals.md#range-literals) | `..` | infix | left | 2 |
-| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md#conditional-expressions) | <code>? &vert;</code> | ternary | right | 5 |
-| [logical OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `or` | infix | left | 10 |
-| [logical AND](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `and` | infix | left | 11 |
-| [bitwise OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | <code>&vert;&vert;&vert;</code> | infix | left | 12 |
-| [bitwise XOR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `^^^` | infix | left | 13 |
-| [bitwise AND](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `&&&` | infix | left | 14 |
-| [equality](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#equality-comparison) | `==` | infix | left | 20 |
-| [inequality](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#equality-comparison) | `!=` | infix | left | 20 |
-| [less-than-or-equal](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `<=` | infix | left | 25 |
-| [less-than](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `<` | infix | left | 25 |
-| [greater-than-or-equal](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `>=` | infix | left | 25 |
-| [greater-than](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `>` | infix | left | 25 |
-| [right shift](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `>>>` | infix | left | 28 |
-| [left shift](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `<<<` | infix | left | 28 |
-| [addition](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) or [concatenation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Concatentation.md#concatenation) | `+` | infix | left | 30 |
-| [subtraction](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `-` | infix | left | 30 |
-| [multiplication](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `*` | infix | left | 35 |
-| [division](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `/` | infix | left | 35 |
-| [modulus](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `%` | infix | left | 35 |
-| [exponentiation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `^` | infix | right | 40 |
-| [bitwise NOT](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `~~~` | prefix | right | 45 |
-| [logical NOT](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `not` | prefix | right | 45 |
-| [negative](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `-` | prefix | right | 45 |
-
+| [conditional operator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ConditionalExpressions.md#conditional-expressions) | <code>? &vert;</code> | ternary | right | 3 |
+| [logical OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `or` | infix | left | 4 |
+| [logical AND](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `and` | infix | left | 5 |
+| [bitwise OR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | <code>&vert;&vert;&vert;</code> | infix | left | 6 |
+| [bitwise XOR](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `^^^` | infix | left | 7 |
+| [bitwise AND](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `&&&` | infix | left | 8 |
+| [equality](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#equality-comparison) | `==` | infix | left | 9 |
+| [inequality](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#equality-comparison) | `!=` | infix | left | 9 |
+| [less-than-or-equal](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `<=` | infix | left | 10 |
+| [less-than](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `<` | infix | left | 11 |
+| [greater-than-or-equal](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `>=` | infix | left | 11 |
+| [greater-than](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ComparativeExpressions.md#quantitative-comparison) | `>` | infix | left | 11 |
+| [right shift](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `>>>` | infix | left | 12 |
+| [left shift](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `<<<` | infix | left | 12 |
+| [addition](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) or [concatenation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Concatentation.md#concatenation) | `+` | infix | left | 13 |
+| [subtraction](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `-` | infix | left | 13 |
+| [multiplication](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `*` | infix | left | 14 |
+| [division](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `/` | infix | left | 14 |
+| [modulus](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `%` | infix | left | 14 |
+| [exponentiation](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `^` | infix | right | 15 |
+| [bitwise NOT](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/BitwiseExpressions.md#bitwise-expressions) | `~~~` | prefix | right | 16 |
+| [logical NOT](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/LogicalExpressions.md#logical-expressions) | `not` | prefix | right | 16 |
+| [negative](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ArithmeticExpressions.md#arithmetic-expressions) | `-` | prefix | right | 16 |
 
 Copy-and-update expressions necessarily need to have the lowest precedence to ensure a consistent behavior of the corresponding [evaluate-and-reassign statement](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements). 
 Similar considerations hold for the range operator to ensure a consistent behavior of the corresponding [contextual expression](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ContextualExpressions.md#contextual-and-omitted-expressions).
@@ -50,12 +49,14 @@ This artificial precedence is listed in the following table, along with how the 
 
 | Description | Syntax | Operator | Associativity | Precedence |
 | --- | --- | --- | --- | --- |
-| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `(` `)` | n/a | left | 900 | 
-| [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Adjoint` | prefix | right | 950 |
-| [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Controlled` | prefix | right | 950 |
-| [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 1000 |
-| [Named item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 1100 |  
-| [Array item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#array-item-access-and-array-slicing) | `[` `]` | n/a | left | 1100 |
+| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `(` `)` | n/a | left | 17 | 
+| [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Adjoint` | prefix | right | 18 |
+| [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Controlled` | prefix | right | 18 |
+| [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 19 |
+| [Named item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 20 |  
+| [Array item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#array-item-access-and-array-slicing) | `[` `]` | n/a | left | 20 |
+| [Function lambda](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md#lambda-expressions) | `->` | n/a | right | 21 |
+| [Operation lambda](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md#lambda-expressions) | `=>` | n/a | right | 21 |
 
 To illustrate the implications of the assigned precedences, suppose you have a unitary operation `DoNothing` (as defined in [Specialization declarations](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/1_ProgramStructure/4_SpecializationDeclarations.md#specialization-declarations)), a callable `GetStatePrep` that returns a unitary operation, and an array `algorithms` that contains items of type `Algorithm` defined as follows
 
