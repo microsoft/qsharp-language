@@ -1,9 +1,5 @@
 # Frequently Asked Questions
 
-### *Where can I give feedback on the Quantum Intermediate Representation (QIR)?*
-
-We very much welcome input for the QIR! We choose to make our current thinking public early on to encourage contributions and feedback on how to make it usable across a wide variety of hardware backends and software frontends. Please use our [documentation template](https://github.com/microsoft/qsharp-language/issues/new?labels=Documentation&template=documentation.md) to share ideas around QIR. 
-
 ### *Where can I find the current specification of the Q# language?*
 
 The specification for the latest Q# version shipped with the [Quantum Development Kit](https://www.microsoft.com/quantum/development-kit) can be found [here](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language).
