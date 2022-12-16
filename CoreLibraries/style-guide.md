@@ -179,7 +179,7 @@ We suggest:
 
 ### Type Conversions
 
-Since Q# is a strongly and staticly typed language, a value of one type can only be used as a value of another type by using an explicit call to a type conversion function.
+Since Q# is a strongly and statically typed language, a value of one type can only be used as a value of another type by using an explicit call to a type conversion function.
 This is in contrast to languages which allow for values to change types implicitly (e.g.: type promotion), or through casting.
 As a result, type conversion functions play an important role in Q# library development, and comprise one of the more commonly encountered decisions about naming.
 We note, however, that since type conversions are always _deterministic_, they can be written as functions and thus fall under the advice above.
