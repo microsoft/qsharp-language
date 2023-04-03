@@ -17,8 +17,8 @@ A type-parametrized callable needs to be concretized, that is, it must be provid
         array : 'T1[]
     ) : 'T2[] {
 
-        mutable mapped = new 'T2[Length(array)];
-        for (i in IndexRange(array)) {
+        mutable mapped = [];
+        for i in 0 .. Length(array) {
             set mapped w/= i <- mapper(array[i]);
         }
         return mapped;

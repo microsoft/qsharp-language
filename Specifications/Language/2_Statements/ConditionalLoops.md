@@ -55,7 +55,7 @@ For example, if `arr` is an array of positive integers,
 
 ```qsharp
 mutable (item, index) = (-1, 0);
-while index < Length(arr) && item < 0 {
+while index < Length(arr) and item < 0 {
     set item = arr[index];
     set index += 1;
 }

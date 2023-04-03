@@ -88,7 +88,7 @@ Similarly, the following function multiplies each item in an array with the give
 
 ```qsharp
 function Multiplied(factor : Double, array : Double[]) : Double[] {
-    mutable res = new Double[Length(array)];
+    mutable res = [1.1, size = Length(array)];
     for i in IndexRange(res) {
         set res w/= i <- factor * array[i];
     }
