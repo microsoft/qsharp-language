@@ -111,13 +111,15 @@ For more information, see [Contextual expressions](https://github.com/microsoft/
 An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions, separated by commas and enclosed in brackets `[` and `]`; for example, `[1,2,3]`.
 All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance), which is the item type of the array.
 
-Arrays of arbitrary length, and in particular empty arrays, may be created using a new array expression.
-Such an expression is of the form `new <ItemType>[expr]`, where `expr` can be any expression of type `Int` and `<ItemType>` is to be replaced by the type of the array items.
+Fixed length arrays are declared using the `let` statement, for example, `let dailyTemps = [65, 73, 67, 80]` or `let dailyTemps = [("Mon", 67), ("Tues", 60), ("Wed", 74)]`. 
 
-For instance, `new Int[10]` creates an array of integers containing ten items.
-The length of an array can be queried with the function `Length`. It is defined in the automatically opened namespace `Microsoft.Quantum.Core` and returns an `Int` value.
+Arrays of arbitrary length  may be created using an array expression.
+Such an expression is of the form `[<TypeValue>, size = <expr>]`, where `<TypeValue>` is to be replaced by a value that is the type of the array items, and `expr` can be any expression of type `Int`.
 
-All items in the created array are set to the [default value](#default-values) of the item type.
+For example, `mutable arr1 = [1, size = 4]` creates an updatable four-member array of integers `[1, 1, 1, 1]`, whereas `mutable results = [Zero, 0]` creates an empty array of Result types. The compiler automatically detects the data type from the first parameter. Empty arrays can be declared as `mutable arr1 = []`.  
+
+The length of an array can be queried with the function `Length`. It is defined in the automatically opened namespace `Microsoft.Quantum.Core` and returns an `Int` value. The `length` function can be used to set the size of an array. For example, `mutable arr1 = [1.1, size = Length(arr2)]` creates an array of floats based on the length of arr2. 
+
 Arrays containing qubits or callables must be properly initialized with non-default values before their elements may be safely used.
 Suitable initialization routines can be found in the `Microsoft.Quantum.Arrays` namespace.
 
