@@ -32,3 +32,6 @@ From the publishing side in the *quantum-docs-private* repo, the *qsharp-languag
 #### Submitting changes
 
 To update articles, submit your changes as a PR to the *qsharp-language/main* branch. When the PR is merged, the GitHub action will update the `⭐Docs` branch, and *quantum-docs-private* will include the updates in the next publishing cycle. 
+
+**Adding a new topic, removing a topic, or changing the filename of a topic**.
+These modifications are NOT automatically updated as part of this workflow. You should merge your PR as usual, and then contact *quantumdocwriters@microsoft.com* with the details so the mapping table and table of contents can be modified accordingly.
