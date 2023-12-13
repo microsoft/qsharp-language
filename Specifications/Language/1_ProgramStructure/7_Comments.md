@@ -55,10 +55,10 @@ operation ApplyTwice<'T>(op : ('T => Unit), target : 'T) : Unit {
 
 Q# recognizes the following names as documentation comment headers.
 
-- **Summary**: A short summary of a function or operation's behavior 
+- **Summary**: A short summary of a function or operation's behavior
   or the purpose of a type. The first paragraph of the summary is used
   for hover information. It should be plain text.
-- **Description**: A description of a function or operation's behavior 
+- **Description**: A description of a function or operation's behavior
   or the purpose of a type. The summary and description are concatenated to
   form the generated documentation file for the function, operation, or type.
   The description may contain in-line LaTeX-formatted symbols and equations.
@@ -76,3 +76,4 @@ Q# recognizes the following names as documentation comment headers.
   operations, or user-defined types.
 - **References**: A list of references and citations for the documented item.
 
+← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

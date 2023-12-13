@@ -45,36 +45,19 @@ let g = () -> value;
 
 ### Characteristics
 
-The characteristics of an anonymous operation are inferred based on the body of the lambda expression.
+The characteristics of an anonymous operation are inferred based on the applications of the lambda. If the lambda is used with a functor application, or in a context that expects a characteristic, the lambda is then inferred to have that characteristic.
 For example:
 
 ```qsharp
-// Has type Unit => Unit is Adj + Ctl because X is known to be Adj + Ctl.
-() => X(q)
+operation NoOp(q : Qubit) : Unit is Adj {}
+operation Main() : Unit {
+    use q = Qubit();
+    let foo = () => NoOp(q);
+    foo(); // Has type Unit => Unit with no characteristics
 
-
-// Has type Unit => Result because M is neither Adj nor Ctl.
-() => M(q)
-```
-
-Because of limitations in characteristics inference, this is based only on type information known at the point where the lambda expression occurs.
-For example:
-
-```qsharp
-let foo = op => op(q);
-foo(X);
-```
-
-`foo` is inferred to have the following type based on both the body of the lambda and the type of `X`:
-
-```qsharp
-(Qubit => Unit is Adj + Ctl) => Unit
-```
-
-But the most specific type that `foo` could have is:
-
-```qsharp
-(Qubit => Unit is Adj + Ctl) => Unit is Adj + Ctl
+    let bar = () => NoOp(q);
+    Adjoint bar(); // Has type Unit => Unit is Adj
+}
 ```
 
 If you need different characteristics for an operation lambda than what was inferred, you will need to create a top-level operation declaration instead.
