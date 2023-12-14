@@ -37,7 +37,7 @@ Value literals for the [`Double` type](https://github.com/microsoft/qsharp-langu
 | Standard | `0.1973269804` |
 | Scientific | `1.973269804e-1` |
 
-If nothing follows after the decimal point, then the digit after the decimal point may be omitted. For example, `1.` is a valid `Double` literal and the same as `1.0`. Similarly, if the digits before the decimal point are all zero, then they may be omitted. For example, `.1` is a valid `Double` literal and the same as `0.1`.
+If nothing follows after the decimal point, then the digit after the decimal point may be omitted. For example, `1.` is a valid `Double` literal and the same as `1.0`.
 
 ## Bool literals
 
@@ -108,18 +108,11 @@ For more information, see [Contextual expressions](https://github.com/microsoft/
 
 ## Array literals
 
-An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of one or more expressions, separated by commas and enclosed in brackets `[` and `]`; for example, `[1,2,3]`.
-All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance), which is the item type of the array.
+An [array](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language/4_TypeSystem#available-types) literal is a sequence of zero or more expressions, separated by commas and enclosed in brackets `[` and `]`; for example, `[1,2,3]`.
+All expressions must have a [common base type](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/SubtypingAndVariance.md#subtyping-and-variance), which is the item type of the array. If an empty array is specified with `[]`, a type annotation may be needed for the compiler to determine the appropriate type of the expression.
 
-Arrays of arbitrary length, and in particular empty arrays, may be created using a new array expression.
-Such an expression is of the form `new <ItemType>[expr]`, where `expr` can be any expression of type `Int` and `<ItemType>` is to be replaced by the type of the array items.
-
-For instance, `new Int[10]` creates an array of integers containing ten items.
-The length of an array can be queried with the function `Length`. It is defined in the automatically opened namespace `Microsoft.Quantum.Core` and returns an `Int` value.
-
-All items in the created array are set to the [default value](#default-values) of the item type.
-Arrays containing qubits or callables must be properly initialized with non-default values before their elements may be safely used.
-Suitable initialization routines can be found in the `Microsoft.Quantum.Arrays` namespace.
+Arrays of arbitrary length may be created using a sized-array expression.
+Such an expression is of the form `[expr, size = s]`, where `s` can be any expression of type `Int` and `expr` is evaluated to a value that will be the items of the array repeated `s` times. For example, `[1.2, size = 3]` creates the same array as `[1.2, 1.2, 1.2]`.
 
 ## Tuple literals
 
@@ -143,27 +136,5 @@ For instance, if `IntPair` has two items of type `Int`, then `IntPair(2, 3)` cre
 ## Operation and function literals
 
 Anonymous operations and functions can be created using a [lambda expression](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md#lambda-expressions).
-
-## Default values
-
-Type | Default
----------|----------
- `Unit` | `()`
- `Int` | `0`
- `BigInt` | `0L`
- `Double` | `0.0`
- `Bool` | `false`
- `String` | `""`
- `Qubit` | _invalid qubit_
- `Result` | `Zero`
- `Pauli` | `PauliI`
- `Range` | empty range
- Array | empty array
- Tuple | all items are set to default values
- User-defined type | all items are set to default values
- Operation | _invalid operation_
- Function | _invalid function_
-
-For qubits and callables, the default is an invalid reference that cannot be used without causing a runtime error.
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
