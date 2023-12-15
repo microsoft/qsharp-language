@@ -36,8 +36,6 @@ where `condition` is an arbitrary expression of type `Bool`.
 
 The `repeat` loop runs a block of statements before evaluating a condition. If the condition evaluates to true, the loop exits. If the condition evaluates to false, an additional block of statements defined as part of an optional `fixup` block, if present, is run prior to entering the next loop iteration.
 
-The compiler treats all parts of the `repeat` loop (both blocks and the condition) as a single scope for each repetition; symbols that are defined within the `repeat` block are visible both to the condition and within the `fixup` block. As for other loops, symbols go out of scope after each iteration, such that symbols defined in the `fixup` block are not visible in the `repeat` block.
-
 ### Target-specific restrictions
 
 Loops that break based on a condition are challenging to process on quantum hardware if the condition depends on measurement outcomes since the length of the instruction sequence to run is not known ahead of time.
@@ -46,9 +44,7 @@ Despite their common presence in particular classes of quantum algorithms, curre
 
 ## While loop
 
-A more familiar-looking loop for classical computations is the `while` loop. It is supported only within functions.
-
-A `while` loop consists of the keyword `while`, an expression of type `Bool`, and a statement block.
+A more familiar-looking loop for classical computations is the `while` loop, which consists of the keyword `while`, an expression of type `Bool`, and a statement block.
 For example, if `arr` is an array of positive integers,
 
 ```qsharp
@@ -60,8 +56,5 @@ while index < Length(arr) && item < 0 {
 ```
 
 The statement block is run as long as the condition evaluates to `true`.
-
-> [!NOTE]
-> Due to the challenge they pose for execution, we discourage the use of loops that break based on a condition and hence do not support `while` loops within operations. The use of `while` loops within operations may be considered in the future, with the restriction that the condition cannot depend on the outcome of a quantum measurement.
 
 ← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
