@@ -11,14 +11,14 @@ For instance, the following comparison evaluates to `false` due to rounding erro
 
 Equality comparison of arrays, and tuples are supported by comparisons of their items, and are only supported if all of their nested types support equality comparison.
 
-Equality comparison of ranges are supported, and two ranges are considered equal if xthey produce the same sequence of integers. For example, the following two ranges
+Equality comparison of close-ended ranges are supported, and two ranges are considered equal if they produce the same sequence of integers. For example, the following two ranges
 
 ```qsharp
     let r1 = 0..2..5; // generates the sequence 0,2,4
     let r2 = 0..2..4; // generates the sequence 0,2,4
 ```
 
-are considered equal.
+are considered equal. Equality comparison of open-ended ranges are not supported.
 
 ## Quantitative comparison
 

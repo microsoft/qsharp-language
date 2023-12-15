@@ -2,7 +2,7 @@
 
 Call expressions are an important part of any programming language. Operation and function calls, much like [partial applications](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/Closures.md#partial-application), can be used as an expression anywhere as long as the returned value is of a suitable type.
 
-The usefulness of calling functions in this form primarily lies in debugging, and such operation calls are one of the most common constructs in any Q# program. At the same time, operations can only be called from within other operations and not from within functions. For more information, see also [Qubits](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits).
+The usefulness of calling operations in this form primarily lies in debugging, and such operation calls are one of the most common constructs in any Q# program. At the same time, operations can only be called from within other operations and not from within functions. For more information, see also [Qubits](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/4_TypeSystem/QuantumDataTypes.md#qubits).
 
 With callables being first-class values, call expressions are a generic way of supporting patterns that aren't common enough to merit their own dedicated language construct, or dedicated syntax has not (yet) been introduced for other reasons. Some examples of library methods that serve that purpose are `ApplyIf`, which invokes an operation conditional on a classical bit being set; `ApplyToEach`, which applies a given operation to each element in an array; and `ApplyWithInputTransformation`, as shown in the following sample.
 
@@ -13,7 +13,7 @@ With callables being first-class values, call expressions are a generic way of s
         input : 'TIn
     ) : Unit {
 
-        op(fn(input)); 
+        op(fn(input));
     }
 ```
 
