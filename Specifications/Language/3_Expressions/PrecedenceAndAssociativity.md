@@ -49,9 +49,9 @@ This artificial precedence is listed in the following table, along with how the 
 
 | Description | Syntax | Operator | Associativity | Precedence |
 | --- | --- | --- | --- | --- |
-| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `(` `)` | n/a | left | 17 |
-| [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Adjoint` | prefix | right | 18 |
-| [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/CallStatements.md#call-statements) | `Controlled` | prefix | right | 18 |
+| [Call combinator](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CallExpressions.md#call-expressions) | `(` `)` | n/a | left | 17 |
+| [Adjoint functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CallExpressions.md#call-expressions) | `Adjoint` | prefix | right | 18 |
+| [Controlled functor](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CallExpressions.md#call-expressions) | `Controlled` | prefix | right | 18 |
 | [Unwrap application](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `!` | postfix | left | 19 |
 | [Named item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#item-access-for-user-defined-types) | `::` | n/a | left | 20 |  
 | [Array item access](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/ItemAccessExpressions.md#array-item-access-and-array-slicing) | `[` `]` | n/a | left | 20 |
