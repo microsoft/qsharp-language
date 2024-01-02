@@ -36,4 +36,3 @@ Values of type `Pauli` specify a single-qubit Pauli operator; the possibilities 
 The `Result` type specifies the result of a quantum measurement. Q# mirrors most quantum hardware by providing measurements in products of single-qubit Pauli operators; a `Result` of `Zero` indicates that the +1 eigenvalue was measured, and a `Result` of `One` indicates that the -1 eigenvalue was measured. That is, Q# represents eigenvalues by the power to which -1 is raised.
 This convention is more common in the quantum algorithms community, as it maps more closely to classical bits.
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)

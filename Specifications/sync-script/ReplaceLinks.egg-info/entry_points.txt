@@ -1,0 +1,2 @@
+[console_scripts]
+replace_links = replace_links:main

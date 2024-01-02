@@ -57,4 +57,4 @@ while index < Length(arr) && item < 0 {
 
 The statement block is run as long as the condition evaluates to `true`.
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

@@ -76,4 +76,4 @@ Q# recognizes the following names as documentation comment headers.
   operations, or user-defined types.
 - **References**: A list of references and citations for the documented item.
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+

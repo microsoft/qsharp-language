@@ -1,8 +1,8 @@
 # Contextual and omitted expressions
 
-Contextual expressions are expressions that are only valid in certain contexts, such as the use of item names in [copy-and-update expressions](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/3_Expressions/CopyAndUpdateExpressions.md#copy-and-update-expressions) without having to qualify them.
+Contextual expressions are expressions that are only valid in certain contexts, such as the use of item names in [copy-and-update expressions](xref:microsoft.quantum.qsharp.copyandupdateexpressions#copy-and-update-expressions) without having to qualify them.
 
-Expressions can be *omitted* when they can be inferred and automatically inserted by the compiler, for example, in the case of [evaluate-and-reassign statements](https://github.com/microsoft/qsharp-language/blob/main/Specifications/Language/2_Statements/VariableDeclarationsAndReassignments.md#evaluate-and-reassign-statements).
+Expressions can be *omitted* when they can be inferred and automatically inserted by the compiler, for example, in the case of [evaluate-and-reassign statements](xref:microsoft.quantum.qsharp.variabledeclarationsandreassignments#evaluate-and-reassign-statements).
 
 Open-ended ranges are another example that apply to both contextual and omitted expressions. They are are valid only within a certain context, and the compiler translates them into normal `Range` expressions during compilation by inferring suitable boundaries.
 
@@ -45,4 +45,4 @@ let slice10 = arr[...];       // slice10 is [1,2,3,4,5,6];
 
 Since the determination of whether the range step is positive or negative happens at runtime, the compiler inserts a suitable expression that will be evaluated at runtime. For omitted end values, the inserted expression is `step < 0 ? 0 | Length(arr)-1`, and for omitted start values it is `step < 0 ? Length(arr)-1 | 0`, where `step` is the expression given for the range step, or `1` if no step is specified.
 
-← [Back to Index](https://github.com/microsoft/qsharp-language/tree/main/Specifications/Language#index)
+
