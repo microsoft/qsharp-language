@@ -1,8 +1,12 @@
-# Q# Language and Core Libraries Design
+## DEPRECATION NOTICE
 
-Welcome to the official repository for design of the Q# language and core libraries. This is where new Q# features are developed and specified, and where you can share ideas and suggestions about the future evolution of the Q# language and core libraries.
+**This repository is deprecated.** 
 
-> _For more information about the corresponding library API design process, please see [CoreLibraries section](https://github.com/microsoft/qsharp-language/blob/main/CoreLibraries/review-process.md)._
+For the Modern QDK repository, please visit [Microsoft/qsharp](http://github.com/microsoft/qsharp).
+
+You can also try out the Modern QDK in VS Code for Web at [vscode.dev/quantum](https://vscode.dev/quantum).
+
+For more information about the Modern QDK and Azure Quantum, visit [https://aka.ms/AQ/Documentation](https://aka.ms/AQ/Documentation).
 
 ## Contributing
 
